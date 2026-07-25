@@ -1,0 +1,60 @@
+---
+import { route, type Locale } from '~/lib/routes';
+import { t } from '~/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dict = t(locale);
+const nf = dict.notFound;
+
+const links = [
+  { label: dict.nav.home, href: route('home', locale) },
+  { label: dict.nav.demo, href: route('demo', locale) },
+  { label: dict.nav.method, href: route('method', locale) },
+  { label: dict.nav.privacy, href: route('privacy', locale) },
+];
+---
+
+<section class="section">
+  <div class="shell shell--narrow">
+    <div class="nf">
+      <p class="nf__code numeral">{nf.code}</p>
+      <h1>{nf.title}</h1>
+      <p class="lede">{nf.body}</p>
+      <div>
+        <p class="eyebrow" style="margin-bottom: 1rem">{nf.links}</p>
+        <ul class="nf__links">
+          {links.map((l) => <li><a class="link" href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .nf {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+    padding-block: clamp(1rem, 5vw, 4rem);
+  }
+
+  .nf__code {
+    font-size: var(--step-5);
+    line-height: 1;
+    color: var(--cobalt);
+  }
+
+  .nf h1 {
+    max-width: 16ch;
+  }
+
+  .nf__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.5rem;
+  }
+</style>

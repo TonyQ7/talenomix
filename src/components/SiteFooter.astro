@@ -1,0 +1,66 @@
+---
+import { anchor, route, type Locale, type RouteKey } from '~/lib/routes';
+import { t } from '~/i18n';
+import LangToggle from './LangToggle.astro';
+
+interface Props {
+  locale: Locale;
+  routeKey: RouteKey;
+}
+
+const { locale, routeKey } = Astro.props;
+const dict = t(locale);
+const year = new Date().getFullYear();
+
+const productLinks = [
+  { label: dict.nav.product, href: anchor(locale, 'product') },
+  { label: dict.nav.workflow, href: anchor(locale, 'workflow') },
+  { label: dict.nav.demo, href: route('demo', locale) },
+  { label: dict.nav.designPartners, href: anchor(locale, 'design-partners') },
+];
+
+const siteLinks = [
+  { label: dict.nav.evidence, href: anchor(locale, 'evidence') },
+  { label: dict.nav.method, href: route('method', locale) },
+  { label: dict.nav.privacy, href: route('privacy', locale) },
+];
+---
+
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <a class="wordmark" href={route('home', locale)} style="color: var(--on-ink);">
+          <span class="wordmark__dot" aria-hidden="true" style="background: var(--mint-light);"></span>
+          <span>{dict.brand.name}</span>
+        </a>
+        <p style="margin-top: 1rem; color: var(--on-ink-muted); font-size: var(--step--1); max-width: 40ch;">
+          {dict.footer.blurb}
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h2>{dict.footer.productTitle}</h2>
+        <ul>
+          {productLinks.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2>{dict.footer.companyTitle}</h2>
+        <ul>
+          {siteLinks.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+        <h2 style="margin-top: 1.75rem;">{dict.footer.languageTitle}</h2>
+        <LangToggle locale={locale} routeKey={routeKey} />
+      </div>
+    </div>
+
+    <p class="provisional" style="margin-top: 1.75rem;">{dict.brand.provisionalNotice}</p>
+
+    <div class="footer-legal">
+      <p>© {year} {dict.footer.rights}</p>
+      <p style="max-width: 62ch;">{dict.footer.disclaimer}</p>
+    </div>
+  </div>
+</footer>

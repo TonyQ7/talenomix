@@ -1,0 +1,421 @@
+/*
+  Synthetic demo styles.
+
+  Deliberately global (prefixed `dm-`) rather than component-scoped: the stepper
+  script toggles classes at runtime, and unscoped selectors keep that behaviour
+  obvious. The no-JS baseline is "every step visible, in order" — enhancement only
+  ever hides things once JavaScript has confirmed it can show them again.
+*/
+
+.dm-notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  border: 1px dashed var(--state-unresolved);
+  background: var(--state-unresolved-fill);
+  padding: 0.85rem 1.1rem;
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.dm-notice__badge {
+  font-size: var(--step--2);
+  font-weight: 700;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--state-unresolved);
+  border: 1px solid currentColor;
+  padding: 0.15rem 0.45rem;
+  flex: none;
+}
+
+/* ---- Layout ------------------------------------------------------------- */
+
+.dm-shell {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .dm-shell {
+    grid-template-columns: 17rem minmax(0, 1fr);
+  }
+
+  .dm-nav {
+    position: sticky;
+    top: 6rem;
+  }
+}
+
+/* ---- Step navigation ---------------------------------------------------- */
+
+.dm-nav__list {
+  display: grid;
+  gap: 0;
+  border-block-start: 1px solid var(--rule);
+}
+
+.dm-nav__item {
+  border-block-end: 1px solid var(--rule);
+}
+
+.dm-nav__link {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: 0.4rem;
+  align-items: baseline;
+  padding-block: 0.7rem;
+  font-size: var(--step--1);
+  line-height: 1.35;
+  color: var(--ink-muted);
+  text-decoration: none;
+  inline-size: 100%;
+  text-align: start;
+}
+
+.dm-nav__link:hover {
+  color: var(--cobalt);
+}
+
+.dm-nav__link[aria-current='step'] {
+  color: var(--ink);
+  font-weight: 650;
+}
+
+.dm-nav__link[aria-current='step'] .dm-nav__n {
+  color: var(--cobalt);
+}
+
+.dm-nav__n {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: var(--tracking-code);
+  color: var(--ink-faint);
+}
+
+/* ---- Steps -------------------------------------------------------------- */
+
+.dm-steps {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4rem);
+}
+
+.dm-step {
+  scroll-margin-top: 6rem;
+}
+
+.dm-step__head {
+  display: grid;
+  gap: 0.65rem;
+  padding-bottom: 1.1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.dm-step__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+.dm-step__title {
+  font-family: var(--font-sans);
+  font-size: var(--step-2);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.2;
+}
+
+.dm-step__body {
+  color: var(--ink-muted);
+  max-width: var(--measure);
+}
+
+.dm-step__panel {
+  margin-top: 1.75rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+/* ---- Enhanced (JavaScript) mode ----------------------------------------- */
+
+.dm-controls {
+  display: none;
+}
+
+.dm-filter {
+  display: none;
+}
+
+.js-reveal .dm-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+}
+
+.js-reveal .dm-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.dm-shell.is-stepped .dm-step[hidden] {
+  display: none;
+}
+
+.dm-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-xs);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--paper-raised);
+  transition:
+    border-color var(--dur-quick) var(--ease-survey),
+    background-color var(--dur-quick) var(--ease-survey);
+}
+
+.dm-btn:hover:not(:disabled) {
+  border-color: var(--ink);
+}
+
+.dm-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dm-progress {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: var(--tracking-code);
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.dm-select {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-xs);
+  background: var(--paper-raised);
+  font-size: var(--step--1);
+}
+
+.dm-filter__label {
+  font-size: var(--step--2);
+  font-weight: 700;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/* ---- Document card ------------------------------------------------------ */
+
+.dm-doc {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem 1.25rem;
+  align-items: start;
+  border: 1px solid var(--rule-strong);
+  background: var(--paper-raised);
+  padding: clamp(1.1rem, 2.5vw, 1.6rem);
+}
+
+.dm-doc__glyph {
+  inline-size: 2.75rem;
+  block-size: 3.4rem;
+  border: 1px solid var(--rule-strong);
+  background: var(--paper);
+  position: relative;
+  flex: none;
+}
+
+.dm-doc__glyph::before,
+.dm-doc__glyph::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0.5rem;
+  block-size: 1px;
+  background: var(--rule-strong);
+}
+
+.dm-doc__glyph::before {
+  inset-block-start: 1rem;
+}
+
+.dm-doc__glyph::after {
+  inset-block-start: 1.6rem;
+  inset-inline-end: 1.2rem;
+}
+
+/* ---- Field list --------------------------------------------------------- */
+
+.dm-fields {
+  display: grid;
+  gap: 0;
+  border-block-start: 1px solid var(--rule);
+}
+
+.dm-field {
+  display: grid;
+  gap: 0.35rem 1.5rem;
+  padding-block: 0.9rem;
+  border-block-end: 1px solid var(--rule);
+}
+
+@media (min-width: 42rem) {
+  .dm-field {
+    grid-template-columns: 12rem minmax(0, 1fr);
+  }
+}
+
+.dm-field__key {
+  font-size: var(--step--2);
+  font-weight: 700;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.dm-field__val {
+  font-size: var(--step--1);
+  line-height: 1.6;
+}
+
+.dm-field__val ul {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.dm-field__val li {
+  padding-inline-start: 1rem;
+  position: relative;
+}
+
+.dm-field__val li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0.62em;
+  inline-size: 5px;
+  block-size: 1px;
+  background: var(--ink-faint);
+}
+
+/* ---- Held-for-decision cards -------------------------------------------- */
+
+.dm-held {
+  display: grid;
+  gap: 1rem;
+}
+
+.dm-held__item {
+  border: 1px solid var(--rule);
+  background: var(--paper-raised);
+}
+
+.dm-held__q {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+  padding: 0.95rem 1.15rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: var(--step--1);
+  list-style: none;
+}
+
+.dm-held__q::-webkit-details-marker {
+  display: none;
+}
+
+.dm-held__q:hover {
+  color: var(--cobalt);
+}
+
+.dm-held__a {
+  padding: 0 1.15rem 1.15rem;
+  display: grid;
+  gap: 0.75rem;
+  font-size: var(--step--1);
+  color: var(--ink-muted);
+  line-height: 1.6;
+  max-width: var(--measure);
+}
+
+.dm-held__decision {
+  border-inline-start: 2px solid var(--mint);
+  padding-inline-start: 0.9rem;
+  color: var(--ink);
+}
+
+/* ---- CSV preview -------------------------------------------------------- */
+
+.dm-csv {
+  overflow-x: auto;
+  contain: paint;
+  border: 1px solid var(--rule-strong);
+  background: var(--ink);
+  color: var(--on-ink);
+  padding: 1.1rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  line-height: 1.8;
+  tab-size: 2;
+}
+
+.dm-csv:focus-visible {
+  outline-color: var(--focus-on-ink);
+  outline-offset: 2px;
+}
+
+/* ---- Coverage summary --------------------------------------------------- */
+
+.dm-coverage {
+  display: grid;
+  gap: 1.25rem;
+  border: 1px solid var(--rule);
+  background: var(--paper-raised);
+  padding: clamp(1.1rem, 2.5vw, 1.6rem);
+}
+
+.dm-coverage__counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+}
+
+.dm-coverage__count {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.dm-coverage__n {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Final CTA ---------------------------------------------------------- */
+
+.dm-cta {
+  display: grid;
+  gap: 1.25rem;
+  justify-items: start;
+}

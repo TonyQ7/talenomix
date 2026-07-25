@@ -1,0 +1,474 @@
+---
+import { anchor, type Locale } from '~/lib/routes';
+import { t } from '~/i18n';
+import {
+  DEMO_TOTAL,
+  demoCoverage,
+  demoCsv,
+  demoMandate,
+  demoResearch,
+  demoTargets,
+  targetName,
+} from '~/data/demo';
+import { COVERAGE_STATES } from '~/types/domain';
+import MandateUniverse from '~/components/MandateUniverse.astro';
+import StateChip from '~/components/StateChip.astro';
+import CoverageLegend from '~/components/CoverageLegend.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dict = t(locale);
+const d = dict.demo;
+
+const mandate = demoMandate(locale);
+const targets = demoTargets(locale);
+const research = demoResearch(locale);
+const coverage = demoCoverage();
+const csv = demoCsv(locale);
+
+const meterModifier: Record<string, string> = {
+  included: 'resolved',
+  'needs-review': 'review',
+  unresolved: 'unresolved',
+  excluded: 'excluded',
+};
+---
+
+<section class="section section--tight">
+  <div class="shell">
+    <div class="page-head">
+      <p class="eyebrow">{d.eyebrow}</p>
+      <h1>{d.title}</h1>
+      <p class="lede">{d.lede}</p>
+    </div>
+
+    <p class="dm-notice" style="margin-top: 2rem; max-width: 64rem">
+      <span class="dm-notice__badge">{dict.ui.syntheticBadge}</span>
+      <span>{d.syntheticNotice}</span>
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell">
+    <div class="dm-shell" id="demo-shell">
+      <!-- ------------------------------------------------------ step index -->
+      <nav class="dm-nav" aria-label={d.stepNav}>
+        <ol class="dm-nav__list" id="demo-nav">
+          {
+            d.steps.map((step, i) => (
+              <li class="dm-nav__item">
+                <a
+                  class="dm-nav__link"
+                  href={`#step-${step.id}`}
+                  data-step-link={String(i)}
+                  aria-current={i === 0 ? 'step' : undefined}
+                >
+                  <span class="dm-nav__n">{String(i + 1).padStart(2, '0')}</span>
+                  <span>{step.title}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+        <p class="note-inline" style="margin-top: 1.25rem">{d.noJsNote}</p>
+      </nav>
+
+      <!-- ----------------------------------------------------------- steps -->
+      <div class="dm-steps" id="demo-steps">
+        {
+          d.steps.map((step, i) => (
+            <article class="dm-step" id={`step-${step.id}`} data-step={String(i)}>
+              <header class="dm-step__head">
+                <div class="dm-step__meta">
+                  <p class="eyebrow">
+                    {d.stepLabel} {String(i + 1).padStart(2, '0')} {d.ofLabel} {String(d.steps.length).padStart(2, '0')}
+                  </p>
+                  <p class="step__stamp">{step.stamp}</p>
+                </div>
+                <h2 class="dm-step__title">{step.title}</h2>
+              </header>
+
+              <p class="dm-step__body">{step.body}</p>
+
+              <div class="dm-step__panel">
+                {/* -------------------------------------------- 01 upload */}
+                {step.id === 'upload' && (
+                  <div class="dm-doc">
+                    <div class="dm-doc__glyph" aria-hidden="true" />
+                    <div class="stack" style="--stack-gap: 0.5rem">
+                      <h3>{mandate.roleTitle}</h3>
+                      <p class="card__body">{mandate.clientDescriptor}</p>
+                      <p class="code">
+                        {mandate.mandateId} · DOCX · {dict.ui.syntheticBadge.toUpperCase()}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* -------------------------------------- 02 requirements */}
+                {step.id === 'requirements' && (
+                  <div>
+                    <p class="eyebrow" style="margin-bottom: 1rem">{d.mandateTitle}</p>
+                    <dl class="dm-fields">
+                      <div class="dm-field">
+                        <dt class="dm-field__key">{d.fields.role}</dt>
+                        <dd class="dm-field__val">{mandate.roleTitle}</dd>
+                      </div>
+                      <div class="dm-field">
+                        <dt class="dm-field__key">{d.fields.client}</dt>
+                        <dd class="dm-field__val">{mandate.clientDescriptor}</dd>
+                      </div>
+                      <div class="dm-field">
+                        <dt class="dm-field__key">{d.fields.sector}</dt>
+                        <dd class="dm-field__val">{mandate.sector}</dd>
+                      </div>
+                      <div class="dm-field">
+                        <dt class="dm-field__key">{d.fields.markets}</dt>
+                        <dd class="dm-field__val">{mandate.countries.join(' · ')}</dd>
+                      </div>
+                      <div class="dm-field">
+                        <dt class="dm-field__key">{d.fields.reportsTo}</dt>
+                        <dd class="dm-field__val">{mandate.reportsTo}</dd>
+                      </div>
+                      <div class="dm-field">
+                        <dt class="dm-field__key">{d.fields.mustHave}</dt>
+                        <dd class="dm-field__val">
+                          <ul>{mandate.mustHave.map((x) => <li>{x}</li>)}</ul>
+                        </dd>
+                      </div>
+                      <div class="dm-field">
+                        <dt class="dm-field__key">{d.fields.niceToHave}</dt>
+                        <dd class="dm-field__val">
+                          <ul>{mandate.niceToHave.map((x) => <li>{x}</li>)}</ul>
+                        </dd>
+                      </div>
+                      <div class="dm-field">
+                        <dt class="dm-field__key">{d.fields.exclusions}</dt>
+                        <dd class="dm-field__val">
+                          <ul>{mandate.exclusions.map((x) => <li>{x}</li>)}</ul>
+                        </dd>
+                      </div>
+                      <div class="dm-field">
+                        <dt class="dm-field__key">{d.fields.openQuestions}</dt>
+                        <dd class="dm-field__val">
+                          <ul>{mandate.openQuestions.map((x) => <li>{x}</li>)}</ul>
+                        </dd>
+                      </div>
+                      <div class="dm-field">
+                        <dt class="dm-field__key">{d.fields.approval}</dt>
+                        <dd class="dm-field__val">{d.approvalGranted}</dd>
+                      </div>
+                    </dl>
+                  </div>
+                )}
+
+                {/* ------------------------------------------ 03 universe */}
+                {step.id === 'universe' && (
+                  <div class="stack" style="--stack-gap: 1.5rem">
+                    <figure class="map-frame">
+                      <MandateUniverse locale={locale} variant="full" id="mu-demo" />
+                      <figcaption class="map-frame__caption">
+                        <p>{dict.home.hero.mapCaption}</p>
+                        <p class="code">{dict.ui.syntheticData}</p>
+                      </figcaption>
+                    </figure>
+
+                    <CoverageLegend locale={locale} />
+                    <p class="note-inline">{d.universeLede}</p>
+
+                    <div class="dm-filter">
+                      <label class="dm-filter__label" for="state-filter">{d.filterLabel}</label>
+                      <select class="dm-select" id="state-filter">
+                        <option value="all">{d.filterAll}</option>
+                        {COVERAGE_STATES.map((s) => <option value={s}>{dict.states[s]}</option>)}
+                      </select>
+                      <span class="dm-progress" id="filter-count" aria-live="polite" />
+                    </div>
+
+                    <div class="table-scroll" tabindex="0" role="region" aria-label={d.universeTitle}>
+                      <table class="ledger" id="universe-table">
+                        <thead>
+                          <tr>
+                            <th scope="col">{d.tableHeads.company}</th>
+                            <th scope="col">{d.tableHeads.country}</th>
+                            <th scope="col">{d.tableHeads.segment}</th>
+                            <th scope="col">{d.tableHeads.rationale}</th>
+                            <th scope="col">{d.tableHeads.depth}</th>
+                            <th scope="col">{d.tableHeads.state}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {targets.map((target) => (
+                            <tr data-state={target.state}>
+                              <th scope="row">
+                                {target.name}
+                                <span class="code" style="display:block; margin-top:0.3rem">{target.id}</span>
+                              </th>
+                              <td><span class="code">{target.country}</span></td>
+                              <td>{target.segment}</td>
+                              <td style="min-inline-size: 20rem">{target.rationale}</td>
+                              <td>
+                                <span class="code">{target.evidenceDepth.toFixed(2)}</span>
+                              </td>
+                              <td><StateChip locale={locale} state={target.state} /></td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* ------------------------------------------ 04 research */}
+                {step.id === 'research' && (
+                  <div class="stack" style="--stack-gap: 1.25rem">
+                    <p class="note-inline">{d.researchLede}</p>
+                    <div class="table-scroll" tabindex="0" role="region" aria-label={d.researchTitle}>
+                      <table class="ledger">
+                        <thead>
+                          <tr>
+                            <th scope="col">{d.tableHeads.roleFocus}</th>
+                            <th scope="col">{d.tableHeads.company}</th>
+                            <th scope="col">{d.tableHeads.reason}</th>
+                            <th scope="col">{d.tableHeads.openQuestion}</th>
+                            <th scope="col">{d.tableHeads.state}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {research.map((task) => (
+                            <tr>
+                              <th scope="row">
+                                {task.roleFocus}
+                                <span class="code" style="display:block; margin-top:0.3rem">{task.id}</span>
+                              </th>
+                              <td>{targetName(task.targetCompanyId)}</td>
+                              <td style="min-inline-size: 20rem">{task.reasonToResearch}</td>
+                              <td style="min-inline-size: 14rem">{task.openQuestion ?? '—'}</td>
+                              <td><StateChip locale={locale} state={task.state} /></td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <p class="field-note">{d.noPersonNote}</p>
+                  </div>
+                )}
+
+                {/* ------------------------------------------- 05 resolve */}
+                {step.id === 'resolve' && (
+                  <div class="stack" style="--stack-gap: 1.75rem">
+                    <p class="note-inline">{d.resolveLede}</p>
+
+                    <div class="dm-held">
+                      {d.resolveItems.map((item) => (
+                        <details class="dm-held__item">
+                          <summary class="dm-held__q">
+                            <span class="code">{item.code}</span>
+                            <span>{item.issue}</span>
+                          </summary>
+                          <div class="dm-held__a">
+                            <p>{item.detail}</p>
+                            <p class="dm-held__decision">{item.decision}</p>
+                          </div>
+                        </details>
+                      ))}
+                    </div>
+
+                    <div class="dm-coverage">
+                      <p class="eyebrow">{d.coverageTitle}</p>
+                      <div class="meter">
+                        <div class="meter__track" role="img" aria-label={`${d.coverageTitle}: ${COVERAGE_STATES.map((s) => `${dict.states[s]} ${coverage[s]}`).join(', ')}`}>
+                          {COVERAGE_STATES.map((s) =>
+                            coverage[s] > 0 ? (
+                              <span
+                                class={`meter__seg meter__seg--${meterModifier[s]}`}
+                                style={`flex: ${coverage[s]}`}
+                              />
+                            ) : null,
+                          )}
+                        </div>
+                        <div class="meter__scale">
+                          <span>0</span>
+                          <span>{DEMO_TOTAL}</span>
+                        </div>
+                      </div>
+                      <div class="dm-coverage__counts">
+                        {COVERAGE_STATES.map((s) => (
+                          <div class="dm-coverage__count">
+                            <span class="dm-coverage__n">{coverage[s]}</span>
+                            <StateChip locale={locale} state={s} />
+                          </div>
+                        ))}
+                      </div>
+                      <p class="note-inline">{dict.ui.syntheticData}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* ---------------------------------------------- 06 pack */}
+                {step.id === 'pack' && (
+                  <div class="stack" style="--stack-gap: 1.25rem">
+                    <p class="note-inline">{d.packLede}</p>
+                    <div class="card card--marked">
+                      <div class="card__head">
+                        <h3>{d.packTitle}</h3>
+                        <span class="code">{mandate.mandateId}</span>
+                      </div>
+                      <ul class="checklist" style="margin-top: 0.5rem">
+                        {d.packContents.map((item) => (
+                          <li>
+                            <span class="checklist__mark" aria-hidden="true">✓</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
+                {/* -------------------------------------------- 07 export */}
+                {step.id === 'export' && (
+                  <div class="stack" style="--stack-gap: 1.25rem">
+                    <p class="note-inline">{d.exportLede}</p>
+                    <pre class="dm-csv" tabindex="0" role="region" aria-label={d.exportTitle}>{csv}</pre>
+                    <p class="field-note">{d.exportNote}</p>
+                  </div>
+                )}
+              </div>
+            </article>
+          ))
+        }
+
+        <!-- Stepper controls appear only when JavaScript is available -->
+        <div class="dm-controls" id="demo-controls">
+          <button class="dm-btn" type="button" id="demo-prev">
+            <span aria-hidden="true">←</span>
+            {d.prev}
+          </button>
+          <span class="dm-progress" id="demo-progress" aria-live="polite"></span>
+          <button class="dm-btn" type="button" id="demo-next">
+            {d.next}
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section panel--ink">
+  <div class="shell">
+    <div class="dm-cta">
+      <p class="eyebrow">{dict.home.finalCta.eyebrow}</p>
+      <h2 style="max-width: 18ch">{d.ctaTitle}</h2>
+      <p class="lede" style="max-width: 52ch">{d.ctaBody}</p>
+      <a class="btn btn--primary" href={anchor(locale, 'design-partners')}>
+        {d.cta}
+        <span class="btn__arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Progressive enhancement only. Everything below assumes the page already
+  // renders as a complete, readable walkthrough; the script turns that into a
+  // stepper and never removes information that cannot be reached another way.
+  const shell = document.getElementById('demo-shell');
+  const stepsRoot = document.getElementById('demo-steps');
+  if (shell && stepsRoot) {
+    const steps = Array.from(stepsRoot.querySelectorAll<HTMLElement>('.dm-step'));
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-step-link]'));
+    const prev = document.getElementById('demo-prev') as HTMLButtonElement | null;
+    const next = document.getElementById('demo-next') as HTMLButtonElement | null;
+    const progress = document.getElementById('demo-progress');
+    const total = steps.length;
+    let index = 0;
+
+    const render = (scroll: boolean): void => {
+      steps.forEach((step, i) => {
+        step.hidden = i !== index;
+      });
+      links.forEach((link, i) => {
+        if (i === index) link.setAttribute('aria-current', 'step');
+        else link.removeAttribute('aria-current');
+      });
+      if (prev) prev.disabled = index === 0;
+      if (next) next.disabled = index === total - 1;
+      if (progress) progress.textContent = `${String(index + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+      if (scroll) steps[index]?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    };
+
+    const goTo = (target: number, scroll: boolean): void => {
+      index = Math.max(0, Math.min(total - 1, target));
+      render(scroll);
+      const id = steps[index]?.id;
+      if (id) history.replaceState(null, '', `#${id}`);
+    };
+
+    // Honour a deep link before hiding anything, so a shared URL still lands right.
+    const fromHash = steps.findIndex((s) => `#${s.id}` === window.location.hash);
+    index = fromHash === -1 ? 0 : fromHash;
+
+    shell.classList.add('is-stepped');
+    render(false);
+
+    prev?.addEventListener('click', () => goTo(index - 1, true));
+    next?.addEventListener('click', () => goTo(index + 1, true));
+    links.forEach((link, i) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        goTo(i, true);
+      });
+    });
+
+    // A hash-only navigation does not reload the page, so without this a deep
+    // link followed from elsewhere on the site would leave the stepper on step 1.
+    window.addEventListener('hashchange', () => {
+      const target = steps.findIndex((s) => `#${s.id}` === window.location.hash);
+      if (target !== -1 && target !== index) goTo(target, true);
+    });
+
+    // ---- Target-universe filter -------------------------------------------
+    const filter = document.getElementById('state-filter') as HTMLSelectElement | null;
+    const table = document.getElementById('universe-table');
+    const count = document.getElementById('filter-count');
+    if (filter && table) {
+      const rows = Array.from(table.querySelectorAll<HTMLTableRowElement>('tbody tr'));
+      const apply = (): void => {
+        const wanted = filter.value;
+        let shown = 0;
+        for (const row of rows) {
+          const match = wanted === 'all' || row.dataset['state'] === wanted;
+          row.hidden = !match;
+          if (match) shown += 1;
+        }
+        if (count) count.textContent = `${shown} / ${rows.length}`;
+      };
+      filter.addEventListener('change', apply);
+      apply();
+    }
+  }
+</script>
+
+<style>
+  /* `ch` is relative to the element's own font size, so the constraint belongs on
+     the heading rather than the grid container — otherwise the display type is
+     measured in body ems and collapses to a narrow column. */
+  .page-head {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .page-head h1 {
+    max-width: 15ch;
+  }
+
+  .page-head .lede {
+    max-width: var(--measure);
+  }
+</style>

@@ -1,0 +1,12 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import Method from '~/views/Method.astro';
+import { t } from '~/i18n';
+
+const locale = 'sv' as const;
+const meta = t(locale).meta.method;
+---
+
+<PageLayout locale={locale} routeKey="method" title={meta.title} description={meta.description}>
+  <Method locale={locale} />
+</PageLayout>

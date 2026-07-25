@@ -1,0 +1,30 @@
+# Build output
+dist/
+.astro/
+.output/
+
+# Dependencies
+node_modules/
+
+# Test artifacts
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+.playwright-mcp/
+
+# Private operations workspace.
+# PLAN.md section 3: firm lists, contacts, interview notes and customer data must
+# never reach the public repository. Everything under private/ stays local.
+private/
+
+# Environment / editor / OS
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*

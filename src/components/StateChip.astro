@@ -1,0 +1,25 @@
+---
+import { t } from '~/i18n';
+import type { Locale } from '~/lib/routes';
+import type { CoverageState } from '~/types/domain';
+
+interface Props {
+  locale: Locale;
+  state: CoverageState;
+}
+
+const { locale, state } = Astro.props;
+const dict = t(locale);
+
+const modifier: Record<CoverageState, string> = {
+  included: 'resolved',
+  excluded: 'excluded',
+  unresolved: 'unresolved',
+  'needs-review': 'review',
+};
+---
+
+<span class:list={['state', `state--${modifier[state]}`]}>
+  <span class="state__glyph" aria-hidden="true"></span>
+  {dict.states[state]}
+</span>

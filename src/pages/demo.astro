@@ -1,0 +1,12 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import Demo from '~/views/Demo.astro';
+import { t } from '~/i18n';
+
+const locale = 'en' as const;
+const meta = t(locale).meta.demo;
+---
+
+<PageLayout locale={locale} routeKey="demo" title={meta.title} description={meta.description}>
+  <Demo locale={locale} />
+</PageLayout>

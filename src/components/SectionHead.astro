@@ -1,0 +1,26 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  lede?: string;
+  /** Sheet code shown in the margin, e.g. "03 / 09". */
+  sheet?: string;
+  sheetLabel?: string;
+  /** Render the title with the serif display face (default) or the sans face. */
+  level?: 'h2' | 'h3';
+}
+
+const { eyebrow, title, lede, sheet, sheetLabel = 'Sheet', level = 'h2' } = Astro.props;
+const Title = level;
+---
+
+<header class="sheet-head" data-reveal>
+  <div class="sheet-head__meta">
+    <p class="eyebrow">{eyebrow}</p>
+    {sheet && <p class="code">{sheetLabel} {sheet}</p>}
+  </div>
+  <div class="sheet-head__body">
+    <Title class="sheet-head__title">{title}</Title>
+    {lede && <p class="lede">{lede}</p>}
+  </div>
+</header>

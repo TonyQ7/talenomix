@@ -1,0 +1,96 @@
+---
+import { t } from '~/i18n';
+import type { Locale } from '~/lib/routes';
+import type { Claim } from '~/types/domain';
+
+interface Props {
+  locale: Locale;
+  claims: readonly Claim[];
+  caption?: string;
+}
+
+const { locale, claims, caption } = Astro.props;
+const dict = t(locale);
+---
+
+<div class="table-scroll" tabindex="0" role="region" aria-label={caption ?? dict.method.ledgerTitle}>
+  <table class="ledger">
+    {caption && <caption>{caption}</caption>}
+    <thead>
+      <tr>
+        <th scope="col">{dict.ui.claim}</th>
+        <th scope="col">{dict.ui.source}</th>
+        <th scope="col">{dict.ui.type}</th>
+        <th scope="col">{dict.ui.retrieved}</th>
+        <th scope="col">{dict.ui.confidence}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        claims.map((claim) => (
+          <tr>
+            <th scope="row">
+              {claim.text[locale]}
+              {claim.source.passage && (
+                <span class="ledger__passage" lang={claim.source.language}>
+                  “{claim.source.passage}”
+                  {claim.source.paraphrase && (
+                    <span class="ledger__gloss" lang="en"> — {claim.source.paraphrase}</span>
+                  )}
+                </span>
+              )}
+              {claim.vendorClaim && <span class="ledger__flag">{dict.ui.vendorClaimNote}</span>}
+            </th>
+            <td>
+              <a class="link" href={claim.source.url} rel="noopener nofollow" target="_blank">
+                {claim.source.publisher}
+                <span class="visually-hidden"> ({dict.ui.opensNewTab})</span>
+              </a>
+            </td>
+            <td><span class="code">{dict.evidenceKinds[claim.source.kind] ?? claim.source.kind}</span></td>
+            <td><span class="code">{claim.source.retrievedOn}</span></td>
+            <td><span class="code">{claim.confidence}</span></td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .ledger__passage,
+  .ledger__flag {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: var(--step--2);
+    line-height: 1.5;
+    max-width: 52ch;
+  }
+
+  .ledger__passage {
+    color: var(--ink-muted);
+    font-style: italic;
+    border-inline-start: 2px solid var(--rule-strong);
+    padding-inline-start: 0.7rem;
+  }
+
+  .ledger__gloss {
+    font-style: normal;
+    color: var(--ink-faint);
+  }
+
+  .ledger__flag {
+    color: var(--state-unresolved);
+    font-weight: 600;
+  }
+
+  .ledger th[scope='row'] {
+    min-inline-size: 22rem;
+  }
+
+  @media (max-width: 48rem) {
+    .ledger th[scope='row'] {
+      min-inline-size: 16rem;
+    }
+  }
+</style>

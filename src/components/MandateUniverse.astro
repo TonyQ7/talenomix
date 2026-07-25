@@ -1,0 +1,281 @@
+---
+import { contourOpacity, contourWeight, universeScene, type MapVariant } from '~/lib/universe';
+import { demoTargets } from '~/data/demo';
+import { t } from '~/i18n';
+import type { Locale } from '~/lib/routes';
+import type { CoverageState } from '~/types/domain';
+
+interface Props {
+  locale: Locale;
+  variant?: MapVariant;
+  /** Prefix for internal ids so two maps can coexist on one page. */
+  id?: string;
+  class?: string;
+}
+
+const { locale, variant = 'full', id, class: className = '' } = Astro.props;
+const p = id ?? `mu-${variant}`;
+const dict = t(locale);
+const scene = universeScene(variant);
+
+// Segment labels come from the demo data, which keeps the map and the
+// walkthrough describing the same fictional territory.
+const segmentLabels = new Map<string, string>();
+for (const target of demoTargets(locale)) {
+  if (!segmentLabels.has(target.segmentKey)) segmentLabels.set(target.segmentKey, target.segment);
+}
+
+const waypointLabel = (key: string): string => {
+  if (key === 'brief') return dict.home.workflow.inputLabel;
+  if (key === 'pack') return dict.demo.packTitle;
+  return segmentLabels.get(key) ?? key;
+};
+
+const zoneFill: Record<CoverageState, string> = {
+  included: 'var(--mint)',
+  'needs-review': 'var(--cobalt)',
+  unresolved: `url(#${p}-dots)`,
+  excluded: `url(#${p}-hatch)`,
+};
+
+const zoneOpacity: Record<CoverageState, number> = {
+  included: 0.1,
+  'needs-review': 0.08,
+  unresolved: 1,
+  excluded: 1,
+};
+
+const titleId = `${p}-title`;
+const descId = `${p}-desc`;
+---
+
+<svg
+  class:list={['mu', `mu--${variant}`, className]}
+  viewBox={`0 0 ${scene.width} ${scene.height}`}
+  preserveAspectRatio="xMidYMid meet"
+  role="img"
+  aria-labelledby={`${titleId} ${descId}`}
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <title id={titleId}>{dict.home.hero.mapTitle}</title>
+  <desc id={descId}>{dict.home.hero.mapCaption}</desc>
+
+  <defs>
+    <pattern id={`${p}-hatch`} width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="7" stroke="var(--state-excluded)" stroke-width="1.1" stroke-opacity="0.35" />
+    </pattern>
+    <pattern id={`${p}-dots`} width="9" height="9" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.1" fill="var(--state-unresolved)" fill-opacity="0.42" />
+    </pattern>
+    <clipPath id={`${p}-clip`}>
+      <rect x="0" y="0" width={scene.width} height={scene.height} />
+    </clipPath>
+  </defs>
+
+  <g clip-path={`url(#${p}-clip)`}>
+    {/* Survey graticule */}
+    <g class="mu__grid" aria-hidden="true">
+      {scene.gridX.map((x) => <line x1={x} y1="0" x2={x} y2={scene.height} />)}
+      {scene.gridY.map((y) => <line x1="0" y1={y} x2={scene.width} y2={y} />)}
+    </g>
+
+    {/* Coverage territories — each state gets its own fill pattern, not just a colour */}
+    <g class="mu__zones">
+      {
+        scene.zones.map((zone) =>
+          zone.paths.map((d) => (
+            <path
+              d={d}
+              fill={zoneFill[zone.state]}
+              fill-opacity={zoneOpacity[zone.state]}
+              stroke={
+                zone.state === 'included'
+                  ? 'var(--mint)'
+                  : zone.state === 'needs-review'
+                    ? 'var(--cobalt)'
+                    : zone.state === 'unresolved'
+                      ? 'var(--state-unresolved)'
+                      : 'var(--state-excluded)'
+              }
+              stroke-width="1.4"
+              stroke-opacity="0.55"
+              stroke-dasharray={zone.state === 'unresolved' ? '6 5' : undefined}
+            />
+          )),
+        )
+      }
+    </g>
+
+    {/* Terrain: deeper contours mean more supporting evidence */}
+    <g class="mu__contours" fill="none" aria-hidden="true">
+      {
+        scene.contours.map((ring) =>
+          ring.paths.map((d) => (
+            <path
+              d={d}
+              stroke="var(--ink)"
+              stroke-width={contourWeight(ring.level)}
+              stroke-opacity={contourOpacity(ring.level)}
+              stroke-linejoin="round"
+            />
+          )),
+        )
+      }
+    </g>
+
+    {/* The research traverse: signed brief on the left, calibration pack on the right */}
+    <g class="mu__traverse">
+      <path d={scene.traverse} fill="none" stroke="var(--cobalt)" stroke-width="2" stroke-opacity="0.28" />
+      <path
+        d={scene.traverse}
+        fill="none"
+        stroke="var(--cobalt)"
+        stroke-width="2"
+        stroke-dasharray="9 7"
+        stroke-linecap="round"
+      />
+    </g>
+
+    {/* Cluster markers */}
+    <g class="mu__nodes">
+      {
+        scene.clusters.map((c) => (
+          <g>
+            {c.state === 'included' && <rect x={c.x - 6} y={c.y - 6} width="12" height="12" fill="var(--mint)" />}
+            {c.state === 'needs-review' && (
+              <g>
+                <rect x={c.x - 6} y={c.y - 6} width="12" height="12" fill="none" stroke="var(--cobalt)" stroke-width="2" />
+                <path d={`M${c.x - 6} ${c.y}L${c.x + 6} ${c.y}L${c.x + 6} ${c.y + 6}L${c.x - 6} ${c.y + 6}Z`} fill="var(--cobalt)" />
+              </g>
+            )}
+            {c.state === 'unresolved' && (
+              <circle cx={c.x} cy={c.y} r="6.5" fill="var(--paper-raised)" stroke="var(--state-unresolved)" stroke-width="2" stroke-dasharray="3 3" />
+            )}
+            {c.state === 'excluded' && (
+              <g stroke="var(--state-excluded)" stroke-width="1.8">
+                <rect x={c.x - 6} y={c.y - 6} width="12" height="12" fill="var(--paper-raised)" />
+                <path d={`M${c.x - 4} ${c.y - 4}L${c.x + 4} ${c.y + 4}M${c.x + 4} ${c.y - 4}L${c.x - 4} ${c.y + 4}`} />
+              </g>
+            )}
+            <text class="mu__code" x={c.x + 13} y={c.y - 4}>{c.code}</text>
+            <text class="mu__label" x={c.x + 13} y={c.y + 11}>{segmentLabels.get(c.segmentKey) ?? c.segmentKey}</text>
+          </g>
+        ))
+      }
+    </g>
+
+    {/* Traverse waypoints, including the two endpoints */}
+    <g class="mu__waypoints">
+      {
+        scene.waypoints.map((w) => {
+          const endpoint = w.key === 'brief' || w.key === 'pack';
+          return (
+            <g>
+              {endpoint && (
+                <g>
+                  <rect x={w.x - 9} y={w.y - 9} width="18" height="18" fill="var(--ink)" />
+                  <text class="mu__wp-n" x={w.x} y={w.y + 4} text-anchor="middle">{w.n}</text>
+                  <text class="mu__wp-label" x={w.x} y={w.y + 30} text-anchor="middle">{waypointLabel(w.key)}</text>
+                </g>
+              )}
+              {!endpoint && <circle cx={w.x} cy={w.y} r="3" fill="var(--cobalt)" />}
+            </g>
+          );
+        })
+      }
+    </g>
+  </g>
+
+  {/* Registration marks and scale bar */}
+  <g class="mu__frame" aria-hidden="true">
+    <path d="M0 26V0h26" />
+    <path d={`M${scene.width - 26} 0h26v26`} />
+    <path d={`M${scene.width} ${scene.height - 26}v26h-26`} />
+    <path d={`M26 ${scene.height}H0v-26`} />
+  </g>
+</svg>
+
+<style>
+  .mu {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .mu__grid line {
+    stroke: var(--ink);
+    stroke-width: 0.5;
+    stroke-opacity: 0.07;
+  }
+
+  .mu__frame path {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.2;
+    stroke-opacity: 0.45;
+  }
+
+  .mu__code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    fill: var(--ink-faint);
+  }
+
+  .mu__label {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    fill: var(--ink);
+  }
+
+  .mu__wp-n {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    fill: var(--paper);
+  }
+
+  .mu__wp-label {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    fill: var(--ink);
+  }
+
+  /*
+    At narrow widths the whole viewBox scales down far enough that in-map text
+    would be unreadable. The labels are dropped and the accompanying HTML legend
+    and tables carry the same information instead.
+  */
+  /* The waypoint number is meaningless once its label is gone, and at this scale
+     it would render at about 3px. */
+  @media (max-width: 47.99rem) {
+    .mu__code,
+    .mu__label,
+    .mu__wp-label,
+    .mu__wp-n {
+      display: none;
+    }
+  }
+
+  /* Inverted sections need the terrain to read against dark paper. */
+  :global(.panel--ink) .mu__grid line,
+  :global(.panel--ink) .mu__contours path {
+    stroke: var(--on-ink);
+  }
+
+  :global(.panel--ink) .mu__frame path {
+    stroke: var(--on-ink);
+  }
+
+  :global(.panel--ink) .mu__label,
+  :global(.panel--ink) .mu__wp-label {
+    fill: var(--on-ink);
+  }
+
+  :global(.panel--ink) .mu__code {
+    fill: var(--on-ink-faint);
+  }
+</style>

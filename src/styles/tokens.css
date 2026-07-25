@@ -1,0 +1,113 @@
+/*
+  Talenomix design tokens.
+
+  PLAN.md section 3 specifies a paper / ink / cobalt / mint palette with Manrope and
+  Newsreader typography, an editorial grid, hairline rules and evidence-led annotation.
+  The visual metaphor throughout is a survey chart: contours, traverses, coverage.
+
+  Everything below is a named token. No raw hex values are permitted outside this file.
+*/
+
+:root {
+  color-scheme: light;
+
+  /* ---- Surface: warm survey-chart paper ---------------------------------- */
+  --paper: #f2efe7;
+  --paper-raised: #faf8f3;
+  --paper-sunk: #e7e3d8;
+  --paper-deep: #dcd7c9;
+
+  /* ---- Ink --------------------------------------------------------------- */
+  --ink: #131822;
+  --ink-raised: #1e2531;
+  --ink-strong: #0b0e15;
+  --ink-muted: #575f6d;
+  /* Every ink tone below is set so the lightest one still clears 4.5:1 on the
+     darkest paper surface (--paper-sunk). See tests/a11y.spec.ts. */
+  --ink-faint: #5d6472;
+
+  /* Ink used as a surface (inverted sections) */
+  --on-ink: #efece4;
+  --on-ink-muted: #a6adb9;
+  --on-ink-faint: #7b8391;
+
+  /* ---- Cobalt: the primary mark ------------------------------------------ */
+  --cobalt: #1b44c8;
+  --cobalt-deep: #14329a;
+  --cobalt-bright: #2f5ae8;
+  --cobalt-light: #8ba3ec;
+  --cobalt-rgb: 27 68 200;
+
+  /* ---- Mint: resolved / verified ----------------------------------------- */
+  --mint: #0a6250;
+  --mint-deep: #08513f;
+  --mint-light: #7fceb7;
+  --mint-rgb: 13 122 97;
+
+  /* ---- Coverage states --------------------------------------------------- */
+  /* Colour is never the only signal — each state also has its own glyph and fill
+     pattern (see .state--* in components.css and the SVG patterns on the map).
+     Each colour clears 4.5:1 against its OWN tinted chip fill composited over the
+     darkest surface, not merely against bare paper — the fill is what the label
+     actually sits on. Covered by tests/a11y.spec.ts. */
+  --state-resolved: var(--mint);
+  --state-resolved-fill: color-mix(in srgb, var(--mint) 14%, transparent);
+  --state-unresolved: #734d07;
+  --state-unresolved-fill: color-mix(in srgb, #734d07 12%, transparent);
+  --state-excluded: #545b67;
+  --state-excluded-fill: color-mix(in srgb, #545b67 10%, transparent);
+  --state-review: var(--cobalt);
+  --state-review-fill: color-mix(in srgb, var(--cobalt) 10%, transparent);
+
+  /* ---- Hairline rules ---------------------------------------------------- */
+  --rule: color-mix(in srgb, var(--ink) 14%, transparent);
+  --rule-strong: color-mix(in srgb, var(--ink) 30%, transparent);
+  --rule-faint: color-mix(in srgb, var(--ink) 8%, transparent);
+  --rule-on-ink: color-mix(in srgb, var(--on-ink) 18%, transparent);
+  --rule-on-ink-strong: color-mix(in srgb, var(--on-ink) 34%, transparent);
+
+  /* ---- Focus ------------------------------------------------------------- */
+  --focus: var(--cobalt);
+  --focus-on-ink: var(--mint-light);
+
+  /* ---- Typography -------------------------------------------------------- */
+  --font-display: 'Newsreader Variable', 'Newsreader', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-sans: 'Manrope Variable', 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', 'Roboto Mono', Menlo, monospace;
+
+  /* Floor is 12px: the annotation labels (codes, stamps, legends) must stay
+     readable at 320px, which is where this size is used most densely. */
+  --step--2: clamp(0.75rem, 0.736rem + 0.068vw, 0.8125rem);
+  --step--1: clamp(0.8125rem, 0.785rem + 0.136vw, 0.9375rem);
+  --step-0: clamp(0.9375rem, 0.903rem + 0.17vw, 1.0625rem);
+  --step-1: clamp(1.125rem, 1.057rem + 0.34vw, 1.375rem);
+  --step-2: clamp(1.3125rem, 1.176rem + 0.68vw, 1.8125rem);
+  --step-3: clamp(1.625rem, 1.352rem + 1.36vw, 2.625rem);
+  --step-4: clamp(2rem, 1.455rem + 2.73vw, 4rem);
+  --step-5: clamp(2.5rem, 1.41rem + 5.45vw, 5.5rem);
+
+  --tracking-display: -0.022em;
+  --tracking-tight: -0.012em;
+  --tracking-label: 0.15em;
+  --tracking-code: 0.06em;
+
+  --leading-display: 0.98;
+  --leading-tight: 1.14;
+  --leading-body: 1.62;
+
+  /* ---- Space ------------------------------------------------------------- */
+  --gutter: clamp(1.15rem, 4vw, 4rem);
+  --max-content: 84rem;
+  --max-prose: 38rem;
+  --measure: 64ch;
+  --space-section: clamp(4.5rem, 9vw, 9rem);
+  --space-section-tight: clamp(3rem, 6vw, 5.5rem);
+
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+
+  /* ---- Motion ------------------------------------------------------------ */
+  --ease-survey: cubic-bezier(0.22, 0.61, 0.24, 1);
+  --dur-reveal: 620ms;
+  --dur-quick: 160ms;
+}

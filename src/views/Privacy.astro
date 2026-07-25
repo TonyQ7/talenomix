@@ -1,0 +1,104 @@
+---
+import { route, type Locale } from '~/lib/routes';
+import { t } from '~/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dict = t(locale);
+const p = dict.privacy;
+---
+
+<section class="section section--tight">
+  <div class="shell shell--narrow">
+    <div class="page-head">
+      <p class="eyebrow">{p.eyebrow}</p>
+      <h1>{p.title}</h1>
+      <p class="lede">{p.lede}</p>
+      <p class="code">{p.updated}</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell shell--narrow">
+    <div class="policy">
+      {
+        p.sections.map((s, i) => (
+          <article class="policy__section" id={s.id} data-reveal>
+            <div class="policy__head">
+              <span class="code">{String(i + 1).padStart(2, '0')}</span>
+              <h2>{s.title}</h2>
+            </div>
+            {s.body.map((para) => <p class="policy__p">{para}</p>)}
+            {s.list && (
+              <ul class="checklist" style="margin-top: 1.25rem">
+                {s.list.map((item) => (
+                  <li>
+                    <span class="checklist__mark" aria-hidden="true">·</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </article>
+        ))
+      }
+
+      <p class="field-note" style="margin-top: 1rem">
+        <a class="link" href={route('method', locale)}>{dict.nav.method}</a>
+        {' · '}
+        <a class="link" href={route('home', locale)}>{dict.nav.home}</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-head {
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .page-head h1 {
+    max-width: 15ch;
+  }
+
+  .page-head .lede {
+    max-width: var(--measure);
+  }
+
+  .policy {
+    display: grid;
+    gap: clamp(2.25rem, 4.5vw, 3.5rem);
+  }
+
+  .policy__head {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr);
+    gap: 0.5rem;
+    align-items: baseline;
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .policy__head h2 {
+    font-family: var(--font-sans);
+    font-size: var(--step-2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.2;
+  }
+
+  .policy__p {
+    max-width: var(--measure);
+    color: var(--ink-muted);
+  }
+
+  .policy__p + .policy__p {
+    margin-top: 1em;
+  }
+</style>

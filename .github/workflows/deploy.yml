@@ -1,0 +1,94 @@
+name: Deploy to GitHub Pages
+
+# PLAN.md section 3, step 8: Pages moves from legacy branch deployment to GitHub
+# Actions. This workflow is the replacement.
+#
+# It is intentionally NOT wired to `main` yet. Publishing is gated on the manual
+# clearance steps in PLAN.md section 5 — company, trademark and domain screening
+# for the Talenomix name, plus the application/booking destination. Until those
+# are done, deploys happen only when a human runs this workflow by hand.
+
+on:
+  workflow_dispatch:
+    inputs:
+      clearance_confirmed:
+        description: 'Name/trademark/domain screening complete and application destination configured?'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    name: Confirm launch gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Refuse to deploy without confirmed clearance
+        if: ${{ inputs.clearance_confirmed != true }}
+        run: |
+          echo "::error::Deploy blocked. PLAN.md section 5 requires PRV, Bolagsverket, EUIPO/TMview," \
+               "WIPO, domain and commercial-confusion screening to be complete before public launch."
+          exit 1
+
+  build:
+    name: Build
+    needs: gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run check
+      - run: npm run lint
+      - run: npm run build
+      - run: npm run verify:claims
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Test
+        run: npm run test
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  smoke:
+    name: Production smoke test
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the deployed pages respond
+        run: |
+          base="https://tonyq7.github.io/talenomix"
+          for path in "/" "/demo/" "/method/" "/privacy/" "/sv/" "/sv/demo/" "/sv/metod/" "/sv/integritet/"; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --retry 5 --retry-delay 5 "${base}${path}")
+            echo "${path} -> ${code}"
+            [ "$code" = "200" ] || exit 1
+          done

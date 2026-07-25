@@ -1,0 +1,89 @@
+---
+import '~/styles/global.css';
+import { HREFLANG, HTML_LANG, LOCALES, route, asset, type Locale, type RouteKey } from '~/lib/routes';
+import { t } from '~/i18n';
+import SiteHeader from '~/components/SiteHeader.astro';
+import SiteFooter from '~/components/SiteFooter.astro';
+
+interface Props {
+  locale: Locale;
+  routeKey: RouteKey;
+  title: string;
+  description: string;
+  /** 404 has no canonical counterpart worth advertising to crawlers. */
+  noIndex?: boolean;
+}
+
+const { locale, routeKey, title, description, noIndex = false } = Astro.props;
+const dict = t(locale);
+
+const canonical = new URL(route(routeKey, locale), Astro.site);
+const alternates = LOCALES.map((l) => ({
+  hreflang: HREFLANG[l],
+  href: new URL(route(routeKey, l), Astro.site).toString(),
+}));
+---
+
+<!doctype html>
+<html lang={HTML_LANG[locale]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.toString()} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    <link rel="alternate" hreflang="x-default" href={new URL(route(routeKey, 'en'), Astro.site).toString()} />
+    {noIndex && <meta name="robots" content="noindex" />}
+
+    <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
+    <meta name="theme-color" content="#f2efe7" />
+    <meta name="color-scheme" content="light" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={dict.meta.siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.toString()} />
+    <meta property="og:locale" content={locale === 'sv' ? 'sv_SE' : 'en_GB'} />
+    <meta name="twitter:card" content="summary" />
+
+    {/*
+      Adds a marker class before first paint so the reveal styles only ever apply
+      when JavaScript is running. Without this, a no-JS visitor would see nothing.
+    */}
+    <script is:inline>
+      document.documentElement.classList.add('js-reveal');
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">{dict.ui.skipToContent}</a>
+    <SiteHeader locale={locale} routeKey={routeKey} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter locale={locale} routeKey={routeKey} />
+
+    <script>
+      // Restrained reveal motion. Anything not observed stays visible, and the
+      // reduced-motion media query neutralises the transition in CSS.
+      const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add('is-revealed');
+              observer.unobserve(entry.target);
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+        );
+        for (const el of targets) observer.observe(el);
+      } else {
+        for (const el of targets) el.classList.add('is-revealed');
+      }
+    </script>
+  </body>
+</html>

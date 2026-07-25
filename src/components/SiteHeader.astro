@@ -1,0 +1,49 @@
+---
+import { anchor, route, type Locale, type RouteKey } from '~/lib/routes';
+import { t } from '~/i18n';
+import LangToggle from './LangToggle.astro';
+
+interface Props {
+  locale: Locale;
+  routeKey: RouteKey;
+}
+
+const { locale, routeKey } = Astro.props;
+const dict = t(locale);
+
+const links = [
+  { label: dict.nav.product, href: anchor(locale, 'product') },
+  { label: dict.nav.workflow, href: anchor(locale, 'workflow') },
+  { label: dict.nav.demo, href: route('demo', locale), key: 'demo' as RouteKey },
+  { label: dict.nav.designPartners, href: anchor(locale, 'design-partners') },
+  { label: dict.nav.evidence, href: anchor(locale, 'evidence') },
+];
+---
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="wordmark" href={route('home', locale)}>
+      <span class="wordmark__dot" aria-hidden="true"></span>
+      <span>{dict.brand.name}</span>
+      <span class="wordmark__sub">{dict.brand.descriptor}</span>
+    </a>
+
+    <nav class="site-nav site-nav--primary" aria-label={dict.nav.home}>
+      {
+        links.map((link) => (
+          <a
+            class="site-nav__link"
+            href={link.href}
+            aria-current={link.key && link.key === routeKey ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="header-actions">
+      <LangToggle locale={locale} routeKey={routeKey} />
+    </div>
+  </div>
+</header>

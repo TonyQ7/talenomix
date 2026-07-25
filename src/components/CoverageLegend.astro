@@ -1,0 +1,18 @@
+---
+import { t } from '~/i18n';
+import type { Locale } from '~/lib/routes';
+import { COVERAGE_STATES } from '~/types/domain';
+import StateChip from './StateChip.astro';
+
+interface Props {
+  locale: Locale;
+  label?: string;
+}
+
+const { locale, label } = Astro.props;
+const dict = t(locale);
+---
+
+<div class="legend" role="group" aria-label={label ?? dict.home.hero.mapLegendTitle}>
+  {COVERAGE_STATES.map((state) => <StateChip locale={locale} state={state} />)}
+</div>

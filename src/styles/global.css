@@ -1,0 +1,8 @@
+/* Single stylesheet entry point. Imported once from PageLayout.astro. */
+@import '@fontsource-variable/manrope/wght.css';
+@import '@fontsource-variable/newsreader/opsz.css';
+
+@import './tokens.css';
+@import './base.css';
+@import './components.css';
+@import './demo.css';

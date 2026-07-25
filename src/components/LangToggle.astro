@@ -1,0 +1,39 @@
+---
+import { LOCALES, LOCALE_ENDONYM, LOCALE_SHORT, route, type Locale, type RouteKey } from '~/lib/routes';
+import { t } from '~/i18n';
+
+interface Props {
+  locale: Locale;
+  routeKey: RouteKey;
+}
+
+const { locale, routeKey } = Astro.props;
+const dict = t(locale);
+---
+
+{/*
+  Two plain links to the counterpart page. No script, no cookie, no storage —
+  which is why the toggle keeps working with JavaScript disabled and why it never
+  strands a visitor on a page that does not exist in the other language.
+*/}
+<nav class="lang-toggle" aria-label={dict.ui.languageGroup}>
+  {
+    LOCALES.map((l) => {
+      const current = l === locale;
+      return (
+        <a
+          class="lang-toggle__opt"
+          href={route(routeKey, l)}
+          hreflang={l}
+          lang={l}
+          aria-current={current ? 'true' : undefined}
+        >
+          {LOCALE_SHORT[l]}
+          <span class="visually-hidden">
+            {current ? ` — ${LOCALE_ENDONYM[l]}` : ` — ${dict.ui.switchTo} ${LOCALE_ENDONYM[l]}`}
+          </span>
+        </a>
+      );
+    })
+  }
+</nav>
