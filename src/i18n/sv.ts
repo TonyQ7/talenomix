@@ -12,9 +12,9 @@ export const sv: Dictionary = {
   meta: {
     siteName: 'Talenomix',
     home: {
-      title: 'Talenomix — uppdragsintelligens för nordisk executive search',
+      title: 'Talenomix — underbyggd intelligens för executive search',
       description:
-        'Talenomix Mandate omvandlar en påskriven uppdragsbeskrivning och byråns befintliga kunskap till en källbelagd målbolagskarta, en researchkö och ett kalibreringsunderlag – ovanpå ert CRM, inte i stället för det.',
+        'Talenomix hjälper executive-searchbyråer att omvandla kundens uppdragsbeskrivning, byråns kunskap och betrodd marknadsinformation till en tydlig, underbyggd sökplan.',
     },
     demo: {
       title: 'Syntetisk uppdragsdemo — Talenomix',
@@ -70,7 +70,7 @@ export const sv: Dictionary = {
   brand: {
     name: 'Talenomix',
     product: 'Talenomix Mandate',
-    descriptor: 'Uppdragsintelligens',
+    descriptor: 'Searchintelligens',
     provisionalNotice:
       'Talenomix är ett preliminärt arbetsnamn. Kontroll av firmanamn, varumärke och domän är inte avslutad, och ingenting på webbplatsen ska läsas som ett anspråk på ett godkänt varumärke.',
   },
@@ -97,14 +97,39 @@ export const sv: Dictionary = {
 
   home: {
     hero: {
-      eyebrow: 'Uppdragsintelligens för nordisk executive search',
-      headline: 'Starta varje sökuppdrag med en marknadskarta som håller.',
-      body: 'Talenomix omvandlar uppdragsbeskrivningen och byråns befintliga kunskap till en källbelagd målbolagskarta, en researchkö och ett kalibreringsunderlag – utan att ersätta ert CRM eller automatisera bedömningen.',
-      primaryCta: 'Ansök med ett skarpt uppdrag',
-      secondaryCta: 'Utforska vår syntetiska demo',
+      eyebrow: 'Sökintelligens för executive-searchbyråer',
+      headline: 'Gör varje uppdragsbeskrivning till en tydlig, underbyggd sökplan.',
+      body: 'Talenomix samlar kundens uppdragsbeskrivning, det byrån redan vet och betrodd marknadsinformation. Teamet ser var det ska söka, vilka ledarroller som ska undersökas, vad som redan är känt och vad som återstår att kontrollera – utan att ersätta ert CRM eller låta AI fatta anställningsbeslut.',
+      primaryCta: 'Se produkten i arbete',
+      secondaryCta: 'Se designpartnerprogrammet',
+      quickTitle: 'Det här får teamet',
+      outcomes: [
+        {
+          label: 'Var ni ska söka',
+          body: 'Ett målbolagsuniversum grupperat per marknadssegment, med skäl och underlag för varje inkludering.',
+        },
+        {
+          label: 'Vad ni ska undersöka',
+          body: 'En praktisk kö med bolag och ledarroller att researcha – aldrig en AI-rankad lista över människor.',
+        },
+        {
+          label: 'Vad ni redan vet',
+          body: 'Tidigare research, relationer, off-limits-regler och beslut hämtas fram ur byråns egna underlag.',
+        },
+        {
+          label: 'Vad som återstår att kontrollera',
+          body: 'Tunt underlag, dubbletter och öppna kundfrågor blir synliga innan sökningen går vidare.',
+        },
+      ],
+      flowLabel: 'Så passar Talenomix in i ett sökuppdrag',
+      flow: [
+        'Kunduppdrag + byråns kunskap',
+        'Talenomix organiserar underlaget',
+        'Teamet godkänner sökplanen',
+      ],
       mapTitle: 'Uppdragets sökuniversum',
       mapCaption:
-        'Målbolagen bildar kluster. Konturdjupet visar hur mycket underlag som bär dem. Traversen går från påskriven uppdragsbeskrivning till godkänd täckning.',
+        'En syntetisk sökkarta: målbolag grupperade per segment, vart och ett med skäl, underlagsdjup och granskningsläge.',
       mapLegendTitle: 'Täckningslägen',
     },
 
@@ -386,8 +411,8 @@ export const sv: Dictionary = {
 
   demo: {
     eyebrow: 'Syntetisk demo',
-    title: 'Ett fiktivt uppdrag, från början till slut.',
-    lede: 'Ett COO-uppdrag hos en fiktiv nordisk industrikoncern. Varje bolag, krav och siffra nedan är påhittad för den här genomgången.',
+    title: 'Se hur en uppdragsbeskrivning blir en underbyggd sökplan.',
+    lede: 'Följ ett fiktivt COO-uppdrag från kundens påskrivna beskrivning till ett kundfärdigt kalibreringsunderlag och en CRM-export. Varje bolag, krav och siffra nedan är påhittad för genomgången.',
     syntheticNotice:
       'Syntetiskt scenario. Alla bolag är fiktiva, inga verkliga personuppgifter förekommer någonstans på sidan, och ingenting här anropar en extern tjänst.',
     stepLabel: 'Steg',
@@ -402,43 +427,97 @@ export const sv: Dictionary = {
         title: 'Läs in det påskrivna uppdraget',
         body: 'Beskrivningen kommer in som det dokument kunden faktiskt skrev under. Det förblir referenspunkten: varje extraherat kriterium behåller en pekare tillbaka till den formulering det kom ifrån.',
         stamp: 'Uppdrag mottaget · källa låst',
+        systemWork: 'Registrerar källfilen, bevarar versionen och förbereder dokumentet för extraktion på klausulnivå.',
+        humanDecision: 'Bekräftar att detta är den styrande beskrivningen och att rätt kundrestriktioner är bifogade.',
       },
       {
         id: 'requirements',
         title: 'Granska de extraherade kraven',
         body: 'Roll, marknad, bransch, senioritet och krav på underlag läggs fram för granskning. Oklarheter lyfts som öppna frågor i stället för att avgöras i tysthet.',
         stamp: 'Väntar på mänskligt godkännande',
+        systemWork: 'Strukturerar beskrivningen till sökbara kriterier och länkar varje föreslaget krav till källformuleringen.',
+        humanDecision: 'Godkänner, redigerar eller avslår varje kriterium och avgör vilka oklarheter som måste tillbaka till kunden.',
       },
       {
         id: 'universe',
         title: 'Utforska målbolagslandskapet',
         body: 'Bolagshypoteserna grupperas i segment, var och en med skälet till att den kvalificerade sig och källan bakom. Underlagets djup är synligt, så ett tunt underbyggt kluster ser tunt ut.',
         stamp: 'Hypoteser föreslagna',
+        systemWork: 'Kombinerar godkända källor med byråns kunskap för att föreslå bolag, segment och skäl för inkludering.',
+        humanDecision: 'Sätter den verkliga marknadsgränsen och avgör vilka angränsande segment som ska täckas.',
       },
       {
         id: 'research',
         title: 'Granska researchkön',
         body: 'Varje godkänt bolag blir en researchuppgift riktad mot en roll, inte mot en person. Kön säger var man ska leta och varför – den rankar aldrig någon.',
         stamp: 'Kö byggd · ingen rankning',
+        systemWork: 'Gör godkända bolagshypoteser till spårbara researchuppgifter med rollfokus och skäl att undersöka.',
+        humanDecision: 'Bestämmer researchordning, identifierar möjliga relationsägare och bedömer de personer teamet senare hittar.',
       },
       {
         id: 'resolve',
         title: 'Lös dubbletter, off-limits och osäkerhet',
         body: 'Dubbletter mot er CRM-export, kundens off-limits-regler och genuint osäkra poster hålls tillbaka för beslut i stället för att tyst inkluderas eller strykas.',
         stamp: 'Beslut dokumenterade',
+        systemWork: 'Lyfter motstridiga poster, restriktioner och svagt underlag med skälet bifogat.',
+        humanDecision: 'Slår ihop eller separerar poster, tillämpar kundens gränser och avgör vad som ska förbli oavgjort.',
       },
       {
         id: 'pack',
         title: 'Ta fram kalibreringsunderlaget',
         body: 'Kartan, resonemanget, täckningen hittills och de öppna frågorna blir ett dokument som konsulten kan försvara rad för rad på kalibreringsmötet.',
         stamp: 'Godkänt för kund',
+        systemWork: 'Samlar den godkända kartan, underlaget, exkluderingarna, täckningen och frågorna i ett enhetligt kunddokument.',
+        humanDecision: 'Godkänner berättelsen, utmanar marknadsgränsen och äger varje rekommendation i kundmötet.',
       },
       {
         id: 'export',
         title: 'Lämna tillbaka godkända poster till ert CRM',
         body: 'Godkända bolag, researchuppgifter och beslut lämnar systemet som en CSV ert befintliga system kan läsa in. Dokumentationen av uppdraget stannar där byrån har den.',
         stamp: 'Export förberedd',
+        systemWork: 'Paketerar endast godkända poster med stabila ID:n, beslutslägen och uppdragsreferenser för export.',
+        humanDecision: 'Godkänner vad som går in i registret och behåller det återanvändbara researchminnet för framtida uppdrag.',
       },
+    ],
+    overviewTitle: 'Uppdraget i korthet',
+    overviewLede:
+      'Det här är inte en allmän rundtur i en dashboard. Genomgången följer ett uppdrag och visar indata, arbetet Talenomix förbereder, de mänskliga kontrollpunkterna och posterna som lämnar arbetsytan.',
+    overviewStats: [
+      {
+        value: '4',
+        label: 'Nordiska marknader',
+        detail: 'Sverige, Danmark, Norge och Finland',
+      },
+      {
+        value: '12',
+        label: 'Målbolagshypoteser',
+        detail: 'I sex fiktiva marknadssegment',
+      },
+      {
+        value: '8',
+        label: 'Rollbaserade researchuppgifter',
+        detail: 'Inga personer poängsätts eller rankas',
+      },
+      {
+        value: '3',
+        label: 'Beslut hålls för granskning',
+        detail: 'Dubblett, off-limits och osäker passform',
+      },
+    ],
+    systemLabel: 'Talenomix förbereder',
+    humanLabel: 'Teamet avgör',
+    intakeTitle: 'Källfil och inläsningspost',
+    intakeItems: [
+      { label: 'Fil', body: 'Nordvik_Group_COO_Mandate_v3.docx' },
+      { label: 'Version', body: 'Påskriven av kund · v3 · skrivskyddad källa' },
+      { label: 'Mottagen', body: '25 juli 2026 · syntetiskt scenario' },
+      { label: 'Spårbarhet', body: 'Klausulreferenser bevaras för varje extraherat kriterium' },
+    ],
+    intakeStats: [
+      { value: '19', label: 'Sidor' },
+      { value: '7', label: 'Föreslagna kriterier' },
+      { value: '3', label: 'Öppna frågor' },
+      { value: '1', label: 'Godkännandegrind' },
     ],
     mandateTitle: 'Extraherat uppdrag',
     fields: {
@@ -458,6 +537,12 @@ export const sv: Dictionary = {
     universeTitle: 'Målbolagsuniversum',
     universeLede:
       'Tolv fiktiva bolag, grupperade per segment. Underlagets djup visar hur mycket källbelagt material som stödjer att bolaget alls hör hemma i omfattningen.',
+    universeStats: [
+      { value: '12', label: 'Kartlagda bolag' },
+      { value: '6', label: 'Marknadssegment' },
+      { value: '4', label: 'Nordiska marknader' },
+      { value: '4', label: 'Täckningslägen' },
+    ],
     filterLabel: 'Filtrera på läge',
     filterAll: 'Alla lägen',
     tableHeads: {
@@ -474,6 +559,12 @@ export const sv: Dictionary = {
     researchTitle: 'Researchkö',
     researchLede:
       'Uppgifterna pekar mot en roll inom ett bolag. Vem som i dag innehar rollen är något era researchers fastställer och era konsulter bedömer.',
+    researchStats: [
+      { value: '8', label: 'Researchuppgifter' },
+      { value: '6', label: 'Redo att undersökas' },
+      { value: '2', label: 'Blockerade för granskning' },
+      { value: '0', label: 'Rankade personer' },
+    ],
     noPersonNote:
       'Ingen enskild person namnges någonstans i kön – av princip, inte för att demoversionen är maskad.',
     resolveTitle: 'Hålls för beslut',
@@ -505,6 +596,8 @@ export const sv: Dictionary = {
     packTitle: 'Kalibreringsunderlag för kund',
     packLede:
       'Underlaget konsulten försvarar inför kunden. Det är medvetet ifrågasättbart – varje avsnitt går att utmana och spåra.',
+    packVersion: 'Utkast 0.4 · förberett för mänskligt godkännande',
+    packQuestionsTitle: 'Frågor som följer med till kalibreringen',
     packContents: [
       'Normaliserat uppdrag, där varje kriterium är länkat till formuleringen det kom ifrån',
       'Målbolagskarta per segment, med underlagets djup synligt',
@@ -516,6 +609,18 @@ export const sv: Dictionary = {
     exportTitle: 'Det som går tillbaka till ert CRM',
     exportLede:
       'En platt fil, medvetet tråkig, som bara innehåller godkända poster och besluten som hör till dem.',
+    exportFlowLabel: 'Exportväg',
+    exportFlow: [
+      'Godkända Talenomix-poster',
+      'Granskningsbar CSV-export',
+      'Ert befintliga CRM',
+    ],
+    exportStats: [
+      { value: '6', label: 'Inkluderade bolag' },
+      { value: '2', label: 'Dokumenterade exkluderingar' },
+      { value: '8', label: 'Bevarade researchuppgifter' },
+      { value: '1', label: 'Återanvändbar uppdragspost' },
+    ],
     exportNote:
       'CSV är det som finns i dag. Native-integrationer byggs efter att piloterna avgjort vilka system som spelar roll – den här demoversionen antyder ingen aktiv koppling till någon produkt.',
     coverageTitle: 'Täckning efter steg fem',
@@ -682,7 +787,7 @@ export const sv: Dictionary = {
 
   footer: {
     blurb:
-      'Talenomix Mandate omvandlar en påskriven uppdragsbeskrivning och byråns befintliga kunskap till en marknadskarta som håller, en källbelagd researchkö och ett kalibreringsunderlag – ovanpå ert CRM, inte i stället för det.',
+      'Talenomix hjälper executive-searchbyråer att omvandla kundens uppdragsbeskrivning, byråns kunskap och betrodd marknadsinformation till en tydlig, underbyggd sökplan – ovanpå ert CRM, inte i stället för det.',
     productTitle: 'Produkt',
     companyTitle: 'Webbplatsen',
     languageTitle: 'Språk',

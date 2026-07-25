@@ -13,13 +13,13 @@ export const ROUTES: readonly RouteCase[] = [
     key: 'home',
     en: './',
     sv: './sv/',
-    h1: { en: /market map you can defend/i, sv: /marknadskarta som håller/i },
+    h1: { en: /evidence-backed search plan/i, sv: /underbyggd sökplan/i },
   },
   {
     key: 'demo',
     en: './demo/',
     sv: './sv/demo/',
-    h1: { en: /fictional mandate/i, sv: /fiktivt uppdrag/i },
+    h1: { en: /search brief becomes/i, sv: /uppdragsbeskrivning blir/i },
   },
   {
     key: 'method',

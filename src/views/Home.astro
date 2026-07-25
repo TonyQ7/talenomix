@@ -30,23 +30,56 @@ const claims = homeClaims();
       <div class="hero__lead" data-reveal style="--reveal-delay: 120ms">
         <p class="lede">{h.hero.body}</p>
         <div class="btn-row">
-          <a class="btn btn--primary" href={anchor(locale, 'design-partners')}>
+          <a class="btn btn--primary" href={route('demo', locale)}>
             {h.hero.primaryCta}
             <span class="btn__arrow" aria-hidden="true">→</span>
           </a>
-          <a class="btn btn--secondary" href={route('demo', locale)}>{h.hero.secondaryCta}</a>
+          <a class="btn btn--secondary" href={anchor(locale, 'design-partners')}>{h.hero.secondaryCta}</a>
         </div>
       </div>
 
       <div class="hero__aside" data-reveal style="--reveal-delay: 180ms">
-        <p class="code">{h.hero.mapLegendTitle}</p>
-        <CoverageLegend locale={locale} />
+        <p class="code">{h.hero.quickTitle}</p>
+        <ul class="hero__outcomes">
+          {
+            h.hero.outcomes.map((outcome) => (
+              <li>
+                <h2>{outcome.label}</h2>
+                <p>{outcome.body}</p>
+              </li>
+            ))
+          }
+        </ul>
       </div>
+    </div>
+
+    <div class="plain-flow" aria-label={h.hero.flowLabel} data-reveal style="--reveal-delay: 210ms">
+      {
+        h.hero.flow.map((item, i) => (
+          <>
+            <div class="plain-flow__step">
+              <span class="code">{String(i + 1).padStart(2, '0')}</span>
+              <strong>{item}</strong>
+            </div>
+            {i < h.hero.flow.length - 1 && <span class="plain-flow__arrow" aria-hidden="true">→</span>}
+          </>
+        ))
+      }
     </div>
   </div>
 
   <div class="shell">
     <figure class="map-frame" data-reveal style="--reveal-delay: 220ms">
+      <div class="map-frame__top">
+        <div>
+          <p class="code">{h.hero.mapTitle} · SYNTH-01</p>
+          <p>{h.hero.mapCaption}</p>
+        </div>
+        <div>
+          <p class="code">{h.hero.mapLegendTitle}</p>
+          <CoverageLegend locale={locale} />
+        </div>
+      </div>
       <MandateUniverse locale={locale} variant="hero" id="mu-hero" />
       <figcaption class="map-frame__caption">
         <p>{h.hero.mapCaption}</p>
@@ -409,11 +442,13 @@ const claims = homeClaims();
   .hero__head {
     display: grid;
     gap: 1.5rem;
-    max-width: 20ch;
+    max-width: 70rem;
   }
 
   .hero__head h1 {
-    max-width: 15ch;
+    max-width: 17ch;
+    overflow-wrap: anywhere;
+    hyphens: auto;
   }
 
   .hero__grid {
@@ -448,6 +483,108 @@ const claims = homeClaims();
     .hero__aside {
       border-inline-start: 1px solid var(--rule);
       padding-inline-start: clamp(1.5rem, 3vw, 2.5rem);
+    }
+  }
+
+  .hero__outcomes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .hero__outcomes li {
+    display: grid;
+    align-content: start;
+    gap: 0.35rem;
+    padding: 0.9rem 0;
+    border-block-end: 1px solid var(--rule);
+  }
+
+  .hero__outcomes li:nth-child(odd) {
+    padding-inline-end: 1rem;
+  }
+
+  .hero__outcomes li:nth-child(even) {
+    padding-inline-start: 1rem;
+    border-inline-start: 1px solid var(--rule);
+  }
+
+  .hero__outcomes h2 {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .hero__outcomes p {
+    color: var(--ink-muted);
+    font-size: var(--step--2);
+    line-height: 1.55;
+  }
+
+  .plain-flow {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding: clamp(1rem, 2vw, 1.4rem);
+    border: 1px solid var(--rule-strong);
+    background: var(--paper-raised);
+  }
+
+  .plain-flow__step {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: var(--step--1);
+  }
+
+  .plain-flow__step .code {
+    color: var(--cobalt);
+  }
+
+  .plain-flow__arrow {
+    display: none;
+    color: var(--cobalt);
+  }
+
+  @media (min-width: 50rem) {
+    .plain-flow {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .plain-flow__arrow {
+      display: inline;
+    }
+  }
+
+  .map-frame__top {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1rem, 2vw, 1.4rem);
+    border-block-end: 1px solid var(--rule);
+    background: var(--paper-raised);
+  }
+
+  .map-frame__top > div {
+    display: grid;
+    align-content: start;
+    gap: 0.65rem;
+  }
+
+  .map-frame__top > div:first-child > p:last-child {
+    color: var(--ink-muted);
+    font-size: var(--step--1);
+    line-height: 1.55;
+    max-width: 58ch;
+  }
+
+  @media (min-width: 58rem) {
+    .map-frame__top {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+      align-items: end;
     }
   }
 

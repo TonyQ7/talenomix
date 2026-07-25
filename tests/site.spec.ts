@@ -103,7 +103,14 @@ test.describe('links and CTAs', () => {
     }
   });
 
-  test('primary CTA reaches the design-partner section', async ({ page }) => {
+  test('hero CTA opens the product demo', async ({ page }) => {
+    await page.goto('./');
+    await page.getByRole('link', { name: /See the product in action/i }).click();
+    await expect(page).toHaveURL(/\/demo\/$/);
+    await expect(page.locator('.dm-overview')).toBeVisible();
+  });
+
+  test('design-partner CTA reaches the design-partner section', async ({ page }) => {
     await page.goto('./');
     const cta = page.getByRole('link', { name: /Apply with one live mandate/i }).first();
     await cta.click();
@@ -129,6 +136,16 @@ test.describe('content guarantees', () => {
       const queue = await page.locator('#step-research').innerText();
       expect(queue).not.toMatch(/\b[A-ZÅÄÖ][a-zåäö]+ [A-ZÅÄÖ][a-zåäö]+sson\b/);
     }
+  });
+
+  test('the demo shows the case context and a human checkpoint at every step', async ({ page }) => {
+    await page.goto('./demo/#step-pack');
+
+    await expect(page.locator('.dm-overview')).toBeVisible();
+    await expect(page.locator('.dm-overview .dm-metric')).toHaveCount(4);
+    await expect(page.locator('.dm-responsibility')).toHaveCount(7);
+    await expect(page.locator('.dm-pack-preview')).toBeVisible();
+    await expect(page.locator('.dm-pack-questions')).toContainText(/Finnish energy-systems/i);
   });
 
   test('claim ledger rows carry a source link and a retrieval date', async ({ page }) => {

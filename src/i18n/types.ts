@@ -18,6 +18,12 @@ export interface Labelled {
   readonly body: string;
 }
 
+export interface Metric {
+  readonly value: string;
+  readonly label: string;
+  readonly detail?: string;
+}
+
 export interface NumberedStep {
   readonly n: string;
   readonly title: string;
@@ -88,6 +94,10 @@ export interface Dictionary {
       readonly body: string;
       readonly primaryCta: string;
       readonly secondaryCta: string;
+      readonly quickTitle: string;
+      readonly outcomes: readonly Labelled[];
+      readonly flowLabel: string;
+      readonly flow: readonly string[];
       readonly mapTitle: string;
       readonly mapCaption: string;
       readonly mapLegendTitle: string;
@@ -196,7 +206,17 @@ export interface Dictionary {
       readonly title: string;
       readonly body: string;
       readonly stamp: string;
+      readonly systemWork: string;
+      readonly humanDecision: string;
     }[];
+    readonly overviewTitle: string;
+    readonly overviewLede: string;
+    readonly overviewStats: readonly Metric[];
+    readonly systemLabel: string;
+    readonly humanLabel: string;
+    readonly intakeTitle: string;
+    readonly intakeItems: readonly Labelled[];
+    readonly intakeStats: readonly Metric[];
     readonly mandateTitle: string;
     readonly fields: {
       readonly role: string;
@@ -214,6 +234,7 @@ export interface Dictionary {
     readonly approvalGranted: string;
     readonly universeTitle: string;
     readonly universeLede: string;
+    readonly universeStats: readonly Metric[];
     readonly filterLabel: string;
     readonly filterAll: string;
     readonly tableHeads: {
@@ -229,6 +250,7 @@ export interface Dictionary {
     };
     readonly researchTitle: string;
     readonly researchLede: string;
+    readonly researchStats: readonly Metric[];
     readonly noPersonNote: string;
     readonly resolveTitle: string;
     readonly resolveLede: string;
@@ -240,9 +262,14 @@ export interface Dictionary {
     }[];
     readonly packTitle: string;
     readonly packLede: string;
+    readonly packVersion: string;
+    readonly packQuestionsTitle: string;
     readonly packContents: readonly string[];
     readonly exportTitle: string;
     readonly exportLede: string;
+    readonly exportFlowLabel: string;
+    readonly exportFlow: readonly string[];
+    readonly exportStats: readonly Metric[];
     readonly exportNote: string;
     readonly coverageTitle: string;
     readonly ctaTitle: string;

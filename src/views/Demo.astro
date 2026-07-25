@@ -49,6 +49,24 @@ const meterModifier: Record<string, string> = {
       <span class="dm-notice__badge">{dict.ui.syntheticBadge}</span>
       <span>{d.syntheticNotice}</span>
     </p>
+
+    <div class="dm-overview" data-reveal>
+      <div class="dm-overview__intro">
+        <p class="eyebrow">{d.overviewTitle}</p>
+        <p>{d.overviewLede}</p>
+      </div>
+      <dl class="dm-metrics dm-metrics--overview">
+        {
+          d.overviewStats.map((stat) => (
+            <div class="dm-metric">
+              <dt class="dm-metric__label">{stat.label}</dt>
+              <dd class="dm-metric__value">{stat.value}</dd>
+              {stat.detail && <dd class="dm-metric__detail">{stat.detail}</dd>}
+            </div>
+          ))
+        }
+      </dl>
+    </div>
   </div>
 </section>
 
@@ -94,17 +112,55 @@ const meterModifier: Record<string, string> = {
 
               <p class="dm-step__body">{step.body}</p>
 
+              <div class="dm-responsibility">
+                <div>
+                  <p class="code">{d.systemLabel}</p>
+                  <p>{step.systemWork}</p>
+                </div>
+                <div>
+                  <p class="code">{d.humanLabel}</p>
+                  <p>{step.humanDecision}</p>
+                </div>
+              </div>
+
               <div class="dm-step__panel">
                 {/* -------------------------------------------- 01 upload */}
                 {step.id === 'upload' && (
-                  <div class="dm-doc">
-                    <div class="dm-doc__glyph" aria-hidden="true" />
-                    <div class="stack" style="--stack-gap: 0.5rem">
-                      <h3>{mandate.roleTitle}</h3>
-                      <p class="card__body">{mandate.clientDescriptor}</p>
-                      <p class="code">
-                        {mandate.mandateId} · DOCX · {dict.ui.syntheticBadge.toUpperCase()}
-                      </p>
+                  <div class="stack" style="--stack-gap: 1rem">
+                    <div class="dm-doc">
+                      <div class="dm-doc__glyph" aria-hidden="true" />
+                      <div class="stack" style="--stack-gap: 0.5rem">
+                        <h3>{mandate.roleTitle}</h3>
+                        <p class="card__body">{mandate.clientDescriptor}</p>
+                        <p class="code">
+                          {mandate.mandateId} · DOCX · {dict.ui.syntheticBadge.toUpperCase()}
+                        </p>
+                      </div>
+                    </div>
+
+                    <dl class="dm-metrics">
+                      {
+                        d.intakeStats.map((stat) => (
+                          <div class="dm-metric">
+                            <dt class="dm-metric__label">{stat.label}</dt>
+                            <dd class="dm-metric__value">{stat.value}</dd>
+                          </div>
+                        ))
+                      }
+                    </dl>
+
+                    <div class="dm-intake">
+                      <p class="eyebrow">{d.intakeTitle}</p>
+                      <dl>
+                        {
+                          d.intakeItems.map((item) => (
+                            <div>
+                              <dt>{item.label}</dt>
+                              <dd>{item.body}</dd>
+                            </div>
+                          ))
+                        }
+                      </dl>
                     </div>
                   </div>
                 )}
@@ -163,12 +219,30 @@ const meterModifier: Record<string, string> = {
                         <dd class="dm-field__val">{d.approvalGranted}</dd>
                       </div>
                     </dl>
+                    <div class="dm-approval">
+                      <span class="dm-approval__mark" aria-hidden="true">✓</span>
+                      <div>
+                        <p class="code">{d.humanLabel}</p>
+                        <p>{d.approvalGranted}</p>
+                      </div>
+                    </div>
                   </div>
                 )}
 
                 {/* ------------------------------------------ 03 universe */}
                 {step.id === 'universe' && (
                   <div class="stack" style="--stack-gap: 1.5rem">
+                    <dl class="dm-metrics">
+                      {
+                        d.universeStats.map((stat) => (
+                          <div class="dm-metric">
+                            <dt class="dm-metric__label">{stat.label}</dt>
+                            <dd class="dm-metric__value">{stat.value}</dd>
+                          </div>
+                        ))
+                      }
+                    </dl>
+
                     <figure class="map-frame">
                       <MandateUniverse locale={locale} variant="full" id="mu-demo" />
                       <figcaption class="map-frame__caption">
@@ -227,6 +301,16 @@ const meterModifier: Record<string, string> = {
                 {step.id === 'research' && (
                   <div class="stack" style="--stack-gap: 1.25rem">
                     <p class="note-inline">{d.researchLede}</p>
+                    <dl class="dm-metrics">
+                      {
+                        d.researchStats.map((stat) => (
+                          <div class="dm-metric">
+                            <dt class="dm-metric__label">{stat.label}</dt>
+                            <dd class="dm-metric__value">{stat.value}</dd>
+                          </div>
+                        ))
+                      }
+                    </dl>
                     <div class="table-scroll" tabindex="0" role="region" aria-label={d.researchTitle}>
                       <table class="ledger">
                         <thead>
@@ -313,15 +397,44 @@ const meterModifier: Record<string, string> = {
                 {step.id === 'pack' && (
                   <div class="stack" style="--stack-gap: 1.25rem">
                     <p class="note-inline">{d.packLede}</p>
-                    <div class="card card--marked">
-                      <div class="card__head">
-                        <h3>{d.packTitle}</h3>
-                        <span class="code">{mandate.mandateId}</span>
+                    <div class="dm-pack-preview">
+                      <div class="dm-pack-preview__cover">
+                        <div class="dm-pack-preview__brand">
+                          <span class="wordmark__dot" aria-hidden="true" />
+                          <span>Talenomix</span>
+                        </div>
+                        <div>
+                          <p class="code">{d.packTitle}</p>
+                          <h3>{mandate.roleTitle}</h3>
+                          <p>{mandate.clientDescriptor}</p>
+                        </div>
+                        <div class="dm-pack-preview__footer">
+                          <span class="code">{mandate.mandateId}</span>
+                          <span class="code">{d.packVersion}</span>
+                        </div>
                       </div>
-                      <ul class="checklist" style="margin-top: 0.5rem">
-                        {d.packContents.map((item) => (
+
+                      <div class="dm-pack-preview__contents">
+                        <p class="eyebrow">{d.packTitle}</p>
+                        <ol>
+                          {
+                            d.packContents.map((item, index) => (
+                              <li>
+                                <span class="code">{String(index + 1).padStart(2, '0')}</span>
+                                <span>{item}</span>
+                              </li>
+                            ))
+                          }
+                        </ol>
+                      </div>
+                    </div>
+
+                    <div class="dm-pack-questions">
+                      <p class="eyebrow">{d.packQuestionsTitle}</p>
+                      <ul class="checklist">
+                        {mandate.openQuestions.map((item) => (
                           <li>
-                            <span class="checklist__mark" aria-hidden="true">✓</span>
+                            <span class="checklist__mark" aria-hidden="true">?</span>
                             <span>{item}</span>
                           </li>
                         ))}
@@ -334,6 +447,29 @@ const meterModifier: Record<string, string> = {
                 {step.id === 'export' && (
                   <div class="stack" style="--stack-gap: 1.25rem">
                     <p class="note-inline">{d.exportLede}</p>
+                    <div class="dm-export-flow" aria-label={d.exportFlowLabel}>
+                      {
+                        d.exportFlow.map((item, index) => (
+                          <>
+                            <div>
+                              <span class="code">{String(index + 1).padStart(2, '0')}</span>
+                              <strong>{item}</strong>
+                            </div>
+                            {index < d.exportFlow.length - 1 && <span aria-hidden="true">→</span>}
+                          </>
+                        ))
+                      }
+                    </div>
+                    <dl class="dm-metrics">
+                      {
+                        d.exportStats.map((stat) => (
+                          <div class="dm-metric">
+                            <dt class="dm-metric__label">{stat.label}</dt>
+                            <dd class="dm-metric__value">{stat.value}</dd>
+                          </div>
+                        ))
+                      }
+                    </dl>
                     <pre class="dm-csv" tabindex="0" role="region" aria-label={d.exportTitle}>{csv}</pre>
                     <p class="field-note">{d.exportNote}</p>
                   </div>
@@ -466,6 +602,12 @@ const meterModifier: Record<string, string> = {
 
   .page-head h1 {
     max-width: 15ch;
+    overflow-wrap: anywhere;
+    hyphens: none;
+  }
+
+  :global(html[lang='sv']) .page-head h1 {
+    hyphens: auto;
   }
 
   .page-head .lede {

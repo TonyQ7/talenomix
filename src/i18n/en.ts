@@ -11,9 +11,9 @@ export const en: Dictionary = {
   meta: {
     siteName: 'Talenomix',
     home: {
-      title: 'Talenomix — Mandate intelligence for Nordic executive search',
+      title: 'Talenomix — Evidence-backed intelligence for executive search',
       description:
-        'Talenomix Mandate turns a signed client brief and your firm’s existing knowledge into a source-linked target-company map, research queue and client calibration pack — above your CRM, not instead of it.',
+        'Talenomix helps executive-search firms turn a client brief, firm knowledge and trusted market information into a clear, evidence-backed search plan.',
     },
     demo: {
       title: 'Synthetic mandate demo — Talenomix',
@@ -69,7 +69,7 @@ export const en: Dictionary = {
   brand: {
     name: 'Talenomix',
     product: 'Talenomix Mandate',
-    descriptor: 'Mandate intelligence',
+    descriptor: 'Executive search intelligence',
     provisionalNotice:
       'Talenomix is a provisional working name. Company, trademark and domain screening is not complete, and nothing on this site should be read as a claim to a cleared mark.',
   },
@@ -96,14 +96,39 @@ export const en: Dictionary = {
 
   home: {
     hero: {
-      eyebrow: 'Mandate intelligence for Nordic executive search',
-      headline: 'Launch every search with a market map you can defend.',
-      body: 'Talenomix turns a client brief and your firm’s existing knowledge into a source-linked target-company map, research queue, and calibration pack — without replacing your CRM or automating judgment.',
-      primaryCta: 'Apply with one live mandate',
-      secondaryCta: 'Explore the synthetic demo',
+      eyebrow: 'Search intelligence for executive-search firms',
+      headline: 'Turn every hiring brief into a clear, evidence-backed search plan.',
+      body: 'Talenomix brings together the client brief, what your firm already knows and trusted market information. Your team sees where to search, which leadership roles to investigate, what is already known and what still needs checking — without replacing your CRM or letting AI make hiring decisions.',
+      primaryCta: 'See the product in action',
+      secondaryCta: 'View the design-partner programme',
+      quickTitle: 'What your team gets',
+      outcomes: [
+        {
+          label: 'Where to search',
+          body: 'A target-company universe grouped by market segment, with a reason and evidence trail for every inclusion.',
+        },
+        {
+          label: 'What to investigate',
+          body: 'A practical queue of companies and leadership roles to research — never an AI-ranked list of people.',
+        },
+        {
+          label: 'What is already known',
+          body: 'Prior research, relationships, off-limits rules and past decisions surfaced from your firm’s own records.',
+        },
+        {
+          label: 'What still needs checking',
+          body: 'Thin evidence, duplicates and open client questions made visible before the search moves forward.',
+        },
+      ],
+      flowLabel: 'How Talenomix fits into a search',
+      flow: [
+        'Client brief + firm knowledge',
+        'Talenomix organises the evidence',
+        'Your team approves the search plan',
+      ],
       mapTitle: 'Mandate search universe',
       mapCaption:
-        'Target companies form clusters. Contour depth is the weight of evidence behind them. The traverse runs from the signed brief to approved coverage.',
+        'A synthetic search map: target companies grouped by segment, each with a reason, evidence depth and review state.',
       mapLegendTitle: 'Coverage states',
     },
 
@@ -385,8 +410,8 @@ export const en: Dictionary = {
 
   demo: {
     eyebrow: 'Synthetic demo',
-    title: 'One fictional mandate, start to finish.',
-    lede: 'A Group COO search at a fictional Nordic industrial group. Every company, requirement and number below is invented for this walkthrough.',
+    title: 'See how a search brief becomes an evidence-backed plan.',
+    lede: 'Follow a fictional Group COO assignment from the signed client brief to a client-ready calibration pack and CRM export. Every company, requirement and number below is invented for this walkthrough.',
     syntheticNotice:
       'Synthetic scenario. All companies are fictional, no real personal data appears anywhere on this page, and nothing here calls an external service.',
     stepLabel: 'Step',
@@ -401,43 +426,97 @@ export const en: Dictionary = {
         title: 'Upload the signed mandate',
         body: 'The brief arrives as the document the client actually signed. It stays the reference point: every extracted criterion keeps a pointer back to the clause it came from.',
         stamp: 'Brief received · source locked',
+        systemWork: 'Register the source file, preserve its version and prepare the document for clause-level extraction.',
+        humanDecision: 'Confirm that this is the controlling brief and that the right client restrictions are attached.',
       },
       {
         id: 'requirements',
         title: 'Review the extracted requirements',
         body: 'Role, market, sector, seniority and evidence criteria are proposed for review. Ambiguity is surfaced as an open question instead of being resolved silently.',
         stamp: 'Awaiting human approval',
+        systemWork: 'Structure the brief into searchable criteria and link every proposed requirement back to its source wording.',
+        humanDecision: 'Approve, edit or reject each criterion and decide which ambiguities must go back to the client.',
       },
       {
         id: 'universe',
         title: 'Explore the target-company landscape',
         body: 'Company hypotheses are grouped into segments, each with the reason it qualified and the source behind it. Depth of evidence is visible, so a thinly supported cluster looks thin.',
         stamp: 'Hypotheses proposed',
+        systemWork: 'Combine approved sources with firm knowledge to propose companies, segments and reasons for inclusion.',
+        humanDecision: 'Set the true market boundary and decide which adjacent segments deserve coverage.',
       },
       {
         id: 'research',
         title: 'Inspect the research queue',
         body: 'Each approved company becomes a research task pointed at a role, not a person. The queue says where to look and why — it never ranks anyone.',
         stamp: 'Queue built · no ranking',
+        systemWork: 'Turn approved company hypotheses into traceable research tasks with a role focus and a reason to investigate.',
+        humanDecision: 'Choose the research order, identify likely relationship owners and judge any people the team later finds.',
       },
       {
         id: 'resolve',
         title: 'Resolve duplicates, off-limits and uncertainty',
         body: 'Duplicates against your CRM export, client off-limits rules and genuinely uncertain entries are held back for a decision rather than quietly included or dropped.',
         stamp: 'Decisions recorded',
+        systemWork: 'Surface conflicting records, restrictions and weak evidence with the underlying reason attached.',
+        humanDecision: 'Merge or separate records, apply the client’s boundaries and decide what remains unresolved.',
       },
       {
         id: 'pack',
         title: 'Generate the client calibration pack',
         body: 'The map, the reasoning, the coverage so far and the open questions become one document your consultant can defend line by line in the calibration meeting.',
         stamp: 'Approved for client',
+        systemWork: 'Assemble the approved map, evidence, exclusions, coverage and questions into a consistent client document.',
+        humanDecision: 'Approve the narrative, challenge the market boundary and own every recommendation in the client meeting.',
       },
       {
         id: 'export',
         title: 'Return approved records to your CRM',
         body: 'Approved companies, research tasks and decisions leave as a CSV your existing system can ingest. The search record stays where your firm keeps it.',
         stamp: 'Export prepared',
+        systemWork: 'Package only approved records with stable IDs, decision states and mandate references for export.',
+        humanDecision: 'Approve what enters the system of record and retain the reusable research memory for future assignments.',
       },
+    ],
+    overviewTitle: 'The case at a glance',
+    overviewLede:
+      'This is not a generic dashboard tour. It follows one assignment and shows the input, the work Talenomix prepares, the human checkpoints and the records that leave the workspace.',
+    overviewStats: [
+      {
+        value: '4',
+        label: 'Nordic markets',
+        detail: 'Sweden, Denmark, Norway and Finland',
+      },
+      {
+        value: '12',
+        label: 'Target-company hypotheses',
+        detail: 'Across six fictional market segments',
+      },
+      {
+        value: '8',
+        label: 'Role-based research tasks',
+        detail: 'No people scored or ranked',
+      },
+      {
+        value: '3',
+        label: 'Decisions held for review',
+        detail: 'Duplicate, off-limits and uncertain fit',
+      },
+    ],
+    systemLabel: 'Talenomix prepares',
+    humanLabel: 'Your team decides',
+    intakeTitle: 'Source file and intake record',
+    intakeItems: [
+      { label: 'File', body: 'Nordvik_Group_COO_Mandate_v3.docx' },
+      { label: 'Version', body: 'Client-signed · v3 · read-only source' },
+      { label: 'Received', body: '25 July 2026 · synthetic scenario' },
+      { label: 'Traceability', body: 'Clause references preserved for every extracted criterion' },
+    ],
+    intakeStats: [
+      { value: '19', label: 'Pages' },
+      { value: '7', label: 'Criteria proposed' },
+      { value: '3', label: 'Open questions' },
+      { value: '1', label: 'Approval gate' },
     ],
     mandateTitle: 'Extracted mandate',
     fields: {
@@ -457,6 +536,12 @@ export const en: Dictionary = {
     universeTitle: 'Target-company universe',
     universeLede:
       'Twelve fictional companies, grouped by segment. Evidence depth is how much sourced material supports the company being in scope at all.',
+    universeStats: [
+      { value: '12', label: 'Companies mapped' },
+      { value: '6', label: 'Market segments' },
+      { value: '4', label: 'Nordic markets' },
+      { value: '4', label: 'Coverage states' },
+    ],
     filterLabel: 'Filter by state',
     filterAll: 'All states',
     tableHeads: {
@@ -473,6 +558,12 @@ export const en: Dictionary = {
     researchTitle: 'Research queue',
     researchLede:
       'Tasks point at a role inside a company. Who currently holds that role is something your researchers establish and your consultants judge.',
+    researchStats: [
+      { value: '8', label: 'Research tasks' },
+      { value: '6', label: 'Ready to investigate' },
+      { value: '2', label: 'Blocked for review' },
+      { value: '0', label: 'People ranked' },
+    ],
     noPersonNote:
       'No individual is named anywhere in this queue — by design, not because the demo is redacted.',
     resolveTitle: 'Held for a decision',
@@ -504,6 +595,8 @@ export const en: Dictionary = {
     packTitle: 'Client calibration pack',
     packLede:
       'The artefact the consultant defends in front of the client. It is deliberately arguable — every section can be challenged and traced.',
+    packVersion: 'Draft 0.4 · prepared for human approval',
+    packQuestionsTitle: 'Questions carried into calibration',
     packContents: [
       'Normalized mandate, with each criterion linked to the clause it came from',
       'Target-company map by segment, with evidence depth shown',
@@ -515,6 +608,18 @@ export const en: Dictionary = {
     exportTitle: 'What returns to your CRM',
     exportLede:
       'A flat file, deliberately boring, containing only approved records and the decisions attached to them.',
+    exportFlowLabel: 'Export path',
+    exportFlow: [
+      'Approved Talenomix records',
+      'Reviewable CSV export',
+      'Your existing CRM',
+    ],
+    exportStats: [
+      { value: '6', label: 'Included companies' },
+      { value: '2', label: 'Recorded exclusions' },
+      { value: '8', label: 'Research tasks retained' },
+      { value: '1', label: 'Reusable mandate record' },
+    ],
     exportNote:
       'CSV is what exists today. Native integrations are built after pilots decide which systems matter — this demo does not imply a live connection to any product.',
     coverageTitle: 'Coverage after step five',
@@ -681,7 +786,7 @@ export const en: Dictionary = {
 
   footer: {
     blurb:
-      'Talenomix Mandate turns a signed client brief and your firm’s existing knowledge into a defensible market map, a source-linked research queue and a client calibration pack — above your CRM, not instead of it.',
+      'Talenomix helps executive-search firms turn a client brief, firm knowledge and trusted market information into a clear, evidence-backed search plan — above the CRM, not instead of it.',
     productTitle: 'Product',
     companyTitle: 'This site',
     languageTitle: 'Language',
