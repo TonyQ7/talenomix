@@ -101,7 +101,7 @@ export const sv: Dictionary = {
       headline: 'Starta varje sökuppdrag med en marknadskarta som håller.',
       body: 'Talenomix omvandlar uppdragsbeskrivningen och byråns befintliga kunskap till en källbelagd målbolagskarta, en researchkö och ett kalibreringsunderlag – utan att ersätta ert CRM eller automatisera bedömningen.',
       primaryCta: 'Ansök med ett skarpt uppdrag',
-      secondaryCta: 'Utforska den syntetiska demon',
+      secondaryCta: 'Utforska vår syntetiska demo',
       mapTitle: 'Uppdragets sökuniversum',
       mapCaption:
         'Målbolagen bildar kluster. Konturdjupet visar hur mycket underlag som bär dem. Traversen går från påskriven uppdragsbeskrivning till godkänd täckning.',
@@ -195,8 +195,8 @@ export const sv: Dictionary = {
         'Fiktiva bolag rakt igenom; researchmålen är roller, aldrig namngivna personer',
         'Fullt läsbar som en statisk genomgång med JavaScript avstängt',
       ],
-      cta: 'Utforska den syntetiska demon',
-      note: 'Endast illustrativ. Demon visar hur produkten är uppbyggd, inte resultat från ett verkligt uppdrag.',
+      cta: 'Utforska vår syntetiska demo',
+      note: 'Endast illustrativ. Demoversionen visar hur produkten är uppbyggd, inte resultat från ett verkligt uppdrag.',
     },
 
     stack: {
@@ -380,7 +380,7 @@ export const sv: Dictionary = {
       title: 'Ta med ett uppdrag ni står i begrepp att starta.',
       body: 'Ingen upphandlingsprocess – ett verkligt sökuppdrag, fyra veckor och en nollmätning tagen från ert eget senaste jämförbara uppdrag. Håller inte kartan får ni veta det inom en månad.',
       primaryCta: 'Ansök med ett skarpt uppdrag',
-      secondaryCta: 'Utforska den syntetiska demon',
+      secondaryCta: 'Utforska vår syntetiska demo',
     },
   },
 
@@ -475,7 +475,7 @@ export const sv: Dictionary = {
     researchLede:
       'Uppgifterna pekar mot en roll inom ett bolag. Vem som i dag innehar rollen är något era researchers fastställer och era konsulter bedömer.',
     noPersonNote:
-      'Ingen enskild person namnges någonstans i kön – av princip, inte för att demon är maskad.',
+      'Ingen enskild person namnges någonstans i kön – av princip, inte för att demoversionen är maskad.',
     resolveTitle: 'Hålls för beslut',
     resolveLede:
       'Tre poster kunde inte avgöras automatiskt. Var och en väntar på en människa, med skälet klart utskrivet.',
@@ -517,7 +517,7 @@ export const sv: Dictionary = {
     exportLede:
       'En platt fil, medvetet tråkig, som bara innehåller godkända poster och besluten som hör till dem.',
     exportNote:
-      'CSV är det som finns i dag. Native-integrationer byggs efter att piloterna avgjort vilka system som spelar roll – den här demon antyder ingen aktiv koppling till någon produkt.',
+      'CSV är det som finns i dag. Native-integrationer byggs efter att piloterna avgjort vilka system som spelar roll – den här demoversionen antyder ingen aktiv koppling till någon produkt.',
     coverageTitle: 'Täckning efter steg fem',
     ctaTitle: 'Ansök med ett skarpt uppdrag',
     ctaBody:
@@ -635,16 +635,16 @@ export const sv: Dictionary = {
         title: 'Den här webbplatsen',
         body: [
           'Webbplatsen består av statiska filer som levereras från GitHub Pages. Den sätter inga kakor, kör ingen analys, bäddar in inga tredjepartsskript och laddar inga tredjepartstypsnitt – Manrope och Newsreader ligger på den här domänen just av det skälet.',
-          'Det finns inget formulär på webbplatsen, så den samlar inte in något ni skriver. Den interaktiva demon körs helt i er webbläsare och gör inga nätverksanrop alls.',
+          'Det finns inget formulär på webbplatsen, så den samlar inte in något ni skriver. Den interaktiva demoversionen körs helt i er webbläsare och gör inga nätverksanrop alls.',
           'En sak vi inte styr över: som värd behandlar GitHub sedvanliga serveruppgifter, inklusive er IP-adress, för att kunna leverera sidan. Det gäller varje webbplats med en värd, och vi säger hellre det rakt ut än antyder att sidan är osynlig.',
         ],
       },
       {
         id: 'demo',
-        title: 'Den syntetiska demon',
+        title: 'Den syntetiska demoversionen',
         body: [
-          'Varje bolag, krav, siffra och beslut i demon är påhittat för genomgången. Inga verkliga personuppgifter förekommer i den, och researchkön pekar av princip mot roller i stället för namngivna personer.',
-          'Demon gör inga externa AI-anrop. Ingenting ni klickar på skickas någonstans.',
+          'Varje bolag, krav, siffra och beslut i demoversionen är påhittat för genomgången. Inga verkliga personuppgifter förekommer i den, och researchkön pekar av princip mot roller i stället för namngivna personer.',
+          'Demoversionen gör inga externa AI-anrop. Ingenting ni klickar på skickas någonstans.',
         ],
       },
       {
