@@ -102,6 +102,14 @@ export const en: Dictionary = {
     'needs-review': 'Needs review',
   },
 
+  countries: {
+    SE: 'Sweden',
+    DK: 'Denmark',
+    NO: 'Norway',
+    FI: 'Finland',
+    IS: 'Iceland',
+  },
+
   evidenceKinds: {
     'direct-statement': 'Direct statement',
     'job-requirement': 'Job requirement',
@@ -151,6 +159,43 @@ export const en: Dictionary = {
       mapCaption:
         'A synthetic search map: target companies grouped by segment, each with a reason, evidence depth and review state.',
       mapLegendTitle: 'Coverage states',
+    },
+
+    console: {
+      title: 'Nordic market console',
+      status: 'Registry frame · in review',
+      filterLegend: 'Filter the console by market',
+      allLabel: 'All Nordics',
+      summary: [
+        {
+          value: '5',
+          label: 'Markets in frame',
+          detail: 'Sweden, Denmark, Norway, Finland, Iceland.',
+        },
+        {
+          value: '4',
+          label: 'Open registries',
+          detail: 'Four national registers publish company data as open data.',
+        },
+        {
+          value: '151',
+          label: 'Firms published',
+          detail: 'Finland only. Every other market is still being resolved.',
+        },
+        {
+          value: '0',
+          label: 'Unsourced figures',
+          detail: 'A number without a source fails the build.',
+        },
+      ],
+      readoutTitle: 'Frame by market',
+      frameLabel: 'Source frame',
+      publishedLabel: 'Firms published',
+      absent: 'In review',
+      mapLabel: 'Mandate search universe',
+      coverageLabel: 'Published counts by market',
+      note: 'This panel shows what is actually established. Where a market has no published count, it says so rather than estimating one — the gaps are the honest part of the map.',
+      cta: 'See the full market page',
     },
 
     bottleneck: {

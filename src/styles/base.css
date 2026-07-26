@@ -225,7 +225,13 @@ abbr[title] {
 .evidence-close > *,
 .dm-shell > *,
 .dm-steps > *,
-.dm-step__panel > * {
+.dm-step__panel > *,
+.console > *,
+.console__body > *,
+.console__grid > *,
+.console__split > *,
+.console__readout > *,
+.readout-row > * {
   min-inline-size: 0;
 }
 

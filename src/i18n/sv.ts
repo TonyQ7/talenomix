@@ -103,6 +103,14 @@ export const sv: Dictionary = {
     'needs-review': 'Kräver granskning',
   },
 
+  countries: {
+    SE: 'Sverige',
+    DK: 'Danmark',
+    NO: 'Norge',
+    FI: 'Finland',
+    IS: 'Island',
+  },
+
   evidenceKinds: {
     'direct-statement': 'Direkt uppgift',
     'job-requirement': 'Platsannons',
@@ -152,6 +160,43 @@ export const sv: Dictionary = {
       mapCaption:
         'En syntetisk sökkarta: målbolag grupperade per segment, vart och ett med skäl, underlagsdjup och granskningsläge.',
       mapLegendTitle: 'Täckningslägen',
+    },
+
+    console: {
+      title: 'Nordisk marknadskonsol',
+      status: 'Registerram · under granskning',
+      filterLegend: 'Filtrera konsolen på marknad',
+      allLabel: 'Hela Norden',
+      summary: [
+        {
+          value: '5',
+          label: 'Marknader i ramen',
+          detail: 'Sverige, Danmark, Norge, Finland, Island.',
+        },
+        {
+          value: '4',
+          label: 'Öppna register',
+          detail: 'Fyra nationella register publicerar bolagsdata som öppna data.',
+        },
+        {
+          value: '151',
+          label: 'Publicerade byråer',
+          detail: 'Endast Finland. Övriga marknader håller på att fastställas.',
+        },
+        {
+          value: '0',
+          label: 'Osourcade siffror',
+          detail: 'En siffra utan källa får bygget att fallera.',
+        },
+      ],
+      readoutTitle: 'Ram per marknad',
+      frameLabel: 'Källram',
+      publishedLabel: 'Publicerade byråer',
+      absent: 'Under granskning',
+      mapLabel: 'Uppdragets sökuniversum',
+      coverageLabel: 'Publicerade antal per marknad',
+      note: 'Panelen visar det som faktiskt är fastställt. Där en marknad saknar publicerat antal står det så i stället för att skattas – luckorna är kartans ärliga del.',
+      cta: 'Se hela marknadssidan',
     },
 
     bottleneck: {

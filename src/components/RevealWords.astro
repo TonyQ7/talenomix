@@ -1,0 +1,31 @@
+---
+/**
+ * Splits a heading into per-word spans so each word can ride up from behind a
+ * clipping mask. The split happens at build time, so the text is present and
+ * selectable in the HTML exactly as written, and screen readers read one
+ * continuous string — the spans are presentational only.
+ *
+ * Without JavaScript the words render in place; under reduced motion they do
+ * too. See src/styles/motion.css.
+ */
+interface Props {
+  text: string;
+  /** Element to render. The caller owns the heading level. */
+  as?: 'h1' | 'h2' | 'p';
+  class?: string;
+}
+
+const { text, as: Tag = 'h1', class: className }: Props = Astro.props;
+const words: string[] = text.split(/\s+/).filter(Boolean);
+---
+
+{/*
+  Written as one unbroken line on purpose. Astro preserves template whitespace,
+  so any newline or indentation inside these spans becomes real text nodes — the
+  heading's textContent then reads "Turn        every        hiring" and every
+  assertion or screen reader that looks at the string sees the padding too. The
+  single explicit space between words is the only whitespace we want.
+*/}
+<Tag class:list={['reveal-words', className]} data-reveal-words
+  >{words.map((word, index) => (<Fragment><span class="reveal-words__word"><span class="reveal-words__inner" style={`--word-index:${index}`}>{word}</span></span>{index < words.length - 1 ? ' ' : ''}</Fragment>))}</Tag
+>

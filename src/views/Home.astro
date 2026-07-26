@@ -2,10 +2,10 @@
 import { anchor, route, type Locale } from '~/lib/routes';
 import { t } from '~/i18n';
 import { homeClaims } from '~/data/claims';
-import MandateUniverse from '~/components/MandateUniverse.astro';
 import SectionHead from '~/components/SectionHead.astro';
-import CoverageLegend from '~/components/CoverageLegend.astro';
 import ClaimLedger from '~/components/ClaimLedger.astro';
+import MarketConsole from '~/components/MarketConsole.astro';
+import RevealWords from '~/components/RevealWords.astro';
 
 interface Props {
   locale: Locale;
@@ -47,7 +47,7 @@ const workflowPhases = [
   <div class="shell">
     <div class="hero__head">
       <p class="eyebrow" data-reveal>{h.hero.eyebrow}</p>
-      <h1 data-reveal style="--reveal-delay: 60ms">{h.hero.headline}</h1>
+      <RevealWords text={h.hero.headline} as="h1" />
     </div>
 
     <div class="hero__grid">
@@ -74,23 +74,9 @@ const workflowPhases = [
       </div>
     </div>
 
-    <figure class="map-frame" data-reveal style="--reveal-delay: 220ms">
-      <div class="map-frame__top">
-        <div>
-          <p class="code">{h.hero.mapTitle} · SYNTH-01</p>
-          <p>{h.hero.mapCaption}</p>
-        </div>
-        <div>
-          <p class="code">{h.hero.mapLegendTitle}</p>
-          <CoverageLegend locale={locale} />
-        </div>
-      </div>
-      <MandateUniverse locale={locale} variant="hero" id="mu-hero" />
-      <figcaption class="map-frame__caption">
-        <p>{h.hero.mapCaption}</p>
-        <p class="code">{h.hero.mapTitle} · SYNTH-01</p>
-      </figcaption>
-    </figure>
+    <div class="hero__console" data-reveal style="--reveal-delay: 220ms">
+      <MarketConsole locale={locale} />
+    </div>
   </div>
 </section>
 
@@ -261,6 +247,93 @@ const workflowPhases = [
 </section>
 
 <style>
+  /* ---- Hero -------------------------------------------------------------
+     Three bands: the claim, the supporting read, then the instrument panel.
+     The panel is the first impression; the type above it earns the right to
+     show one. */
+  .hero {
+    padding-block: clamp(1.5rem, 3.5vw, 2.75rem) var(--space-section);
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .hero__head {
+    display: grid;
+    gap: 1rem;
+  }
+
+  /* Deliberately a step below the global h1 size. The console is the first
+     impression; the headline introduces it rather than competing with it, and
+     the trade buys roughly a line and a half of vertical space so the panel
+     is visible without scrolling on a laptop. */
+  .hero__head :global(h1) {
+    font-size: clamp(2.25rem, 1.2rem + 4.4vw, 4.5rem);
+    max-width: 16ch;
+  }
+
+  .hero__grid {
+    display: grid;
+    gap: clamp(1.75rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+
+  @media (min-width: 62rem) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    }
+  }
+
+  .hero__lead {
+    display: grid;
+    gap: 1.75rem;
+    justify-items: start;
+  }
+
+  .hero__aside {
+    display: grid;
+    gap: 0.9rem;
+    align-content: start;
+  }
+
+  @media (min-width: 62rem) {
+    .hero__aside {
+      border-inline-start: 1px solid var(--rule);
+      padding-inline-start: clamp(1.5rem, 3vw, 2.5rem);
+    }
+  }
+
+  .hero__outcomes {
+    display: grid;
+    gap: 0;
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .hero__outcomes li {
+    padding-block: 0.85rem;
+    border-block-end: 1px solid var(--rule);
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .hero__outcomes :global(h2) {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 650;
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.3;
+  }
+
+  .hero__outcomes li p {
+    font-size: var(--step--2);
+    color: var(--ink-muted);
+    line-height: 1.5;
+  }
+
+  .hero__console {
+    /* The panel is the widest thing on the page and is meant to feel like it. */
+    margin-block-start: clamp(0.5rem, 2vw, 1.5rem);
+  }
+
   .phase-grid,
   .offer-grid {
     display: grid;

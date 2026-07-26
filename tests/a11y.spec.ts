@@ -51,6 +51,7 @@ for (const path of ALL_PATHS) {
 }
 
 test('the demo stays accessible after stepping and filtering', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('./demo/');
   await page.locator('#demo-next').click();
   await page.locator('#demo-next').click();
@@ -60,7 +61,7 @@ test('the demo stays accessible after stepping and filtering', async ({ page }) 
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
     .analyze();
 
-  expect(results.violations.map((v) => `${v.id} (${v.impact})`)).toEqual([]);
+  expect(results.violations.map(describe)).toEqual([]);
 });
 
 test('every image-role SVG has an accessible name', async ({ page }) => {
@@ -69,11 +70,27 @@ test('every image-role SVG has an accessible name', async ({ page }) => {
   const count = await maps.count();
   expect(count).toBeGreaterThan(0);
 
+  // Either mechanism gives a real accessible name. `aria-labelledby` is used by
+  // the contour map, which has a long <desc>; the chart primitives carry a
+  // self-contained `aria-label`. What matters is that the name exists, is not
+  // empty, and — where it points at ids — that those ids resolve.
   for (let i = 0; i < count; i++) {
-    const labelled = await maps.nth(i).getAttribute('aria-labelledby');
-    expect(labelled, 'the mandate map must be described for screen readers').toBeTruthy();
-    for (const id of labelled!.split(/\s+/)) {
-      await expect(page.locator(`#${id}`)).toHaveCount(1);
+    const svg = maps.nth(i);
+    const labelledBy = await svg.getAttribute('aria-labelledby');
+    const label = await svg.getAttribute('aria-label');
+
+    expect(
+      Boolean(labelledBy) || Boolean(label?.trim()),
+      'every image-role SVG needs an accessible name',
+    ).toBe(true);
+
+    if (labelledBy) {
+      for (const id of labelledBy.split(/\s+/)) {
+        // Attribute form rather than `#id`: this selector is built in Node,
+        // where `CSS.escape` does not exist, and an attribute match needs no
+        // escaping regardless of what the id contains.
+        await expect(page.locator(`[id="${id}"]`)).toHaveCount(1);
+      }
     }
   }
 });

@@ -116,6 +116,7 @@ const descId = `${p}-desc`;
               stroke="var(--ink)"
               stroke-width={contourWeight(ring.level)}
               stroke-opacity={contourOpacity(ring.level)}
+              style={`--contour-level:${ring.level}`}
               stroke-linejoin="round"
             />
           )),
@@ -260,22 +261,41 @@ const descId = `${p}-desc`;
     }
   }
 
-  /* Inverted sections need the terrain to read against dark paper. */
+  /* Dark surfaces need the terrain re-pointed at the on-ink tones, and the
+     contours lifted: an ink stroke at 16% opacity is invisible on ink. Both the
+     inverted page sections and the console frame qualify. */
   :global(.panel--ink) .mu__grid line,
-  :global(.panel--ink) .mu__contours path {
+  :global(.console) .mu__grid line {
     stroke: var(--on-ink);
+    stroke-opacity: 0.1;
   }
 
-  :global(.panel--ink) .mu__frame path {
+  :global(.panel--ink) .mu__contours path,
+  :global(.console) .mu__contours path {
     stroke: var(--on-ink);
+    /* Raise the floor so the shallowest contour still registers. */
+    stroke-opacity: calc(0.28 + var(--contour-level, 0.3) * 0.55);
+  }
+
+  :global(.panel--ink) .mu__frame path,
+  :global(.console) .mu__frame path {
+    stroke: var(--on-ink);
+    stroke-opacity: 0.35;
   }
 
   :global(.panel--ink) .mu__label,
-  :global(.panel--ink) .mu__wp-label {
+  :global(.panel--ink) .mu__wp-label,
+  :global(.console) .mu__label,
+  :global(.console) .mu__wp-label {
     fill: var(--on-ink);
   }
 
-  :global(.panel--ink) .mu__code {
-    fill: var(--on-ink-faint);
+  :global(.panel--ink) .mu__code,
+  :global(.console) .mu__code {
+    fill: var(--on-ink-muted);
+  }
+
+  :global(.console) .mu__wp-n {
+    fill: var(--ink);
   }
 </style>

@@ -6,7 +6,7 @@
  * runs in CI, which makes translation completeness a build gate.
  */
 
-import type { CoverageState } from '~/types/domain';
+import type { CoverageState, NordicCountry } from '~/types/domain';
 
 export interface PageMeta {
   readonly title: string;
@@ -90,6 +90,9 @@ export interface Dictionary {
 
   readonly states: Readonly<Record<CoverageState, string>>;
 
+  /** Market names, so the console never renders a bare ISO code as a label. */
+  readonly countries: Readonly<Record<NordicCountry, string>>;
+
   readonly evidenceKinds: Readonly<Record<string, string>>;
 
   readonly home: {
@@ -106,6 +109,23 @@ export interface Dictionary {
       readonly mapTitle: string;
       readonly mapCaption: string;
       readonly mapLegendTitle: string;
+    };
+
+    /** The hero instrument panel. Every figure in it resolves to a claim. */
+    readonly console: {
+      readonly title: string;
+      readonly status: string;
+      readonly filterLegend: string;
+      readonly allLabel: string;
+      readonly summary: readonly Metric[];
+      readonly readoutTitle: string;
+      readonly frameLabel: string;
+      readonly publishedLabel: string;
+      readonly absent: string;
+      readonly mapLabel: string;
+      readonly coverageLabel: string;
+      readonly note: string;
+      readonly cta: string;
     };
     readonly bottleneck: {
       readonly eyebrow: string;

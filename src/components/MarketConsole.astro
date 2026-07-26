@@ -1,0 +1,177 @@
+---
+/**
+ * The hero instrument panel.
+ *
+ * Every figure rendered here comes from src/data/market.ts and carries a
+ * sourceId that must resolve in src/data/claims.ts — scripts/verify-claims.mjs
+ * fails the build otherwise. Where a market has no published count the panel
+ * says "in review" rather than estimating, because a gap that is drawn is
+ * evidence of method and a gap that is filled in is a fabrication.
+ *
+ * Filtering is CSS-only (`:has()` over a native radio group), so it works with
+ * JavaScript disabled and is keyboard-operable without any script.
+ */
+import { COVERAGE_MATRIX, MARKET_FIGURES } from '~/data/market';
+import { coverageStrip } from '~/lib/chart';
+import { route, type Locale } from '~/lib/routes';
+import { t } from '~/i18n';
+import type { MarketFigure, NordicCountry } from '~/types/domain';
+import MandateUniverse from './MandateUniverse.astro';
+import CoverageLegend from './CoverageLegend.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const dict = t(locale);
+const c = dict.home.console;
+
+const MARKETS: readonly NordicCountry[] = ['SE', 'DK', 'NO', 'FI', 'IS'];
+
+/** Render a figure in its unit. Null never becomes zero. */
+function display(figure: MarketFigure): string {
+  if (figure.value === null) return c.absent;
+  switch (figure.unit) {
+    case 'EUR millions':
+      return `€${figure.value}m`;
+    case 'percent':
+      return `${figure.value > 0 ? '+' : ''}${figure.value}%`;
+    default:
+      return String(figure.value);
+  }
+}
+
+const figuresFor = (country: NordicCountry): readonly MarketFigure[] =>
+  MARKET_FIGURES.filter((f) => f.country === country);
+
+const strip = coverageStrip(
+  c.coverageLabel,
+  COVERAGE_MATRIX.map((row) => ({
+    code: row.country,
+    known: row.publishedCount !== null,
+  })),
+);
+---
+
+<div class="console lift" data-draw>
+  <div class="console__head">
+    <p class="console__title">
+      <span class="live-dot" aria-hidden="true"></span>
+      {c.title}
+    </p>
+    <p class="console__status">{c.status}</p>
+  </div>
+
+  <fieldset class="console__filters">
+    <legend class="visually-hidden">{c.filterLegend}</legend>
+
+    <input class="console__radio visually-hidden" type="radio" name="mk" id="mk-all" checked />
+    <label class="chip" for="mk-all">{c.allLabel}</label>
+
+    {
+      MARKETS.map((market) => (
+        <>
+          <input
+            class="console__radio visually-hidden"
+            type="radio"
+            name="mk"
+            id={`mk-${market.toLowerCase()}`}
+          />
+          <label class="chip" for={`mk-${market.toLowerCase()}`}>
+            {dict.countries[market]}
+          </label>
+        </>
+      ))
+    }
+  </fieldset>
+
+  <div class="console__body">
+    {/* Frame-wide summary — visible only while "All" is selected. */}
+    <div class="console__grid" data-summary>
+      {
+        c.summary.map((metric) => (
+          <div class="kpi">
+            <p class="kpi__label">{metric.label}</p>
+            <p class="kpi__value" data-countup>{metric.value}</p>
+            {metric.detail && <p class="kpi__meta">{metric.detail}</p>}
+          </div>
+        ))
+      }
+    </div>
+
+    {/* Per-market detail — replaces the summary once a market is chosen. */}
+    {
+      MARKETS.map((market) => {
+        const figures = figuresFor(market);
+        const row = COVERAGE_MATRIX.find((r) => r.country === market);
+        return (
+          <div class="console__grid" data-market={market} data-detail>
+            {figures.length > 0 ? (
+              figures.map((figure) => (
+                <div class="kpi">
+                  <p class="kpi__label">{figure.label[locale]}</p>
+                  <p class="kpi__value">{display(figure)}</p>
+                  <p class="kpi__meta">{figure.caveat[locale]}</p>
+                  <p class="kpi__source">
+                    {figure.period} · {figure.confidence} · {figure.retrievedOn}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div class="kpi">
+                <p class="kpi__label">{c.publishedLabel}</p>
+                <p class="kpi__value kpi__value--absent">{c.absent}</p>
+                <p class="kpi__meta">{row?.frame[locale]}</p>
+                <p class="kpi__source">{row?.status[locale]}</p>
+              </div>
+            )}
+          </div>
+        );
+      })
+    }
+
+    <div class="console__split">
+      <figure class="console__map">
+        <MandateUniverse locale={locale} variant="hero" id="mu-hero" class="mu--live" />
+        <figcaption class="console__mapfoot">
+          <span class="kpi__source">{c.mapLabel} · SYNTH-01</span>
+          <CoverageLegend locale={locale} />
+        </figcaption>
+      </figure>
+
+      <div class="console__readout">
+        <p class="code">{c.readoutTitle}</p>
+        {
+          COVERAGE_MATRIX.map((row) => (
+            <div class="readout-row" data-market={row.country}>
+              <p class="readout-row__label">
+                <strong>{dict.countries[row.country]}</strong>
+                <br />
+                {row.frame[locale]}
+              </p>
+              <p
+                class:list={[
+                  'readout-row__value',
+                  row.publishedCount === null && 'readout-row__value--absent',
+                ]}
+              >
+                {row.publishedCount ?? c.absent}
+              </p>
+            </div>
+          ))
+        }
+
+        <div>
+          <p class="code" style="margin-bottom:0.6rem">{c.coverageLabel}</p>
+          <Fragment set:html={strip} />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="console__foot">
+    <p>{c.note}</p>
+    <a class="link" href={route('market', locale)}>{c.cta} →</a>
+  </div>
+</div>

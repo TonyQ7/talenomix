@@ -1,0 +1,481 @@
+/*
+  Console layer — the instrument panel.
+
+  The site reads as a printed survey report; the console is the one place that
+  reads as a live terminal embedded in it. That contrast is deliberate and it is
+  used exactly once, in the hero. Repeating it everywhere would flatten the
+  effect and turn a considered choice into a theme.
+
+  Country filtering is CSS-only, driven by `:has()` over a native radio group.
+  It therefore works without JavaScript, is keyboard-operable by default (arrow
+  keys, because it is a real radio group), and degrades to "show everything" on
+  engines without `:has()` — which is the correct failure direction.
+*/
+
+/* ==========================================================================
+   Frame
+   ========================================================================== */
+
+.console {
+  --console-rule: var(--rule-on-ink);
+  position: relative;
+  background: var(--ink);
+  color: var(--on-ink);
+  border: 1px solid var(--ink-raised);
+  display: grid;
+  gap: 0;
+}
+
+.console__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding: clamp(0.85rem, 2vw, 1.15rem) clamp(1rem, 2.5vw, 1.5rem);
+  border-block-end: 1px solid var(--console-rule);
+}
+
+.console__title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: var(--tracking-code);
+  text-transform: uppercase;
+  color: var(--on-ink);
+}
+
+.console__status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: var(--tracking-code);
+  text-transform: uppercase;
+  color: var(--on-ink-muted);
+}
+
+/* ==========================================================================
+   Filter chips
+   ========================================================================== */
+
+.console__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: clamp(0.7rem, 2vw, 0.95rem) clamp(1rem, 2.5vw, 1.5rem);
+  border-block-end: 1px solid var(--console-rule);
+  /* Reset the UA fieldset box; the legend is visually hidden. */
+  border-inline: 0;
+  border-block-start: 0;
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.32rem 0.7rem;
+  border: 1px solid var(--rule-on-ink-strong);
+  border-radius: var(--radius-xs);
+  font-size: var(--step--2);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--on-ink-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-quick) var(--ease-survey),
+    border-color var(--dur-quick) var(--ease-survey),
+    color var(--dur-quick) var(--ease-survey);
+}
+
+.chip:hover {
+  color: var(--on-ink);
+  border-color: var(--on-ink);
+}
+
+/* The radio is visually hidden, so the focus ring has to be drawn on its label.
+   The input immediately precedes its label, which keeps this a plain sibling
+   selector rather than anything that depends on DOM depth. */
+.console__radio:focus-visible + .chip {
+  outline: 2px solid var(--focus-on-ink);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Body and per-country filtering
+   ========================================================================== */
+
+.console__body {
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.console__grid {
+  display: grid;
+  gap: 1px;
+  background: var(--console-rule);
+  border: 1px solid var(--console-rule);
+}
+
+@media (min-width: 34rem) {
+  .console__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 60rem) {
+  .console__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Each market's cells hide when another market is selected. `:has()` keeps the
+   markup free of wrapper elements that exist only to satisfy a selector, and on
+   an engine without `:has()` nothing is hidden — the correct failure direction. */
+.console:has(#mk-se:checked) [data-market]:not([data-market='SE']),
+.console:has(#mk-dk:checked) [data-market]:not([data-market='DK']),
+.console:has(#mk-no:checked) [data-market]:not([data-market='NO']),
+.console:has(#mk-fi:checked) [data-market]:not([data-market='FI']),
+.console:has(#mk-is:checked) [data-market]:not([data-market='IS']) {
+  display: none;
+}
+
+/* Frame-wide summary and per-market detail swap places. */
+.console:has(#mk-all:checked) [data-detail] {
+  display: none;
+}
+
+.console:not(:has(#mk-all:checked)) [data-summary] {
+  display: none;
+}
+
+/* Active chip. */
+.console:has(#mk-all:checked) label[for='mk-all'],
+.console:has(#mk-se:checked) label[for='mk-se'],
+.console:has(#mk-dk:checked) label[for='mk-dk'],
+.console:has(#mk-no:checked) label[for='mk-no'],
+.console:has(#mk-fi:checked) label[for='mk-fi'],
+.console:has(#mk-is:checked) label[for='mk-is'] {
+  background: var(--on-ink);
+  border-color: var(--on-ink);
+  color: var(--ink);
+}
+
+/* ==========================================================================
+   KPI cells
+   ========================================================================== */
+
+.kpi {
+  background: var(--ink);
+  padding: clamp(0.9rem, 2vw, 1.15rem);
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  min-inline-size: 0;
+}
+
+.kpi__value {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.03em;
+  color: var(--on-ink);
+}
+
+.kpi__value--absent {
+  color: var(--on-ink-faint);
+  font-family: var(--font-sans);
+  font-size: var(--step-1);
+  letter-spacing: var(--tracking-tight);
+}
+
+.kpi__label {
+  font-size: var(--step--2);
+  font-weight: 700;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--on-ink-muted);
+  line-height: 1.35;
+}
+
+.kpi__meta {
+  font-size: var(--step--2);
+  color: var(--on-ink-faint);
+  line-height: 1.45;
+}
+
+.kpi__source {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: var(--tracking-code);
+  color: var(--on-ink-faint);
+}
+
+/* ==========================================================================
+   Charts on ink
+   ========================================================================== */
+
+.gauge {
+  inline-size: 100%;
+  max-inline-size: 7rem;
+  block-size: auto;
+}
+
+.gauge__track {
+  stroke: var(--rule-on-ink-strong);
+  stroke-width: 6;
+}
+
+.gauge__value {
+  stroke: var(--mint-light);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.gauge__unknown {
+  stroke: var(--on-ink-faint);
+  stroke-width: 4;
+}
+
+.gauge__display {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-variant-numeric: tabular-nums;
+  fill: var(--on-ink);
+}
+
+.gauge--unknown .gauge__display {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--on-ink-faint);
+}
+
+.stackbar {
+  inline-size: 100%;
+  block-size: 22px;
+}
+
+.stackbar__seg--resolved {
+  fill: var(--mint-light);
+}
+
+.stackbar__seg--review {
+  fill: var(--cobalt-light);
+}
+
+.stackbar__seg--unresolved {
+  fill: #e0b463;
+}
+
+.stackbar__seg--excluded {
+  fill: var(--on-ink-faint);
+}
+
+.strip {
+  inline-size: 100%;
+  max-inline-size: 22rem;
+  block-size: auto;
+  color: var(--on-ink-muted);
+}
+
+.strip__cell rect {
+  fill: none;
+  stroke: var(--rule-on-ink-strong);
+  stroke-width: 1;
+}
+
+.strip__cell.is-known rect {
+  fill: var(--mint-light);
+  stroke: var(--mint-light);
+}
+
+.strip__cell:not(.is-known) rect {
+  fill: url(#strip-hatch);
+}
+
+.strip__cell text {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: var(--tracking-code);
+  fill: var(--on-ink-muted);
+}
+
+.strip__cell.is-known text {
+  fill: var(--on-ink);
+}
+
+.trend {
+  inline-size: 100%;
+  max-inline-size: 16rem;
+  block-size: auto;
+}
+
+.trend__line {
+  stroke: var(--mint-light);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.trend__area {
+  fill: color-mix(in srgb, var(--mint-light) 18%, transparent);
+}
+
+.trend__head {
+  fill: var(--mint-light);
+}
+
+.trend__value {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  fill: var(--on-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   Console footer
+   ========================================================================== */
+
+.console__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(1rem, 2.5vw, 1.5rem);
+  border-block-start: 1px solid var(--console-rule);
+  font-size: var(--step--2);
+  color: var(--on-ink-faint);
+  line-height: 1.5;
+}
+
+.console__foot a {
+  color: var(--mint-light);
+}
+
+/* ==========================================================================
+   Map inside the console
+   ========================================================================== */
+
+.console__map {
+  border: 1px solid var(--console-rule);
+  padding: clamp(0.4rem, 1.5vw, 0.75rem);
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.console__mapfoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  padding-block-start: 0.7rem;
+}
+
+/* ==========================================================================
+   Dark-surface re-pointing
+   ==========================================================================
+   The console is a dark panel that is not `.panel--ink`, so it does not inherit
+   the override block in components.css. Anything reused from the shared
+   vocabulary has to be re-pointed here or it keeps its light-surface colour and
+   fails contrast — `.code` at #5d6472 on #131822 is 2.98:1, which is invisible
+   in a screenshot and obvious in an audit. Covered by tests/a11y.spec.ts.
+*/
+.console .code {
+  color: var(--on-ink-muted);
+}
+
+.console .eyebrow {
+  color: var(--on-ink-muted);
+}
+
+.console .eyebrow::before {
+  background: var(--mint-light);
+}
+
+.console .note-inline,
+.console .card__body {
+  color: var(--on-ink-muted);
+}
+
+.console .link {
+  color: var(--mint-light);
+  text-decoration-color: color-mix(in srgb, var(--mint-light) 40%, transparent);
+}
+
+.console .state--resolved {
+  color: var(--mint-light);
+}
+
+.console .state--review {
+  color: var(--cobalt-light);
+}
+
+.console .state--unresolved {
+  color: #e0b463;
+}
+
+.console .state--excluded {
+  color: var(--on-ink-muted);
+}
+
+.console__split {
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+  align-items: start;
+}
+
+@media (min-width: 64rem) {
+  .console__split {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  }
+}
+
+.console__readout {
+  display: grid;
+  gap: 0.9rem;
+  align-content: start;
+  min-inline-size: 0;
+}
+
+.readout-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+  padding-block-end: 0.7rem;
+  border-block-end: 1px solid var(--console-rule);
+}
+
+.readout-row:last-child {
+  border-block-end: 0;
+  padding-block-end: 0;
+}
+
+.readout-row__label {
+  font-size: var(--step--1);
+  color: var(--on-ink-muted);
+  line-height: 1.4;
+}
+
+.readout-row__value {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+  color: var(--on-ink);
+  white-space: nowrap;
+}
+
+.readout-row__value--absent {
+  color: var(--on-ink-faint);
+}

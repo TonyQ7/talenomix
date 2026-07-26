@@ -58,6 +58,9 @@ const alternates = LOCALES.map((l) => ({
   </head>
 
   <body>
+    {/* Scroll-driven CSS timeline. No listener, no script, and it simply does
+        not render where `animation-timeline` is unsupported. */}
+    <div class="scroll-rail" aria-hidden="true"></div>
     <a class="skip-link" href="#main">{dict.ui.skipToContent}</a>
     <SiteHeader locale={locale} routeKey={routeKey} />
     <main id="main" tabindex="-1">
@@ -67,9 +70,19 @@ const alternates = LOCALES.map((l) => ({
 
     <script>
       // Restrained reveal motion. Anything not observed stays visible, and the
-      // reduced-motion media query neutralises the transition in CSS.
-      const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+      // reduced-motion media query neutralises every transition in CSS, so the
+      // worst case here is that elements are marked revealed immediately.
+      //
+      // Three families share one observer:
+      //   [data-reveal]       — section fade/rise
+      //   [data-draw]         — charts and the contour map draw themselves in
+      //   [data-reveal-words] — headline words ride up behind a mask
+      const targets = document.querySelectorAll<HTMLElement>(
+        '[data-reveal], [data-draw], [data-reveal-words]',
+      );
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!reduced && 'IntersectionObserver' in window) {
         const observer = new IntersectionObserver(
           (entries) => {
             for (const entry of entries) {
@@ -83,6 +96,46 @@ const alternates = LOCALES.map((l) => ({
         for (const el of targets) observer.observe(el);
       } else {
         for (const el of targets) el.classList.add('is-revealed');
+      }
+
+      // Count-up. The final value is already in the HTML — this only animates
+      // from zero to what is rendered, so no-JS and reduced-motion readers see
+      // the real number and never a placeholder.
+      if (!reduced && 'IntersectionObserver' in window) {
+        const counters = document.querySelectorAll<HTMLElement>('[data-countup]');
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              const el = entry.target as HTMLElement;
+              io.unobserve(el);
+
+              const final = el.textContent ?? '';
+              const match = final.match(/-?\d[\d\s.,]*/);
+              if (!match) continue;
+              const target = Number(match[0].replace(/[\s,]/g, ''));
+              if (!Number.isFinite(target)) continue;
+
+              const start = performance.now();
+              const duration = 900;
+              const tick = (now: number): void => {
+                const p = Math.min(1, (now - start) / duration);
+                // easeOutCubic — fast then settling, so the number reads as
+                // arriving at a value rather than ticking mechanically.
+                const eased = 1 - Math.pow(1 - p, 3);
+                el.textContent = final.replace(
+                  match[0],
+                  String(Math.round(target * eased)),
+                );
+                if (p < 1) requestAnimationFrame(tick);
+                else el.textContent = final;
+              };
+              requestAnimationFrame(tick);
+            }
+          },
+          { threshold: 0.5 },
+        );
+        for (const el of counters) io.observe(el);
       }
     </script>
   </body>

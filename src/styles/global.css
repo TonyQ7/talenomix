@@ -5,4 +5,6 @@
 @import './tokens.css';
 @import './base.css';
 @import './components.css';
+@import './console.css';
+@import './motion.css';
 @import './demo.css';

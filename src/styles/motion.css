@@ -1,0 +1,292 @@
+/*
+  Motion layer.
+
+  Three rules govern everything here, in order of precedence:
+
+    1. Nothing animates unless JavaScript confirmed it can (`.js-reveal` on
+       <html>), so a no-JS visitor never sees a half-drawn chart.
+    2. Nothing animates under `prefers-reduced-motion: reduce`. The final state
+       is the base state, so disabling motion removes movement, never content.
+    3. Nothing animates layout. Only `opacity`, `transform`, `stroke-dashoffset`
+       and `clip-path` — properties the compositor can handle without reflow,
+       which is what keeps CLS at 0.
+
+  The scroll rail uses a CSS scroll-driven timeline rather than a scroll
+  listener: no JavaScript, no jank, and it simply does not render on engines
+  that lack support.
+*/
+
+/* ==========================================================================
+   Scroll progress rail
+   ========================================================================== */
+
+.scroll-rail {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-rail {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: 200;
+    display: block;
+    block-size: 2px;
+    pointer-events: none;
+    background: linear-gradient(90deg, var(--cobalt), var(--mint));
+    transform-origin: 0 50%;
+    scale: 0 1;
+    animation: rail-advance linear both;
+    animation-timeline: scroll(root block);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-rail {
+      display: none;
+    }
+  }
+}
+
+@keyframes rail-advance {
+  to {
+    scale: 1 1;
+  }
+}
+
+/* ==========================================================================
+   Staggered headline
+   ==========================================================================
+   The h1 is split into word spans at build time. Each word rides up from
+   behind a clipping mask, which reads as typesetting rather than as a
+   generic fade-in. Base state is fully visible.
+*/
+
+.reveal-words__word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  /* Descenders would otherwise be clipped by the mask. */
+  padding-block-end: 0.12em;
+  margin-block-end: -0.12em;
+}
+
+.reveal-words__inner {
+  display: inline-block;
+  will-change: transform;
+}
+
+.js-reveal .reveal-words__inner {
+  transform: translateY(110%);
+}
+
+.js-reveal .reveal-words.is-revealed .reveal-words__inner {
+  transform: translateY(0);
+  transition: transform 720ms var(--ease-survey);
+  transition-delay: calc(var(--word-index, 0) * 55ms);
+}
+
+/* ==========================================================================
+   Chart draw-in
+   ========================================================================== */
+
+/* Ring gauge: the arc slides into view along its own path. */
+.js-reveal .gauge__value {
+  stroke-dashoffset: var(--frac, 1);
+}
+
+.js-reveal [data-draw].is-revealed .gauge__value {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1100ms var(--ease-survey);
+}
+
+/* Trend line: drawn left to right, then the head dot lands. */
+.js-reveal .trend__line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.js-reveal [data-draw].is-revealed .trend__line {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 950ms var(--ease-survey);
+}
+
+.js-reveal .trend__area,
+.js-reveal .trend__head {
+  opacity: 0;
+}
+
+.js-reveal [data-draw].is-revealed .trend__area,
+.js-reveal [data-draw].is-revealed .trend__head {
+  opacity: 1;
+  transition: opacity 480ms var(--ease-survey) 620ms;
+}
+
+/* Stacked bar: segments wipe in left to right, in order. */
+.js-reveal .stackbar__seg {
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+.js-reveal [data-draw].is-revealed .stackbar__seg {
+  transform: scaleX(1);
+  transition: transform 620ms var(--ease-survey);
+  transition-delay: calc(var(--seg-index, 0) * 110ms);
+}
+
+/* Coverage strip: cells resolve one market at a time. */
+.js-reveal .strip__cell {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.js-reveal [data-draw].is-revealed .strip__cell {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 420ms var(--ease-survey),
+    transform 420ms var(--ease-survey);
+  transition-delay: calc(var(--cell-index, 0) * 90ms);
+}
+
+/* Contour map: the terrain draws itself in depth order. */
+.js-reveal .mu--live .mu__contours path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.js-reveal [data-draw].is-revealed .mu--live .mu__contours path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1600ms var(--ease-survey);
+}
+
+.js-reveal .mu--live .mu__traverse,
+.js-reveal .mu--live .mu__nodes,
+.js-reveal .mu--live .mu__waypoints,
+.js-reveal .mu--live .mu__zones {
+  opacity: 0;
+}
+
+.js-reveal [data-draw].is-revealed .mu--live .mu__zones {
+  opacity: 1;
+  transition: opacity 700ms var(--ease-survey) 260ms;
+}
+
+.js-reveal [data-draw].is-revealed .mu--live .mu__traverse,
+.js-reveal [data-draw].is-revealed .mu--live .mu__nodes,
+.js-reveal [data-draw].is-revealed .mu--live .mu__waypoints {
+  opacity: 1;
+  transition: opacity 700ms var(--ease-survey) 900ms;
+}
+
+/* ==========================================================================
+   Live status dot
+   ========================================================================== */
+
+.live-dot {
+  position: relative;
+  display: inline-flex;
+  inline-size: 7px;
+  block-size: 7px;
+  flex: none;
+}
+
+.live-dot::before,
+.live-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--mint);
+}
+
+.js-reveal .live-dot::before {
+  animation: live-ring 2600ms var(--ease-survey) infinite;
+}
+
+@keyframes live-ring {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+
+.panel--ink .live-dot::before,
+.panel--ink .live-dot::after {
+  background: var(--mint-light);
+}
+
+/* ==========================================================================
+   Pointer affordances
+   ==========================================================================
+   Deliberately small. A 2-degree tilt reads as "this is a surface"; anything
+   larger reads as a template. Disabled on coarse pointers, where it would only
+   fire on tap and feel like a bug.
+*/
+
+@media (hover: hover) and (pointer: fine) {
+  .js-reveal .lift {
+    transition:
+      transform 260ms var(--ease-survey),
+      box-shadow 260ms var(--ease-survey);
+  }
+
+  .js-reveal .lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px -18px color-mix(in srgb, var(--ink) 55%, transparent);
+  }
+
+  .panel--ink .js-reveal .lift:hover {
+    box-shadow: 0 12px 28px -14px rgb(0 0 0 / 0.55);
+  }
+}
+
+/* ==========================================================================
+   Reduced motion — the single override that switches all of it off
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .reveal-words__inner,
+  .js-reveal .reveal-words.is-revealed .reveal-words__inner {
+    transform: none;
+    transition: none;
+  }
+
+  .js-reveal .gauge__value,
+  .js-reveal .trend__line,
+  .js-reveal .mu--live .mu__contours path {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+
+  .js-reveal .trend__area,
+  .js-reveal .trend__head,
+  .js-reveal .mu--live .mu__traverse,
+  .js-reveal .mu--live .mu__nodes,
+  .js-reveal .mu--live .mu__waypoints,
+  .js-reveal .mu--live .mu__zones,
+  .js-reveal .strip__cell {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .js-reveal .stackbar__seg {
+    transform: scaleX(1);
+    transition: none;
+  }
+
+  .js-reveal .live-dot::before {
+    animation: none;
+    opacity: 0;
+  }
+
+  .js-reveal .lift:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
