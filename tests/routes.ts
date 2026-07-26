@@ -1,7 +1,15 @@
 /** Shared route table for the test suite. Mirrors src/lib/routes.ts. */
 
 export interface RouteCase {
-  readonly key: 'home' | 'demo' | 'method' | 'privacy';
+  readonly key:
+    | 'home'
+    | 'demo'
+    | 'market'
+    | 'method'
+    | 'privacy'
+    | 'forExecutive'
+    | 'forBoutique'
+    | 'forResearch';
   readonly en: string;
   readonly sv: string;
   /** Text expected in the <h1> for each locale. */
@@ -22,6 +30,12 @@ export const ROUTES: readonly RouteCase[] = [
     h1: { en: /search brief becomes/i, sv: /uppdragsbeskrivning blir/i },
   },
   {
+    key: 'market',
+    en: './market/',
+    sv: './sv/marknad/',
+    h1: { en: /benchmark that shows/i, sv: /benchmark som visar/i },
+  },
+  {
     key: 'method',
     en: './method/',
     sv: './sv/metod/',
@@ -33,6 +47,30 @@ export const ROUTES: readonly RouteCase[] = [
     sv: './sv/integritet/',
     h1: { en: /privacy and data boundaries/i, sv: /integritet och datagränser/i },
   },
+  {
+    key: 'forExecutive',
+    en: './for/executive-search/',
+    sv: './sv/for/executive-search/',
+    h1: { en: /market knowledge reusable/i, sv: /marknadskunskap återanvändbar/i },
+  },
+  {
+    key: 'forBoutique',
+    en: './for/boutique-search/',
+    sv: './sv/for/boutique-search/',
+    h1: { en: /research leverage/i, sv: /researchkapaciteten/i },
+  },
+  {
+    key: 'forResearch',
+    en: './for/research-led-firms/',
+    sv: './sv/for/researchdrivna-byrer/',
+    h1: { en: /shared infrastructure/i, sv: /gemensam infrastruktur/i },
+  },
 ];
 
 export const ALL_PATHS: readonly string[] = ROUTES.flatMap((r) => [r.en, r.sv]);
+
+export const CTA_DESTINATIONS = {
+  heroDemo: /\/demo\/$/,
+  market: /\/market\/$/,
+  diagnostic: /#design-partners$/,
+} as const;

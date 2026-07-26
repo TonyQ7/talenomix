@@ -189,20 +189,91 @@ export const CLAIMS: readonly Claim[] = [
     vendorClaim: false,
   },
   {
-    id: 'talenomics-name-risk',
+    id: 'se-registry-source',
     text: {
-      en: 'An active Singapore firm trades as Talenomics (EA Licence 19C9823), placing permanent and contract roles including C-suite positions and offering HR advisory and market research. The name similarity is a live commercial risk, which is why Talenomix is presented here as a provisional working name.',
-      sv: 'Ett aktivt bolag i Singapore verkar under namnet Talenomics (EA Licence 19C9823) och tillsätter tillsvidare- och kontraktsroller inklusive ledningspositioner samt erbjuder HR-rådgivning och marknadsanalys. Namnlikheten är en reell kommersiell risk, vilket är skälet till att Talenomix presenteras som ett preliminärt arbetsnamn.',
+      en: 'Bolagsverket provides free valuable company datasets via API, including organisation data, SNI activity codes and digitally filed annual reports; access requires issued API credentials.',
+      sv: 'Bolagsverket tillhandahåller avgiftsfria värdefulla företagsdata via API, inklusive organisationsuppgifter, SNI-koder och digitalt inlämnade årsredovisningar; åtkomst kräver utfärdade API-uppgifter.',
     },
     source: {
-      id: 'src-talenomics',
-      url: 'https://talenomics.com.sg/',
-      publisher: 'Talenomics Pte Ltd (Singapore)',
-      retrievedOn: RETRIEVED,
-      kind: 'direct-statement',
+      id: 'src-se-registry',
+      url: 'https://bolagsverket.se/apierochoppnadata/hamtaforetagsinformation/vardefulladatamangder/apiforvardefulladatamangder.5513.html',
+      publisher: 'Bolagsverket',
+      retrievedOn: '2026-07-26',
+      kind: 'official-statistics',
+      language: 'sv',
+      passage: 'Det kostar ingenting och det krävs inga avtal.',
+      paraphrase: 'The API is free and requires no agreement.',
+    },
+    confidence: 'A',
+    vendorClaim: false,
+  },
+  {
+    id: 'no-registry-source',
+    text: {
+      en: 'Brønnøysundregistrene publishes open APIs for Norwegian legal entities and key figures from filed annual accounts.',
+      sv: 'Brønnøysundregistrene publicerar öppna API:er för norska juridiska personer och nyckeltal från inlämnade årsredovisningar.',
+    },
+    source: {
+      id: 'src-no-registry',
+      url: 'https://data.brreg.no/enhetsregisteret/api/dokumentasjon/en/index.html',
+      publisher: 'Brønnøysundregistrene',
+      retrievedOn: '2026-07-26',
+      kind: 'official-statistics',
       language: 'en',
     },
     confidence: 'A',
+    vendorClaim: false,
+  },
+  {
+    id: 'dk-registry-source',
+    text: {
+      en: 'Virk provides the public Danish CVR company-information surface used for basic legal-entity checks; annual-report evidence is reviewed separately.',
+      sv: 'Virk tillhandahåller den publika danska CVR-tjänsten som används för grundläggande kontroll av juridiska personer; årsredovisningar granskas separat.',
+    },
+    source: {
+      id: 'src-dk-registry',
+      url: 'https://datacvr.virk.dk/',
+      publisher: 'Virk / Danish Business Authority',
+      retrievedOn: '2026-07-26',
+      kind: 'official-statistics',
+      language: 'da',
+      paraphrase: 'Public Danish CVR company-information service.',
+    },
+    confidence: 'B',
+    vendorClaim: false,
+  },
+  {
+    id: 'fi-registry-source',
+    text: {
+      en: 'The Finnish Patent and Registration Office publishes open company data for legal-entity lookup; market classifications on this site remain separate from the registry facts.',
+      sv: 'Patent- och registerstyrelsen i Finland publicerar öppna företagsdata för kontroll av juridiska personer; marknadsklassificeringarna på den här webbplatsen hålls åtskilda från registerfakta.',
+    },
+    source: {
+      id: 'src-fi-registry',
+      url: 'https://www.prh.fi/en/companiesandorganisations/open_data.html',
+      publisher: 'Finnish Patent and Registration Office (PRH)',
+      retrievedOn: '2026-07-26',
+      kind: 'official-statistics',
+      language: 'en',
+    },
+    confidence: 'A',
+    vendorClaim: false,
+  },
+  {
+    id: 'is-coverage-source',
+    text: {
+      en: 'Iceland is maintained as a manually reviewed coverage frame because no comparable open official revenue feed has been established for this work.',
+      sv: 'Island hålls som en manuellt granskad täckningsram eftersom någon jämförbar öppen officiell intäktskälla inte har fastställts för detta arbete.',
+    },
+    source: {
+      id: 'src-is-registry',
+      url: 'https://www.skatturinn.is/english/companies/',
+      publisher: 'Iceland Revenue and Customs',
+      retrievedOn: '2026-07-26',
+      kind: 'official-statistics',
+      language: 'en',
+    },
+    confidence: 'C',
     vendorClaim: false,
   },
 ];
@@ -214,7 +285,7 @@ export const HOME_CLAIM_IDS: readonly string[] = [
   'esk-individual-level',
   'aesc-interim-directory',
   'ai-act-high-risk',
-  'talenomics-name-risk',
+  'fi-market-compilation',
 ];
 
 export function homeClaims(): readonly Claim[] {

@@ -1,0 +1,131 @@
+---
+import type { Locale } from '~/lib/routes';
+import { anchor, route } from '~/lib/routes';
+import { t, type Dictionary } from '~/i18n';
+import SectionHead from '~/components/SectionHead.astro';
+
+interface Props {
+  locale: Locale;
+  segment: keyof Dictionary['segments'];
+}
+
+const { locale, segment } = Astro.props;
+const dict = t(locale);
+const content = dict.segments[segment];
+---
+
+<section class="segment-hero">
+  <div class="shell">
+    <p class="eyebrow">{content.eyebrow}</p>
+    <h1>{content.title}</h1>
+    <p class="lede">{content.lede}</p>
+    <div class="btn-row">
+      <a class="btn btn--primary" href={route('demo', locale)}>{dict.home.hero.primaryCta}</a>
+      <a class="btn btn--secondary" href={route('market', locale)}>{dict.nav.market}</a>
+    </div>
+  </div>
+</section>
+
+<section class="section panel--sunk">
+  <div class="shell segment-grid">
+    <article>
+      <SectionHead
+        eyebrow="01"
+        title={content.signalTitle}
+        lede={content.lede}
+        sheet="01 / 02"
+        sheetLabel={dict.ui.sheet}
+      />
+      <ul class="card-grid">
+        {content.signals.map((item, index) => (
+          <li class="card card--marked">
+            <span class="code">{String(index + 1).padStart(2, '0')}</span>
+            <p>{item}</p>
+          </li>
+        ))}
+      </ul>
+    </article>
+    <article>
+      <SectionHead
+        eyebrow="02"
+        title={content.outcomeTitle}
+        lede={content.ctaBody}
+        sheet="02 / 02"
+        sheetLabel={dict.ui.sheet}
+      />
+      <ul class="checklist">
+        {content.outcomes.map((item) => (
+          <li><span class="checklist__mark" aria-hidden="true">✓</span><span>{item}</span></li>
+        ))}
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section class="section panel--ink">
+  <div class="shell segment-cta">
+    <div>
+      <p class="eyebrow">{content.ctaTitle}</p>
+      <h2>{content.ctaTitle}</h2>
+      <p>{content.ctaBody}</p>
+    </div>
+    <a class="btn btn--primary" href={anchor(locale, 'design-partners')}>{content.cta}</a>
+  </div>
+</section>
+
+<style>
+  .segment-hero {
+    padding: clamp(5rem, 12vw, 11rem) 0 clamp(4rem, 9vw, 8rem);
+  }
+
+  .segment-hero h1 {
+    max-width: 15ch;
+    margin: 0.5rem 0 1.5rem;
+  }
+
+  .segment-hero .lede {
+    max-width: 62ch;
+  }
+
+  .segment-hero .btn-row {
+    margin-top: 2rem;
+  }
+
+  .segment-grid {
+    display: grid;
+    gap: clamp(4rem, 8vw, 8rem);
+  }
+
+  .segment-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .segment-cta p {
+    max-width: 58ch;
+  }
+
+  @media (max-width: 48rem) {
+    .segment-cta {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .segment-cta > div {
+      width: 100%;
+      min-width: 0;
+    }
+  }
+
+  @media (max-width: 28rem) {
+    .segment-hero h1 {
+      overflow-wrap: anywhere;
+    }
+
+    .segment-cta {
+      overflow-wrap: anywhere;
+    }
+  }
+</style>

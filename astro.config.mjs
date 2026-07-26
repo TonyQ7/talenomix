@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 /**
  * Talenomix static site.
@@ -21,4 +22,9 @@ export default defineConfig({
   prefetch: false,
   devToolbar: { enabled: false },
   scopedStyleStrategy: 'class',
+  integrations: [
+    sitemap({
+      filter: (page) => !page.endsWith('/404/'),
+    }),
+  ],
 });

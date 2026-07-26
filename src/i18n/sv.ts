@@ -21,6 +21,11 @@ export const sv: Dictionary = {
       description:
         'Följ ett fiktivt COO-uppdrag från uppdragsbeskrivning till kalibreringsunderlag. Ingen inloggning, inga verkliga personer, inga externa anrop.',
     },
+    market: {
+      title: 'Underlag om den nordiska executive-searchmarknaden — Talenomix',
+      description:
+        'En källbelagd bild av den nordiska executive-searchramen, publicerade siffror och de luckor som fortfarande granskas.',
+    },
     method: {
       title: 'Metod och underlag — Talenomix',
       description:
@@ -30,6 +35,21 @@ export const sv: Dictionary = {
       title: 'Integritet och datagränser — Talenomix',
       description:
         'Vad den här webbplatsen samlar in, vad en pilot med Talenomix Mandate behandlar, och vilka gränser vi håller oss till.',
+    },
+    forExecutive: {
+      title: 'För executive-searchbyråer — Talenomix',
+      description:
+        'Uppdragsintelligens för etablerade executive-searchbyråer som vill återanvända research utan att ersätta sitt CRM.',
+    },
+    forBoutique: {
+      title: 'För boutique-searchbyråer — Talenomix',
+      description:
+        'En fokuserad diagnostik för boutique-team inom executive search med begränsad researchkapacitet.',
+    },
+    forResearch: {
+      title: 'För researchdrivna searchbyråer — Talenomix',
+      description:
+        'Underlagsinfrastruktur för researchdrivna executive-searchbyråer som vill låta metod och marknadskunskap växa över tid.',
     },
     notFound: {
       title: 'Sidan finns inte — Talenomix',
@@ -60,6 +80,7 @@ export const sv: Dictionary = {
     product: 'Produkt',
     workflow: 'Arbetsflöde',
     demo: 'Demo',
+    market: 'Marknadsunderlag',
     designPartners: 'Designpartner',
     evidence: 'Underlag',
     method: 'Metod',
@@ -71,8 +92,8 @@ export const sv: Dictionary = {
     name: 'Talenomix',
     product: 'Talenomix Mandate',
     descriptor: 'Searchintelligens',
-    provisionalNotice:
-      'Talenomix är ett preliminärt arbetsnamn. Kontroll av firmanamn, varumärke och domän är inte avslutad, och ingenting på webbplatsen ska läsas som ett anspråk på ett godkänt varumärke.',
+    publicBoundaryNote:
+      'Publik webbplats: endast aggregerat underlag och en syntetisk demo. Byråposter, relationer och kunddata publiceras aldrig här.',
   },
 
   states: {
@@ -317,9 +338,9 @@ export const sv: Dictionary = {
       applyBody:
         'Ta med ett uppdrag ni står i begrepp att starta. Först en 30 minuters problemintervju, sedan 90 minuters observation av arbetsflödet, därefter ett avgränsat förslag. Ingenting signeras innan ni sett exakt vad de fyra veckorna innehåller.',
       applyStatus:
-        'Status före lansering: ansökningsformulär och bokningsdestination håller på att konfigureras, och kontaktvägen publiceras när kontrollen av namn och firma är klar. Den här sidan samlar medvetet inte in era uppgifter ännu.',
+        'Ansökan är öppen för ett litet antal nordiska byråer. Ta med ett skarpt uppdrag och den managing partner eller operativt ansvariga som äger startflödet.',
       priceNote:
-        'Omfattning och pris sätts per byrå efter ett första samtal, utifrån researchens omfattning, länder, användare, datakällor och integrationsarbete. Inget pris publiceras här, eftersom inget pris vore ärligt över hela det spannet.',
+        'Börja med Mandate Intelligence Diagnostic till fast pris: 55 000 SEK exklusive moms för ett uppdrag och en primär landsram. Ett designpartnerskap avgränsas separat efter ett första samtal.',
     },
 
     evidence: {
@@ -334,7 +355,7 @@ export const sv: Dictionary = {
         'Inga uppmätta tidsbesparingar – de siffrorna kommer ur de första betalda piloterna',
         'Inga integrationer i produktion; CSV är det som finns i dag',
         'Inget stöd eller godkännande från någon employer branding-, research- eller rådgivningsorganisation',
-        'Inget godkänt varumärke – Talenomix är ett preliminärt arbetsnamn',
+        'Inga nordiska totalsiffror där den granskade landsramen inte är klar',
       ],
       cta: 'Läs hela metoden',
     },
@@ -632,6 +653,100 @@ export const sv: Dictionary = {
       'Genomgången är skriven för att läsas rakt igenom. Med JavaScript påslaget blir samma steg navigerbara ett i taget; utan det döljs ingenting.',
   },
 
+  market: {
+    eyebrow: 'Nordiskt marknadsunderlag',
+    title: 'Ett benchmark som visar både underlaget och luckorna.',
+    lede:
+      'Den ärliga första versionen är inte en påhittad nordisk totalsiffra. Den består av ett källbelagt finländskt marknadsankare, den officiella registerramen i varje land och en synlig redovisning av vilka landssiffror som fortfarande granskas.',
+    caveatTitle: 'Läs siffran och grunden tillsammans.',
+    caveatBody:
+      'De publicerade finländska siffrorna kommer från en publik branschsammanställning, inte från en officiell registerklassificering. ”Inte publicerat” betyder att den granskade ramen inte är klar – inte att marknaden är tom.',
+    metricsTitle: 'Publicerat finländskt marknadsankare',
+    coverageTitle: 'Nordisk täckningsmatris',
+    coverageLede:
+      'Officiella register fastställer juridiska personer och inlämnade siffror. Branschklassificeringen kräver fortfarande underlag och mänsklig granskning.',
+    tableHeads: {
+      country: 'Land',
+      frame: 'Researchram',
+      publishedCount: 'Publicerat antal byråer',
+      status: 'Status',
+      source: 'Källa',
+    },
+    notPublished: 'Inte publicerat',
+    sourceNote:
+      'Varje siffra ovan representeras som data med käll-ID, hämtningsdatum, grund och tillförlitlighetsgrad. Små privata celler undertrycks innan något aggregat kan föras över till det här repot.',
+    methodCta: 'Läs underlagsmetoden',
+  },
+
+  segments: {
+    executive: {
+      eyebrow: 'För etablerade searchbyråer',
+      title: 'Gör byråns marknadskunskap återanvändbar mellan uppdrag.',
+      lede:
+        'Talenomix ligger ovanpå systemen ni redan använder. Ett skarpt uppdrag, tidigare research och betrodd marknadsdata blir en granskningsbar startplan.',
+      signalTitle: 'Det som ofta skapar friktion',
+      signals: [
+        'Målbolagsuniversum byggs om trots att liknande arbete redan finns',
+        'Off-limits-regler och relationskunskap är spridda mellan system',
+        'Kundens kalibreringsunderlag sätts ihop manuellt från flera källor',
+      ],
+      outcomeTitle: 'Det diagnostiken levererar',
+      outcomes: [
+        'Ett normaliserat uppdrag med tydliga öppna frågor',
+        'Ett källbelagt målbolagsuniversum och en researchkö',
+        'En täckningsrapport och ett återanvändbart byråminne',
+      ],
+      ctaTitle: 'Börja med ett verkligt uppdrag.',
+      ctaBody:
+        'Diagnostiken har ett fast pris på 55 000 SEK exklusive moms. Designpartnerskap avgränsas efter ett första samtal.',
+      cta: 'Se diagnostiken',
+    },
+    boutique: {
+      eyebrow: 'För boutique-searchbyråer',
+      title: 'Öka researchkapaciteten utan att införa ett andra operativsystem.',
+      lede:
+        'Små team vinner genom omdöme och fokus. Talenomix skyddar den fördelen och gör researcharbetet mindre beroende av att en person minns varje tidigare uppdrag.',
+      signalTitle: 'Där begränsningen märks',
+      signals: [
+        'Partner lägger seniortid på att bygga bolagslistor och presentationer',
+        'Researchkvaliteten varierar med arbetsbelastning och individuellt minne',
+        'CRM finns, men uppdragslogiken ligger i dokument och kalkylblad',
+      ],
+      outcomeTitle: 'Det som förändras',
+      outcomes: [
+        'Uppdraget blir ett gemensamt, godkänt researchkontrakt',
+        'Varje inkludering, exkludering och oklarhet får ett skäl',
+        'Slutunderlaget går att återanvända i stället för att bli en engångsfil',
+      ],
+      ctaTitle: 'Köp en avgränsad diagnostik, inte ett transformationsprogram.',
+      ctaBody:
+        'Ett uppdrag, en primär landsram, tio arbetsdagar efter kompletta underlag: 55 000 SEK exklusive moms.',
+      cta: 'Se diagnostiken',
+    },
+    research: {
+      eyebrow: 'För researchdrivna byråer',
+      title: 'Gör en stark researchmetod till gemensam infrastruktur.',
+      lede:
+        'Talenomix ersätter inte researchers. Det gör deras källspår, täckningsbeslut och olösta frågor synliga nog att granska, återanvända och förbättra.',
+      signalTitle: 'Det som även avancerade team brottas med',
+      signals: [
+        'Underlagets djup försvinner när ett projekt arkiveras',
+        'Överlämningar plattar ut omdöme till ett bolagsnamn och en status',
+        'Täckningen är svår att försvara när källor och exkluderingar ligger isär',
+      ],
+      outcomeTitle: 'Det som blir bestående',
+      outcomes: [
+        'Källbelagda bolagshypoteser i stället för ogenomskinliga fit-poäng',
+        'Mänskliga kontrollpunkter vid uppdrag, universum och kalibrering',
+        'En datamängd som kan återanvändas utan att exponera kandidatdata',
+      ],
+      ctaTitle: 'Pröva lagret runt er metod.',
+      ctaBody:
+        'Diagnostiken mäter om underlaget blir tydligare och mer återanvändbart. Den lovar ingen tidsbesparing innan arbetet har mätts.',
+      cta: 'Se diagnostiken',
+    },
+  },
+
   method: {
     eyebrow: 'Metod',
     title: 'Hur vi vet det vi säger att vi vet.',
@@ -772,7 +887,7 @@ export const sv: Dictionary = {
         title: 'Rättigheter och kontakt',
         body: [
           'När Talenomix behandlar personuppgifter på en kunds instruktion vidarebefordras begäranden från registrerade till den kunden som personuppgiftsansvarig, och vi bistår inom avtalad tid.',
-          'Eftersom Talenomix är ett preliminärt namn i väntan på kontroll av firma och varumärke publiceras en permanent kontaktväg och fullständig integritetspolicy vid lansering. Till dess är den här sidan ett uttalande om de gränser vi bygger mot – inte en ersättning för den information en tjänst i drift kräver.',
+          'Innan personinriktad prospektering eller en tjänst i drift startar måste personuppgiftsansvarig, rättighetskanal, information enligt artikel 14 och gallringsvillkor vara klara. Den här sidan beskriver webbplatsens och produktens nuvarande gränser; den ersätter inte ett kundspecifikt personuppgiftsbiträdesavtal.',
         ],
       },
     ],

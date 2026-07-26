@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { ALL_PATHS, ROUTES } from './routes';
+import { en } from '../src/i18n/en';
+import { DEMO_TOTAL } from '../src/data/demo';
 
 /**
  * Runs in the `no-js` Playwright project with javaScriptEnabled: false.
@@ -42,9 +44,9 @@ test('the demo is a complete walkthrough with all seven steps visible', async ({
     await page.goto(path);
 
     const steps = page.locator('.dm-step');
-    await expect(steps).toHaveCount(7);
+    await expect(steps).toHaveCount(en.demo.steps.length);
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < en.demo.steps.length; i++) {
       await expect(steps.nth(i), `step ${i + 1} on ${path}`).toBeVisible();
     }
 
@@ -53,7 +55,7 @@ test('the demo is a complete walkthrough with all seven steps visible', async ({
     await expect(page.locator('.dm-filter')).toBeHidden();
 
     // The substance of every step is still present.
-    await expect(page.locator('#universe-table tbody tr')).toHaveCount(12);
+    await expect(page.locator('#universe-table tbody tr')).toHaveCount(DEMO_TOTAL);
     await expect(page.locator('.dm-csv')).toBeVisible();
     await expect(page.locator('.dm-held__item')).toHaveCount(3);
   }

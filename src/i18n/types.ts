@@ -41,8 +41,12 @@ export interface Dictionary {
     readonly siteName: string;
     readonly home: PageMeta;
     readonly demo: PageMeta;
+    readonly market: PageMeta;
     readonly method: PageMeta;
     readonly privacy: PageMeta;
+    readonly forExecutive: PageMeta;
+    readonly forBoutique: PageMeta;
+    readonly forResearch: PageMeta;
     readonly notFound: PageMeta;
   };
 
@@ -69,6 +73,7 @@ export interface Dictionary {
     readonly product: string;
     readonly workflow: string;
     readonly demo: string;
+    readonly market: string;
     readonly designPartners: string;
     readonly evidence: string;
     readonly method: string;
@@ -80,7 +85,7 @@ export interface Dictionary {
     readonly name: string;
     readonly product: string;
     readonly descriptor: string;
-    readonly provisionalNotice: string;
+    readonly publicBoundaryNote: string;
   };
 
   readonly states: Readonly<Record<CoverageState, string>>;
@@ -278,6 +283,33 @@ export interface Dictionary {
     readonly noJsNote: string;
   };
 
+  readonly market: {
+    readonly eyebrow: string;
+    readonly title: string;
+    readonly lede: string;
+    readonly caveatTitle: string;
+    readonly caveatBody: string;
+    readonly metricsTitle: string;
+    readonly coverageTitle: string;
+    readonly coverageLede: string;
+    readonly tableHeads: {
+      readonly country: string;
+      readonly frame: string;
+      readonly publishedCount: string;
+      readonly status: string;
+      readonly source: string;
+    };
+    readonly notPublished: string;
+    readonly sourceNote: string;
+    readonly methodCta: string;
+  };
+
+  readonly segments: {
+    readonly executive: SegmentPage;
+    readonly boutique: SegmentPage;
+    readonly research: SegmentPage;
+  };
+
   readonly method: {
     readonly eyebrow: string;
     readonly title: string;
@@ -324,4 +356,17 @@ export interface Dictionary {
     readonly rights: string;
     readonly disclaimer: string;
   };
+}
+
+export interface SegmentPage {
+  readonly eyebrow: string;
+  readonly title: string;
+  readonly lede: string;
+  readonly signalTitle: string;
+  readonly signals: readonly string[];
+  readonly outcomeTitle: string;
+  readonly outcomes: readonly string[];
+  readonly ctaTitle: string;
+  readonly ctaBody: string;
+  readonly cta: string;
 }

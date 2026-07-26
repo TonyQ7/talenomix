@@ -47,7 +47,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
 
       - run: npm ci
@@ -87,7 +87,10 @@ jobs:
       - name: Check the deployed pages respond
         run: |
           base="https://tonyq7.github.io/talenomix"
-          for path in "/" "/demo/" "/method/" "/privacy/" "/sv/" "/sv/demo/" "/sv/metod/" "/sv/integritet/"; do
+          for path in "/" "/demo/" "/market/" "/method/" "/privacy/" \
+                      "/for/executive-search/" "/for/boutique-search/" "/for/research-led-firms/" \
+                      "/sv/" "/sv/demo/" "/sv/marknad/" "/sv/metod/" "/sv/integritet/" \
+                      "/sv/for/executive-search/" "/sv/for/boutique-search/" "/sv/for/researchdrivna-byrer/"; do
             code=$(curl -s -o /dev/null -w '%{http_code}' --retry 5 --retry-delay 5 "${base}${path}")
             echo "${path} -> ${code}"
             [ "$code" = "200" ] || exit 1

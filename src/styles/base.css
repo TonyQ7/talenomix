@@ -31,6 +31,12 @@ body {
   min-height: 100vh;
 }
 
+.num,
+table td,
+table th {
+  font-variant-numeric: tabular-nums;
+}
+
 img,
 svg,
 picture {

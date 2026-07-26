@@ -1,0 +1,10 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import Segment from '~/views/Segment.astro';
+import { t } from '~/i18n';
+const locale = 'en';
+const dict = t(locale);
+---
+<PageLayout locale={locale} routeKey="forResearch" title={dict.meta.forResearch.title} description={dict.meta.forResearch.description}>
+  <Segment locale={locale} segment="research" />
+</PageLayout>

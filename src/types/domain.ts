@@ -1,10 +1,10 @@
 /**
  * Typed internal interfaces for Talenomix.
  *
- * PLAN.md section 3 enumerates these nine interfaces. They are internal only —
- * no public production API is exposed. `FirmRecord` and `PainEvidence` describe
- * the private research pipeline's row shapes and are declared here so the public
- * site, the demo scenario and the private workspace all agree on one model.
+ * Public contracts only. Firm, person, financial, score, and pain-evidence
+ * records live exclusively in the private talenomix-intel repository. Keeping
+ * them out of this package graph makes the public build physically incapable of
+ * importing prospect data.
  *
  * Nothing in this file may carry real personal data. See src/data/demo.ts.
  */
@@ -61,61 +61,23 @@ export interface Claim {
   readonly vendorClaim: boolean;
 }
 
-/** One firm in the publicly discoverable Nordic universe. Private data — never published. */
-export interface FirmRecord {
-  readonly firmId: string;
-  readonly legalName: string;
-  readonly tradingName?: string;
-  readonly domain: string;
-  readonly countries: readonly NordicCountry[];
-  readonly offices: readonly string[];
-  readonly organisationNumber?: string;
-  readonly teamSizeBand: '1-4' | '5-15' | '16-50' | '51-200' | '200+' | 'unknown';
-  readonly hasVisibleResearchFunction: boolean;
-  readonly retainedSearchEvidence: readonly SourceEvidence[];
-  readonly industries: readonly string[];
-  readonly functions: readonly string[];
-  readonly seniority: readonly string[];
-  readonly networkMemberships: readonly string[];
-  readonly methodologyNotes?: string;
-  readonly technologySignals: readonly string[];
-  readonly clientPortalSignals: readonly string[];
-  readonly services: readonly string[];
-  /** Public business contact route only — never a personal email address. */
-  readonly publicContactRoute?: string;
-  readonly sources: readonly SourceEvidence[];
-  readonly verifiedOn: string;
+/** One publishable aggregate with a resolvable public source and explicit basis. */
+export interface MarketFigure {
+  readonly id: string;
+  readonly country: NordicCountry | 'Nordic';
+  readonly label: Readonly<Record<'en' | 'sv', string>>;
+  readonly value: number | null;
+  readonly unit: 'firms' | 'EUR millions' | 'percent' | 'status';
+  readonly period: string;
+  readonly sourceId: string;
+  readonly retrievedOn: string;
+  readonly basis:
+    | 'official-registry'
+    | 'official-statistics'
+    | 'directory-published'
+    | 'review-in-progress';
   readonly confidence: Confidence;
-  readonly inclusionNote?: string;
-}
-
-/** Workflow stages a `PainEvidence` observation can attach to. */
-export type WorkflowStage =
-  | 'mandate-interpretation'
-  | 'market-mapping'
-  | 'institutional-memory'
-  | 'data-quality'
-  | 'system-fragmentation'
-  | 'research-handoff'
-  | 'client-reporting'
-  | 'off-limits-and-conflicts'
-  | 'confidentiality'
-  | 'localization'
-  | 'business-development'
-  | 'ai-adoption';
-
-/** One observed problem at one firm. Private data — never published un-aggregated. */
-export interface PainEvidence {
-  readonly evidenceId: string;
-  readonly firmId: string;
-  readonly stage: WorkflowStage;
-  readonly observation: string;
-  readonly kind: EvidenceKind;
-  readonly source: SourceEvidence;
-  readonly persona: 'managing-partner' | 'operations-lead' | 'head-of-research' | 'consultant' | 'researcher';
-  readonly confidence: Confidence;
-  /** False means a researcher inferred it; true means the firm stated it. */
-  readonly statedByFirm: boolean;
+  readonly caveat: Readonly<Record<'en' | 'sv', string>>;
 }
 
 /** Resolution state of any mapped item. Used by the demo and the coverage report. */

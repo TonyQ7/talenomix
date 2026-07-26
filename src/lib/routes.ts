@@ -12,14 +12,26 @@ export type Locale = (typeof LOCALES)[number];
 
 export const DEFAULT_LOCALE: Locale = 'en';
 
-export type RouteKey = 'home' | 'demo' | 'method' | 'privacy';
+export type RouteKey =
+  | 'home'
+  | 'demo'
+  | 'market'
+  | 'method'
+  | 'privacy'
+  | 'forExecutive'
+  | 'forBoutique'
+  | 'forResearch';
 
 /** Path segment per route per locale. An empty segment is the locale root. */
 const SEGMENTS: Readonly<Record<RouteKey, Readonly<Record<Locale, string>>>> = {
   home: { en: '', sv: 'sv' },
   demo: { en: 'demo', sv: 'sv/demo' },
+  market: { en: 'market', sv: 'sv/marknad' },
   method: { en: 'method', sv: 'sv/metod' },
   privacy: { en: 'privacy', sv: 'sv/integritet' },
+  forExecutive: { en: 'for/executive-search', sv: 'sv/for/executive-search' },
+  forBoutique: { en: 'for/boutique-search', sv: 'sv/for/boutique-search' },
+  forResearch: { en: 'for/research-led-firms', sv: 'sv/for/researchdrivna-byrer' },
 };
 
 /** BASE_URL is `/talenomix` in production and `/` in some tooling contexts. */

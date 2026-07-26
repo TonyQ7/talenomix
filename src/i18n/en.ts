@@ -20,6 +20,11 @@ export const en: Dictionary = {
       description:
         'Walk a fictional Group COO search from brief to calibration pack. No login, no real people, no external calls.',
     },
+    market: {
+      title: 'Nordic executive-search market evidence — Talenomix',
+      description:
+        'A source-backed view of the Nordic executive-search firm frame, published figures and the gaps still under review.',
+    },
     method: {
       title: 'Method and evidence — Talenomix',
       description:
@@ -29,6 +34,21 @@ export const en: Dictionary = {
       title: 'Privacy and data boundaries — Talenomix',
       description:
         'What this website collects, what a Talenomix Mandate pilot processes, and the boundaries we hold ourselves to.',
+    },
+    forExecutive: {
+      title: 'For executive-search firms — Talenomix',
+      description:
+        'Mandate intelligence for established executive-search firms that want reusable research without replacing their CRM.',
+    },
+    forBoutique: {
+      title: 'For boutique search firms — Talenomix',
+      description:
+        'A focused mandate-intelligence diagnostic for boutique executive-search teams with limited research capacity.',
+    },
+    forResearch: {
+      title: 'For research-led search firms — Talenomix',
+      description:
+        'Evidence infrastructure for research-led executive-search firms that want their method and market knowledge to compound.',
     },
     notFound: {
       title: 'Sheet not found — Talenomix',
@@ -59,6 +79,7 @@ export const en: Dictionary = {
     product: 'Product',
     workflow: 'Workflow',
     demo: 'Demo',
+    market: 'Market evidence',
     designPartners: 'Design partners',
     evidence: 'Evidence',
     method: 'Method',
@@ -70,8 +91,8 @@ export const en: Dictionary = {
     name: 'Talenomix',
     product: 'Talenomix Mandate',
     descriptor: 'Executive search intelligence',
-    provisionalNotice:
-      'Talenomix is a provisional working name. Company, trademark and domain screening is not complete, and nothing on this site should be read as a claim to a cleared mark.',
+    publicBoundaryNote:
+      'Public site: aggregate evidence and a synthetic demo only. Firm records, relationships and customer data are never published here.',
   },
 
   states: {
@@ -316,9 +337,9 @@ export const en: Dictionary = {
       applyBody:
         'Bring one mandate your team is about to launch. A 30-minute problem interview comes first, then a 90-minute workflow observation, then a scoped proposal. Nothing is signed before you have seen exactly what the four weeks contain.',
       applyStatus:
-        'Pre-launch status: the application form and booking destination are being configured, and the contact route is published once name and company screening completes. This page is deliberately not collecting your details yet.',
+        'Applications are open for a small number of Nordic firms. Bring one live mandate and the managing partner or operations lead responsible for the launch workflow.',
       priceNote:
-        'Scope and price are set per firm after the discovery call, based on research scope, countries, users, data sources and integration work. No price is published here because none would be honest across that range.',
+        'Start with the fixed Mandate Intelligence Diagnostic: SEK 55,000 excluding VAT for one mandate and one primary country frame. A design partnership is scoped separately after discovery.',
     },
 
     evidence: {
@@ -333,7 +354,7 @@ export const en: Dictionary = {
         'No measured time savings — the first paid pilots produce those numbers',
         'No production CRM integrations; CSV is what exists today',
         'No endorsement by any employer-brand, research or advisory organisation',
-        'No cleared trademark — Talenomix is a provisional working name',
+        'No Nordic totals where the reviewed country frame is not ready',
       ],
       cta: 'Read the full method',
     },
@@ -631,6 +652,100 @@ export const en: Dictionary = {
       'This walkthrough is written to be read straight through. With JavaScript enabled the same steps become navigable one at a time; without it, nothing is hidden.',
   },
 
+  market: {
+    eyebrow: 'Nordic market evidence',
+    title: 'A benchmark that shows the evidence—and the gaps.',
+    lede:
+      'The honest first release is not a made-up Nordic total. It is a sourced Finnish market anchor, the official registry frame used in every country, and a visible record of which country totals are still being reviewed.',
+    caveatTitle: 'Read the figure and its basis together.',
+    caveatBody:
+      'The published Finnish numbers come from a public industry compilation, not an official registry classification. “Not published” means the reviewed frame is not ready; it does not mean the market is empty.',
+    metricsTitle: 'Published Finnish market anchor',
+    coverageTitle: 'Nordic coverage matrix',
+    coverageLede:
+      'Official registries establish legal entities and filed figures. Industry classification still requires evidence and human review.',
+    tableHeads: {
+      country: 'Country',
+      frame: 'Research frame',
+      publishedCount: 'Published firm count',
+      status: 'Status',
+      source: 'Source',
+    },
+    notPublished: 'Not published',
+    sourceNote:
+      'Every figure above is represented as data with a source ID, retrieval date, basis and confidence grade. Small private cells are suppressed before any aggregate can cross into this repository.',
+    methodCta: 'Read the evidence method',
+  },
+
+  segments: {
+    executive: {
+      eyebrow: 'For established search firms',
+      title: 'Make your firm’s market knowledge reusable across mandates.',
+      lede:
+        'Talenomix sits above the systems you already use. It turns a live brief, prior research and trusted market data into one reviewable launch plan.',
+      signalTitle: 'What usually creates drag',
+      signals: [
+        'Target universes rebuilt even when similar work already exists',
+        'Off-limits rules and relationship knowledge scattered across systems',
+        'Client-calibration packs assembled manually from several sources',
+      ],
+      outcomeTitle: 'What the diagnostic produces',
+      outcomes: [
+        'A normalized mandate and explicit open questions',
+        'A source-backed target-company universe and research queue',
+        'A coverage report and reusable firm-memory dataset',
+      ],
+      ctaTitle: 'Start with one real mandate.',
+      ctaBody:
+        'The fixed-fee diagnostic is SEK 55,000 excluding VAT. Design partnerships remain scoped after discovery.',
+      cta: 'See the diagnostic',
+    },
+    boutique: {
+      eyebrow: 'For boutique search firms',
+      title: 'Add research leverage without adding a second operating system.',
+      lede:
+        'Small teams win through judgment and focus. Talenomix protects that advantage while making research assembly less dependent on one person remembering every prior search.',
+      signalTitle: 'Where the constraint appears',
+      signals: [
+        'Partners spend senior time rebuilding company lists and slides',
+        'Research quality varies with workload and individual memory',
+        'A CRM exists, but launch logic lives in documents and spreadsheets',
+      ],
+      outcomeTitle: 'What changes',
+      outcomes: [
+        'The brief becomes a shared, approved research contract',
+        'Every inclusion, exclusion and unknown has a reason',
+        'The final pack is reusable rather than a one-off document',
+      ],
+      ctaTitle: 'Buy a bounded diagnostic, not a transformation programme.',
+      ctaBody:
+        'One mandate, one primary country frame, ten working days after complete inputs: SEK 55,000 excluding VAT.',
+      cta: 'See the diagnostic',
+    },
+    research: {
+      eyebrow: 'For research-led firms',
+      title: 'Turn a strong research method into shared infrastructure.',
+      lede:
+        'Talenomix does not replace researchers. It makes their source trail, coverage decisions and unresolved questions visible enough to review, reuse and improve.',
+      signalTitle: 'What sophisticated teams still fight',
+      signals: [
+        'Evidence depth disappears when a project is archived',
+        'Handoffs flatten judgment into a company name and a status',
+        'Coverage is hard to defend when sources and exclusions are separate',
+      ],
+      outcomeTitle: 'What becomes durable',
+      outcomes: [
+        'Source-linked company hypotheses rather than opaque fit scores',
+        'Human checkpoints at brief, universe and calibration stages',
+        'A dataset that can be reused without exposing candidate data',
+      ],
+      ctaTitle: 'Test the layer around your method.',
+      ctaBody:
+        'The diagnostic measures whether the evidence becomes clearer and more reusable. It makes no time-saving promise before the work is measured.',
+      cta: 'See the diagnostic',
+    },
+  },
+
   method: {
     eyebrow: 'Method',
     title: 'How we know what we say we know.',
@@ -771,7 +886,7 @@ export const en: Dictionary = {
         title: 'Rights and contact',
         body: [
           'Where Talenomix processes personal data on a customer’s instruction, requests from data subjects are routed to that customer as controller, and we support them within the agreed timeframe.',
-          'Because Talenomix is a provisional name pending company and trademark screening, a permanent contact route and full privacy notice are published at launch. Until then this page is a statement of the boundaries we are building to — not a substitute for the notice a live service requires.',
+          'Before person-level prospect research or a live service starts, the controller identity, rights channel, Article 14 information and retention terms must be complete. This page states the current website and product boundaries; it is not a substitute for a customer-specific data-processing agreement.',
         ],
       },
     ],

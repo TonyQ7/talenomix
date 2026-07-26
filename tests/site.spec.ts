@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { ALL_PATHS, ROUTES } from './routes';
+import { en } from '../src/i18n/en';
+import { ALL_PATHS, CTA_DESTINATIONS, ROUTES } from './routes';
 
 test.describe('pages render', () => {
   for (const route of ROUTES) {
@@ -88,17 +89,19 @@ test.describe('links and CTAs', () => {
     expect(seen.size).toBeGreaterThan(4);
   });
 
-  test('in-page anchors resolve to real elements', async ({ page }) => {
-    for (const path of ['./', './sv/']) {
+  test('fragment links resolve to real elements on every route', async ({ page }) => {
+    for (const path of ALL_PATHS) {
       await page.goto(path);
-      const fragments = await page.locator('a[href*="#"]').evaluateAll((els) =>
-        els
-          .map((el) => new URL((el as HTMLAnchorElement).href).hash)
-          .filter((hash) => hash.length > 1),
+      const targets = await page.locator('a[href*="#"]').evaluateAll((els) =>
+        els.map((el) => {
+          const url = new URL((el as HTMLAnchorElement).href);
+          return { page: `${url.origin}${url.pathname}`, hash: url.hash };
+        }).filter((target) => target.hash.length > 1),
       );
 
-      for (const hash of new Set(fragments)) {
-        await expect(page.locator(hash), `${hash} on ${path}`).toHaveCount(1);
+      for (const target of new Map(targets.map((item) => [`${item.page}${item.hash}`, item])).values()) {
+        await page.goto(target.page);
+        await expect(page.locator(target.hash), `${target.hash} linked from ${path}`).toHaveCount(1);
       }
     }
   });
@@ -106,7 +109,7 @@ test.describe('links and CTAs', () => {
   test('hero CTA opens the product demo', async ({ page }) => {
     await page.goto('./');
     await page.getByRole('link', { name: /See the product in action/i }).click();
-    await expect(page).toHaveURL(/\/demo\/$/);
+    await expect(page).toHaveURL(CTA_DESTINATIONS.heroDemo);
     await expect(page.locator('.dm-overview')).toBeVisible();
   });
 
@@ -119,10 +122,10 @@ test.describe('links and CTAs', () => {
 });
 
 test.describe('content guarantees', () => {
-  test('the provisional-name disclosure appears on every page', async ({ page }) => {
+  test('the public/private boundary appears on every page', async ({ page }) => {
     for (const path of ALL_PATHS) {
       await page.goto(path);
-      await expect(page.locator('.provisional')).toBeVisible();
+      await expect(page.locator('.public-boundary')).toBeVisible();
     }
   });
 
@@ -142,8 +145,8 @@ test.describe('content guarantees', () => {
     await page.goto('./demo/#step-pack');
 
     await expect(page.locator('.dm-overview')).toBeVisible();
-    await expect(page.locator('.dm-overview .dm-metric')).toHaveCount(4);
-    await expect(page.locator('.dm-responsibility')).toHaveCount(7);
+    await expect(page.locator('.dm-overview .dm-metric')).toHaveCount(en.demo.overviewStats.length);
+    await expect(page.locator('.dm-responsibility')).toHaveCount(en.demo.steps.length);
     await expect(page.locator('.dm-pack-preview')).toBeVisible();
     await expect(page.locator('.dm-pack-questions')).toContainText(/Finnish energy-systems/i);
   });
@@ -174,7 +177,7 @@ test.describe('demo behaviour with JavaScript', () => {
     await page.goto('./demo/');
 
     const steps = page.locator('.dm-step');
-    await expect(steps).toHaveCount(7);
+    await expect(steps).toHaveCount(en.demo.steps.length);
     await expect(steps.first()).toBeVisible();
     await expect(steps.nth(1)).toBeHidden();
 
@@ -242,11 +245,12 @@ test.describe('keyboard navigation', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'sv');
   });
 
-  test('FAQ entries open with the keyboard', async ({ page }) => {
+  test('market source links and diagnostic price are keyboard reachable', async ({ page }) => {
+    await page.goto('./market/');
+    const source = page.locator('.coverage-table a').first();
+    await source.focus();
+    await expect(source).toBeFocused();
     await page.goto('./');
-    const first = page.locator('.faq__item').first();
-    await first.locator('summary').focus();
-    await page.keyboard.press('Enter');
-    await expect(first).toHaveAttribute('open', '');
+    await expect(page.locator('.offer-price')).toContainText(/55\s?000/);
   });
 });

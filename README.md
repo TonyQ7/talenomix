@@ -3,11 +3,9 @@
 Mandate intelligence for Nordic executive search. This repository holds the
 public website and the synthetic demo for **Talenomix Mandate**.
 
-> **Talenomix is a provisional working name.** Company, trademark and domain
-> screening is not complete. Nothing here should be read as a claim to a cleared
-> mark, and the deploy workflow refuses to publish until that screening is
-> confirmed. If clearance fails, the fallback name is `Aptenra`; only
-> `src/i18n/*.ts` and `src/data/claims.ts` need to change.
+Name, trademark, domain and application-destination screening were confirmed
+before the first public deployment. The manual deploy workflow retains that
+explicit confirmation gate for every release.
 
 ## Quick start
 
@@ -66,10 +64,10 @@ src/
   lib/terrain.ts        Value noise, marching squares, polyline simplification
   lib/universe.ts       Assembles the mandate search universe from that terrain
   lib/routes.ts         Locale-aware routing and the deployment base path
-  types/domain.ts       The nine typed internal interfaces from the plan
+  types/domain.ts       Public contracts only; private firm/person types are absent
   views/                One view per page, rendered by both locales' route files
 scripts/verify-claims.mjs
-private/                Gitignored. Research pipeline and sales materials.
+private/README.md       Local-only pointer to the private sibling repository
 ```
 
 **The map** is generated at build time. `lib/terrain.ts` builds a scalar field
@@ -127,4 +125,4 @@ only and gated**: it refuses to run unless the operator confirms that name,
 trademark and domain screening is complete and the application destination is
 configured. It finishes with a production smoke test over all eight routes.
 
-Remaining manual gates before public launch are listed in `PLAN.md` section 5.
+The committed release and data-boundary gates are listed in `PLAN.md`.
