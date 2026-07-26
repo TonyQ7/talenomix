@@ -183,6 +183,47 @@ export function areaTrend(label: string, values: readonly number[], suffix = '')
 }
 
 /**
+ * Vertical histogram over labelled bands.
+ *
+ * Each bar carries `data-band` so a CSS-only scope control can dim the bars
+ * outside the selected band without any script. Counts are printed above the
+ * bars rather than left to be read off an axis — this is a small dataset shown
+ * to people who will want the exact number.
+ */
+export function histogram(
+  label: string,
+  bars: readonly { band: string; count: number }[],
+): string {
+  if (bars.length === 0) return '';
+  const W = 480;
+  const H = 150;
+  const plot = H - 42;
+  const max = Math.max(...bars.map((b) => b.count));
+  const slot = W / bars.length;
+  const bw = slot * 0.62;
+
+  const parts = bars
+    .map((b, i) => {
+      const h = max > 0 ? (b.count / max) * plot : 0;
+      const x = i * slot + (slot - bw) / 2;
+      const y = plot - h + 18;
+      return `<g class="hist__group" data-band="${escape(b.band)}" style="--bar-index:${i}">
+        <text class="hist__count" x="${n(x + bw / 2)}" y="${n(y - 5)}" text-anchor="middle">${b.count}</text>
+        <rect class="hist__bar" x="${n(x)}" y="${n(y)}" width="${n(bw)}" height="${n(Math.max(1, h))}" rx="2"/>
+        <text class="hist__label" x="${n(x + bw / 2)}" y="${H - 8}" text-anchor="middle">${escape(b.band)}</text>
+      </g>`;
+    })
+    .join('');
+
+  const aria = `${label}. ${bars.map((b) => `${b.band}: ${b.count}`).join(', ')}.`;
+  return `<svg class="hist" viewBox="0 0 ${W} ${H}" role="img" aria-label="${escape(aria)}">
+    <title>${escape(aria)}</title>
+    <line class="hist__axis" x1="0" y1="${plot + 18}" x2="${W}" y2="${plot + 18}"/>
+    ${parts}
+  </svg>`;
+}
+
+/**
  * Small-multiple country strip: one cell per market, filled where a published
  * figure exists and hatched where it does not. This is the coverage argument
  * rendered as a picture — the gaps are the point, so they are drawn, not hidden.

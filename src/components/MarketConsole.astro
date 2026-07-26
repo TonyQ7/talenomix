@@ -11,8 +11,15 @@
  * Filtering is CSS-only (`:has()` over a native radio group), so it works with
  * JavaScript disabled and is keyboard-operable without any script.
  */
-import { COVERAGE_MATRIX, MARKET_FIGURES } from '~/data/market';
-import { coverageStrip } from '~/lib/chart';
+import {
+  COVERAGE_MATRIX,
+  MARKET_FIGURES,
+  NO_FRAME_TOTAL,
+  NO_SIZE_BANDS,
+  NO_WITHOUT_COUNT,
+} from '~/data/market';
+import { CLAIMS } from '~/data/claims';
+import { coverageStrip, histogram } from '~/lib/chart';
 import { route, type Locale } from '~/lib/routes';
 import { t } from '~/i18n';
 import type { MarketFigure, NordicCountry } from '~/types/domain';
@@ -52,6 +59,40 @@ const strip = coverageStrip(
     known: row.publishedCount !== null,
   })),
 );
+
+const bands = NO_SIZE_BANDS.map((b) => ({ band: b.band, count: b.count }));
+const characterised = NO_FRAME_TOTAL - NO_WITHOUT_COUNT;
+const icpCount = NO_SIZE_BANDS.filter((b) => b.min >= 5 && b.min < 50).reduce(
+  (sum, b) => sum + b.count,
+  0,
+);
+const hist = histogram(c.scopeLabel, bands);
+
+// Interpolated here rather than in the template: a literal `{n}` inside a
+// template expression confuses the Astro parser and surfaces as a parse error
+// at end of file, which is a miserable thing to debug.
+const scopeUnknownText = c.scopeUnknown.replace('{n}', String(NO_WITHOUT_COUNT));
+const scopeIcpText = c.scopeIcp.replace('{n}', String(icpCount));
+const streamCountText = c.streamCount.replace('{n}', String(CLAIMS.length));
+const bandText = (band: string): string => c.scopeInBand.replace('{band}', band);
+
+/** Slug a band label into something usable in an id and a data attribute. */
+const slug = (band: string): string => band.replace(/[^0-9+]/g, '') || 'plus';
+
+/**
+ * The evidence stream replays the real claim ledger in retrieval order. It is
+ * not simulated telemetry — every row is a source that was actually fetched on
+ * the date shown, which is the only kind of "live" this product should display.
+ */
+const stream = [...CLAIMS]
+  .sort((a, b) => b.source.retrievedOn.localeCompare(a.source.retrievedOn))
+  .map((claim) => ({
+    when: claim.source.retrievedOn,
+    publisher: claim.source.publisher,
+    kind: dict.evidenceKinds[claim.source.kind] ?? claim.source.kind,
+    grade: claim.confidence,
+    vendor: claim.vendorClaim,
+  }));
 ---
 
 <div class="console lift" data-draw>
@@ -166,6 +207,95 @@ const strip = coverageStrip(
           <p class="code" style="margin-bottom:0.6rem">{c.coverageLabel}</p>
           <Fragment set:html={strip} />
         </div>
+      </div>
+    </div>
+
+    {/* ---- Scope control: real Norwegian headcount distribution ---------- */}
+    <div class="scope" data-draw>
+      <div class="scope__head">
+        <p class="code">{c.scopeLabel}</p>
+        <p class="kpi__source">{c.scopeSource}</p>
+      </div>
+
+      <fieldset class="scope__bands">
+        <legend class="visually-hidden">{c.scopeLegend}</legend>
+        <input class="console__radio visually-hidden" type="radio" name="band" id="band-all" checked />
+        <label class="chip" for="band-all">{c.scopeAll}</label>
+        {
+          NO_SIZE_BANDS.map((b) => (
+            <>
+              <input
+                class="console__radio visually-hidden"
+                type="radio"
+                name="band"
+                id={`band-${slug(b.band)}`}
+              />
+              <label class="chip" for={`band-${slug(b.band)}`}>
+                {b.band}
+              </label>
+            </>
+          ))
+        }
+      </fieldset>
+
+      <Fragment set:html={hist} />
+
+      <div class="scope__readout">
+        <p data-readout="all">
+          <strong class="scope__n">{characterised}</strong>{c.scopeCharacterised}
+          <span class="kpi__meta">{scopeUnknownText}</span>
+        </p>
+        {
+          NO_SIZE_BANDS.map((b) => (
+            <p data-readout={slug(b.band)}>
+              <strong class="scope__n">{b.count}</strong>
+              {bandText(b.band)}
+            </p>
+          ))
+        }
+      </div>
+
+      <p class="scope__icp">
+        <span class="live-dot" aria-hidden="true"></span>
+        {scopeIcpText}
+      </p>
+    </div>
+
+    {/* ---- Evidence stream: the claim ledger, most recent first ---------- */}
+    <div class="stream">
+      <div class="stream__head">
+        <p class="code">{c.streamLabel}</p>
+        <p class="kpi__source">{streamCountText}</p>
+      </div>
+      {/* Focusable because it scrolls, and because focus pauses the marquee —
+          which is how a moving region stays operable (WCAG 2.2.2). */}
+      <div class="stream__viewport" tabindex="0" role="region" aria-label={c.streamLabel}>
+        <ol class="stream__track">
+          {
+            stream.map((row) => (
+              <li class="stream__row">
+                <span class="stream__when">{row.when}</span>
+                <span class="stream__what">{row.publisher}</span>
+                <span class="stream__kind">{row.kind}</span>
+                <span class:list={['stream__grade', row.vendor && 'is-vendor']}>{row.grade}</span>
+              </li>
+            ))
+          }
+          {/* Duplicated purely so the marquee loops seamlessly; hidden from
+              assistive tech so the ledger is not announced twice. */}
+          <li aria-hidden="true" class="stream__dup">
+            <ol class="stream__track-inner">
+              {stream.map((row) => (
+                <li class="stream__row">
+                  <span class="stream__when">{row.when}</span>
+                  <span class="stream__what">{row.publisher}</span>
+                  <span class="stream__kind">{row.kind}</span>
+                  <span class:list={['stream__grade', row.vendor && 'is-vendor']}>{row.grade}</span>
+                </li>
+              ))}
+            </ol>
+          </li>
+        </ol>
       </div>
     </div>
   </div>

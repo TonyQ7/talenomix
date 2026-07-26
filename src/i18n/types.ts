@@ -124,6 +124,20 @@ export interface Dictionary {
       readonly absent: string;
       readonly mapLabel: string;
       readonly coverageLabel: string;
+      readonly scopeLabel: string;
+      readonly scopeSource: string;
+      readonly scopeLegend: string;
+      readonly scopeAll: string;
+      readonly scopeCharacterised: string;
+      /** Contains `{n}` — the count of entities with no published headcount. */
+      readonly scopeUnknown: string;
+      /** Contains `{band}` — the selected size band. */
+      readonly scopeInBand: string;
+      /** Contains `{n}` — the count inside the 5–49 target band. */
+      readonly scopeIcp: string;
+      readonly streamLabel: string;
+      /** Contains `{n}` — the number of ledger entries. */
+      readonly streamCount: string;
       readonly note: string;
       readonly cta: string;
     };

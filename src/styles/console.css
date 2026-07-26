@@ -342,6 +342,248 @@
 }
 
 /* ==========================================================================
+   Scope control — CSS-only band selector over a real distribution
+   ========================================================================== */
+
+.scope {
+  border: 1px solid var(--console-rule);
+  padding: clamp(0.9rem, 2.2vw, 1.35rem);
+  display: grid;
+  gap: 0.9rem;
+  min-inline-size: 0;
+}
+
+.scope__head,
+.stream__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem 1rem;
+}
+
+.scope__bands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-inline-size: 0;
+}
+
+.hist {
+  inline-size: 100%;
+  block-size: auto;
+  /* Capped on the inline axis rather than the block axis: constraining height
+     lets preserveAspectRatio letterbox the chart and strand it in whitespace. */
+  max-inline-size: 40rem;
+}
+
+.hist__axis {
+  stroke: var(--rule-on-ink-strong);
+  stroke-width: 1;
+}
+
+.hist__bar {
+  fill: var(--cobalt-light);
+  transition:
+    fill var(--dur-quick) var(--ease-survey),
+    opacity var(--dur-quick) var(--ease-survey);
+}
+
+.hist__count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  fill: var(--on-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.hist__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--on-ink-faint);
+}
+
+/* Selecting a band dims the rest and promotes the chosen bar to mint. */
+.scope:has(#band-all:checked) [data-readout]:not([data-readout='all']),
+.scope:has(#band-59:checked) [data-readout]:not([data-readout='59']),
+.scope:has(#band-1019:checked) [data-readout]:not([data-readout='1019']),
+.scope:has(#band-2049:checked) [data-readout]:not([data-readout='2049']),
+.scope:has(#band-14:checked) [data-readout]:not([data-readout='14']),
+.scope:has(#band-5099:checked) [data-readout]:not([data-readout='5099']),
+.scope:has(#band-100:checked) [data-readout]:not([data-readout='100']) {
+  display: none;
+}
+
+.scope:not(:has(#band-all:checked)) .hist__group .hist__bar {
+  opacity: 0.28;
+}
+
+.scope:has(#band-14:checked) .hist__group[data-band='1–4'] .hist__bar,
+.scope:has(#band-59:checked) .hist__group[data-band='5–9'] .hist__bar,
+.scope:has(#band-1019:checked) .hist__group[data-band='10–19'] .hist__bar,
+.scope:has(#band-2049:checked) .hist__group[data-band='20–49'] .hist__bar,
+.scope:has(#band-5099:checked) .hist__group[data-band='50–99'] .hist__bar,
+.scope:has(#band-100:checked) .hist__group[data-band='100+'] .hist__bar {
+  opacity: 1;
+  fill: var(--mint-light);
+}
+
+.scope:has(#band-all:checked) label[for='band-all'],
+.scope:has(#band-14:checked) label[for='band-14'],
+.scope:has(#band-59:checked) label[for='band-59'],
+.scope:has(#band-1019:checked) label[for='band-1019'],
+.scope:has(#band-2049:checked) label[for='band-2049'],
+.scope:has(#band-5099:checked) label[for='band-5099'],
+.scope:has(#band-100:checked) label[for='band-100'] {
+  background: var(--on-ink);
+  border-color: var(--on-ink);
+  color: var(--ink);
+}
+
+.scope__readout p {
+  font-size: var(--step--1);
+  color: var(--on-ink-muted);
+  line-height: 1.5;
+}
+
+.scope__n {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  color: var(--on-ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  /* Astro collapses the template whitespace between the number and the label,
+     so the gap is set here rather than relying on a text node surviving. */
+  margin-inline-end: 0.4rem;
+}
+
+.scope__icp {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: var(--step--1);
+  color: var(--mint-light);
+  border-block-start: 1px solid var(--console-rule);
+  padding-block-start: 0.8rem;
+}
+
+/* ==========================================================================
+   Evidence stream
+   ========================================================================== */
+
+.stream {
+  border: 1px solid var(--console-rule);
+  padding: clamp(0.9rem, 2.2vw, 1.35rem);
+  display: grid;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+.stream__viewport:focus-visible {
+  outline: 2px solid var(--focus-on-ink);
+  outline-offset: 2px;
+}
+
+.stream__viewport {
+  block-size: 11rem;
+  overflow: hidden;
+  position: relative;
+  /* Fade the stream at both edges so rows enter and leave rather than pop. */
+  mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+}
+
+.stream__track,
+.stream__track-inner {
+  display: grid;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.js-reveal .stream__track {
+  animation: stream-scroll 38s linear infinite;
+}
+
+.stream:hover .stream__track,
+.stream:focus-within .stream__track {
+  animation-play-state: paused;
+}
+
+@keyframes stream-scroll {
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.stream__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  gap: 0.75rem;
+  align-items: baseline;
+  padding-block: 0.42rem;
+  border-block-end: 1px solid var(--console-rule);
+  font-size: var(--step--2);
+  line-height: 1.4;
+}
+
+.stream__when {
+  font-family: var(--font-mono);
+  color: var(--on-ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.stream__what {
+  color: var(--on-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stream__kind {
+  color: var(--on-ink-muted);
+  white-space: nowrap;
+}
+
+.stream__grade {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--mint-light);
+  border: 1px solid currentColor;
+  padding: 0 0.32rem;
+  border-radius: var(--radius-xs);
+}
+
+.stream__grade.is-vendor {
+  color: #e0b463;
+}
+
+.stream__dup {
+  display: contents;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .stream__track {
+    animation: none;
+  }
+
+  /* Without the loop the duplicate is dead weight and would just pad the
+     scroll area, so it is removed rather than left below the fold. */
+  .stream__dup {
+    display: none;
+  }
+
+  .stream__viewport {
+    block-size: auto;
+    max-block-size: 14rem;
+    overflow-y: auto;
+    mask-image: none;
+  }
+}
+
+/* ==========================================================================
    Console footer
    ========================================================================== */
 

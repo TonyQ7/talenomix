@@ -208,6 +208,57 @@ export const CLAIMS: readonly Claim[] = [
     vendorClaim: false,
   },
   {
+    id: 'no-frame-78100',
+    text: {
+      en: 'A query to the Norwegian Enhetsregister for NACE 78.100 (recruitment and provision of labour) returned 1,369 registered entities, of which 372 publish an employee count and 110 fall in the 5–49 band. 78.100 is a superset that also contains staffing and temporary-labour businesses, so this is a frame to be narrowed, not a count of executive-search firms.',
+      sv: 'En förfrågan till norska Enhetsregisteret för NACE 78.100 (rekruttering og formidling av arbeidskraft) gav 1 369 registrerade enheter, varav 372 publicerar antal anställda och 110 ligger i spannet 5–49. 78.100 är en övermängd som också innehåller bemanning och personaluthyrning, så detta är en ram som ska smalnas av – inte ett antal sökbyråer.',
+    },
+    source: {
+      id: 'src-no-frame',
+      url: 'https://data.brreg.no/enhetsregisteret/api/enheter?naeringskode=78.100',
+      publisher: 'Brønnøysundregistrene — Enhetsregisteret API',
+      retrievedOn: '2026-07-27',
+      kind: 'official-statistics',
+      language: 'no',
+    },
+    confidence: 'A',
+    vendorClaim: false,
+  },
+  {
+    id: 'fi-frame-78100',
+    text: {
+      en: 'A query to the Finnish PRH/YTJ open company API for main business line 78100 returned 461 registered companies. As in Norway, the code covers recruitment and labour provision generally, so it bounds the search frame rather than identifying executive-search firms.',
+      sv: 'En förfrågan till finska PRH/YTJ:s öppna företags-API för huvudverksamhet 78100 gav 461 registrerade bolag. Liksom i Norge omfattar koden rekrytering och personaluthyrning generellt, så den avgränsar sökramen snarare än identifierar sökbyråer.',
+    },
+    source: {
+      id: 'src-fi-frame',
+      url: 'https://avoindata.prh.fi/opendata-ytj-api/v3/companies?mainBusinessLine=78100',
+      publisher: 'Finnish Patent and Registration Office — YTJ open data API',
+      retrievedOn: '2026-07-27',
+      kind: 'official-statistics',
+      language: 'en',
+    },
+    confidence: 'A',
+    vendorClaim: false,
+  },
+  {
+    id: 'se-dk-access-pending',
+    text: {
+      en: 'Swedish and Danish registry endpoints returned authorisation errors on 27 July 2026 (Bolagsverket portal 403, Virk distribution 401). Both are documented as open data, but neither is queryable without credentials, so their frames are recorded as unresolved rather than estimated from directories.',
+      sv: 'Svenska och danska registerslutpunkter returnerade behörighetsfel den 27 juli 2026 (Bolagsverkets portal 403, Virks distribution 401). Båda beskrivs som öppna data, men ingen går att fråga utan uppgifter, så deras ramar redovisas som olösta i stället för att skattas utifrån förteckningar.',
+    },
+    source: {
+      id: 'src-se-dk-access',
+      url: 'https://datacvr.virk.dk/artikel/system-til-system-adgang-til-cvr-data',
+      publisher: 'Erhvervsstyrelsen — CVR system access',
+      retrievedOn: '2026-07-27',
+      kind: 'direct-statement',
+      language: 'da',
+    },
+    confidence: 'A',
+    vendorClaim: false,
+  },
+  {
     id: 'no-registry-source',
     text: {
       en: 'Brønnøysundregistrene publishes open APIs for Norwegian legal entities and key figures from filed annual accounts.',

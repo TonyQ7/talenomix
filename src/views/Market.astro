@@ -15,11 +15,25 @@ const { locale } = Astro.props;
 const dict = t(locale);
 const m = dict.market;
 const sourceById = new Map(CLAIMS.map((claim) => [claim.id, claim.source]));
+// Every figure in the contract is rendered, grouped by market. Hand-picking a
+// subset here is how the page silently stops reflecting the data — and
+// tests/data.spec.ts asserts the full count for exactly that reason.
+const figuresByCountry = MARKET_FIGURES.reduce<Map<string, typeof MARKET_FIGURES>>(
+  (acc, figure) => {
+    const existing = acc.get(figure.country) ?? [];
+    acc.set(figure.country, [...existing, figure]);
+    return acc;
+  },
+  new Map(),
+);
+const marketOrder = [...figuresByCountry.keys()].sort();
+
+// The three charts below illustrate the Finnish directory series specifically,
+// so they are looked up by id rather than taken from whatever happens to be first.
 const byId = new Map(MARKET_FIGURES.map((figure) => [figure.id, figure]));
-const firmCount = byId.get('fi-firms-2023')!;
-const exclusive = byId.get('fi-exclusive-2023')!;
-const marketValue = byId.get('fi-market-2023')!;
-const yoy = byId.get('fi-yoy-2023')!;
+const fiFirms = byId.get('fi-firms-2023')!;
+const fiExclusive = byId.get('fi-exclusive-2023')!;
+const fiYoy = byId.get('fi-yoy-2023')!;
 
 function valueLabel(value: number | null, unit: string): string {
   if (value === null) return m.notPublished;
@@ -44,28 +58,37 @@ function valueLabel(value: number | null, unit: string): string {
       <p>{m.caveatBody}</p>
     </div>
     <SectionHead
-      eyebrow="Finland · 2023"
+      eyebrow={m.eyebrow}
       title={m.metricsTitle}
-      lede={firmCount.caveat[locale]}
+      lede={m.caveatBody}
       sheet="01 / 02"
       sheetLabel={dict.ui.sheet}
     />
 
-    <div class="market-metrics">
-      {[firmCount, exclusive, marketValue, yoy].map((figure) => (
-        <article class="market-metric">
-          <p class="num market-metric__value">{valueLabel(figure.value, figure.unit)}</p>
-          <h2>{figure.label[locale]}</h2>
-          <p>{figure.caveat[locale]}</p>
-          <p class="code">{figure.period} · {figure.basis} · {figure.confidence}</p>
-        </article>
-      ))}
-    </div>
+    {
+      marketOrder.map((country) => (
+        <div class="market-group">
+          <p class="code market-group__head">
+            {dict.countries[country as keyof typeof dict.countries] ?? country}
+          </p>
+          <div class="market-metrics">
+            {(figuresByCountry.get(country) ?? []).map((figure) => (
+              <article class="market-metric">
+                <p class="num market-metric__value">{valueLabel(figure.value, figure.unit)}</p>
+                <h2>{figure.label[locale]}</h2>
+                <p>{figure.caveat[locale]}</p>
+                <p class="code">{figure.period} · {figure.basis} · {figure.confidence}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      ))
+    }
 
     <div class="market-charts" aria-label={m.metricsTitle}>
-      <div set:html={barRow(firmCount.label[locale], firmCount.value ?? 0, firmCount.value ?? 1)} />
-      <div set:html={barRow(exclusive.label[locale], exclusive.value ?? 0, firmCount.value ?? 1)} />
-      <div set:html={dotPlot(yoy.label[locale], yoy.value ?? 0, -10, 10, '%')} />
+      <div set:html={barRow(fiFirms.label[locale], fiFirms.value ?? 0, fiFirms.value ?? 1)} />
+      <div set:html={barRow(fiExclusive.label[locale], fiExclusive.value ?? 0, fiFirms.value ?? 1)} />
+      <div set:html={dotPlot(fiYoy.label[locale], fiYoy.value ?? 0, -10, 10, '%')} />
     </div>
   </div>
 </section>
@@ -143,9 +166,21 @@ function valueLabel(value: number | null, unit: string): string {
     margin-bottom: 0;
   }
 
+  .market-group + .market-group {
+    margin-top: clamp(1.75rem, 4vw, 3rem);
+  }
+
+  .market-group__head {
+    padding-bottom: 0.6rem;
+    margin-bottom: 0.9rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* auto-fit, not a fixed track count: a market with three figures would
+     otherwise leave empty cells showing the grid's own rule colour. */
   .market-metrics {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
     gap: 1px;
     background: var(--rule);
     border: 1px solid var(--rule);
@@ -223,19 +258,10 @@ function valueLabel(value: number | null, unit: string): string {
   }
 
   @media (max-width: 56rem) {
-    .market-metrics {
-      grid-template-columns: 1fr 1fr;
-    }
-
     .market-source-note {
       align-items: flex-start;
       flex-direction: column;
     }
   }
 
-  @media (max-width: 34rem) {
-    .market-metrics {
-      grid-template-columns: 1fr;
-    }
-  }
 </style>
