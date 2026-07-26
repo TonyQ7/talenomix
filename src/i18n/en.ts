@@ -195,7 +195,7 @@ export const en: Dictionary = {
       mapLabel: 'Mandate search universe',
       coverageLabel: 'Published counts by market',
       scopeLabel: 'Headcount distribution · Norway',
-      scopeSource: 'Enhetsregisteret · NACE 78.100 · 27 Jul 2026',
+      scopeSource: 'Enhetsregisteret · NACE 78.100 · 26 Jul 2026',
       scopeLegend: 'Filter the distribution by headcount band',
       scopeAll: 'All bands',
       scopeCharacterised: 'entities publish a headcount.',

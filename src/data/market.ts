@@ -79,7 +79,7 @@ export const MARKET_FIGURES: readonly MarketFigure[] = [
     unit: 'firms',
     period: '2026',
     sourceId: 'no-frame-78100',
-    retrievedOn: '2026-07-27',
+    retrievedOn: '2026-07-26',
     basis: 'official-registry',
     confidence: 'A',
     caveat: {
@@ -95,7 +95,7 @@ export const MARKET_FIGURES: readonly MarketFigure[] = [
     unit: 'firms',
     period: '2026',
     sourceId: 'no-frame-78100',
-    retrievedOn: '2026-07-27',
+    retrievedOn: '2026-07-26',
     basis: 'official-registry',
     confidence: 'A',
     caveat: {
@@ -111,7 +111,7 @@ export const MARKET_FIGURES: readonly MarketFigure[] = [
     unit: 'firms',
     period: '2026',
     sourceId: 'no-frame-78100',
-    retrievedOn: '2026-07-27',
+    retrievedOn: '2026-07-26',
     basis: 'official-registry',
     confidence: 'A',
     caveat: {
@@ -129,7 +129,7 @@ export const MARKET_FIGURES: readonly MarketFigure[] = [
     unit: 'firms',
     period: '2026',
     sourceId: 'fi-frame-78100',
-    retrievedOn: '2026-07-27',
+    retrievedOn: '2026-07-26',
     basis: 'official-registry',
     confidence: 'A',
     caveat: {
@@ -140,7 +140,7 @@ export const MARKET_FIGURES: readonly MarketFigure[] = [
 ];
 
 /**
- * Norwegian headcount distribution under NACE 78.100, queried 27 July 2026.
+ * Norwegian headcount distribution under NACE 78.100, queried 26 July 2026.
  *
  * This is the only market where a full size distribution is currently
  * obtainable without credentials, which is why the scope control is driven by

@@ -196,7 +196,7 @@ export const sv: Dictionary = {
       mapLabel: 'Uppdragets sökuniversum',
       coverageLabel: 'Publicerade antal per marknad',
       scopeLabel: 'Fördelning efter antal anställda · Norge',
-      scopeSource: 'Enhetsregisteret · NACE 78.100 · 27 juli 2026',
+      scopeSource: 'Enhetsregisteret · NACE 78.100 · 26 juli 2026',
       scopeLegend: 'Filtrera fördelningen på storleksspann',
       scopeAll: 'Alla spann',
       scopeCharacterised: 'enheter publicerar antal anställda.',
