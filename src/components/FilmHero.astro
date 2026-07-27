@@ -30,13 +30,28 @@ interface Cta {
 interface Props {
   locale: Locale;
   media?: 'video' | 'still';
+  /**
+   * Replaces the registry badge. The badge is a marketing metric; on /privacy/
+   * or /404 it would be a number in a place where the reader came for something
+   * else, so those pages label themselves instead.
+   */
+  eyebrow?: string;
   headline: string;
   body: string;
-  primary: Cta;
+  /** Optional: the functional pages carry their calls to action further down. */
+  primary?: Cta;
   secondary?: Cta;
 }
 
-const { locale, media = 'still', headline, body, primary, secondary }: Props = Astro.props;
+const {
+  locale,
+  media = 'still',
+  eyebrow,
+  headline,
+  body,
+  primary,
+  secondary,
+}: Props = Astro.props;
 const dict = t(locale);
 
 /**
@@ -74,22 +89,33 @@ const frameLabel = new Intl.NumberFormat(locale === 'sv' ? 'sv-SE' : 'en-GB')
 
   <div class="shell hero-film__content">
     <div class="glass hero-film__plate" data-reveal>
-      <p class="film-badge">
-        <span class="live-dot" aria-hidden="true"></span>
-        <span class="film-badge__n num" data-countup>{frameLabel}</span>
-        <span class="film-badge__label">{dict.ui.frameBadge}</span>
-      </p>
+      {
+        eyebrow ? (
+          <p class="eyebrow hero-film__eyebrow">{eyebrow}</p>
+        ) : (
+          <p class="film-badge">
+            <span class="live-dot" aria-hidden="true" />
+            <span class="film-badge__n num" data-countup>{frameLabel}</span>
+            <span class="film-badge__label">{dict.ui.frameBadge}</span>
+          </p>
+        )
+      }
 
       <RevealWords text={headline} as="h1" class="hero-film__headline" />
 
       <p class="hero-film__body">{body}</p>
 
-      <div class="btn-row">
-        <a class="btn btn--primary" href={primary.href}>
-          {primary.label}<span class="btn__arrow" aria-hidden="true">→</span>
-        </a>
-        {secondary && <a class="btn btn--secondary" href={secondary.href}>{secondary.label}</a>}
-      </div>
+      {
+        primary && (
+          <div class="btn-row">
+            <a class="btn btn--primary" href={primary.href}>
+              {primary.label}
+              <span class="btn__arrow" aria-hidden="true">→</span>
+            </a>
+            {secondary && <a class="btn btn--secondary" href={secondary.href}>{secondary.label}</a>}
+          </div>
+        )
+      }
     </div>
   </div>
 
@@ -147,18 +173,27 @@ const frameLabel = new Intl.NumberFormat(locale === 'sv' ? 'sv-SE' : 'en-GB')
         video.setAttribute('disablepictureinpicture', '');
         slot.appendChild(video);
 
-        void video.play().catch(() => {
-          // Autoplay refused. The gradient is already behind it, so there is
-          // nothing to restore — just retire the control.
+        // Only an autoplay *refusal* should retire the control.
+        //
+        // A pending play() rejects with AbortError the moment anything calls
+        // pause() — including the pause button itself. Retiring the control on
+        // that meant the first press made the button vanish and dropped keyboard
+        // focus to <body>, so the film could be paused exactly once and never
+        // resumed. Covered by tests/film.spec.ts.
+        const retireOnRefusal = (error: unknown): void => {
+          if ((error as DOMException | undefined)?.name === 'AbortError') return;
+          // The gradient is already behind it, so there is nothing to restore.
           toggle?.setAttribute('hidden', '');
-        });
+        };
+
+        void video.play().catch(retireOnRefusal);
 
         if (toggle) {
           toggle.removeAttribute('hidden');
           const label = toggle.querySelector<HTMLElement>('.hero-film__toggle-text');
           toggle.addEventListener('click', () => {
             const wasPaused = video.paused;
-            if (wasPaused) void video.play();
+            if (wasPaused) void video.play().catch(retireOnRefusal);
             else video.pause();
             toggle.setAttribute('aria-pressed', String(!wasPaused));
             const next = wasPaused

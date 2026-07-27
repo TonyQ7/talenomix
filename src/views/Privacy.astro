@@ -1,6 +1,7 @@
 ---
 import { route, type Locale } from '~/lib/routes';
 import { t } from '~/i18n';
+import FilmHero from '~/components/FilmHero.astro';
 
 interface Props {
   locale: Locale;
@@ -11,19 +12,11 @@ const dict = t(locale);
 const p = dict.privacy;
 ---
 
-<section class="section section--tight">
-  <div class="shell shell--narrow">
-    <div class="page-head">
-      <p class="eyebrow">{p.eyebrow}</p>
-      <h1>{p.title}</h1>
-      <p class="lede">{p.lede}</p>
-      <p class="code">{p.updated}</p>
-    </div>
-  </div>
-</section>
+<FilmHero locale={locale} eyebrow={p.eyebrow} headline={p.title} body={p.lede} />
 
 <section class="section">
   <div class="shell shell--narrow">
+    <p class="code policy__updated">{p.updated}</p>
     <div class="policy">
       {
         p.sections.map((s, i) => (
@@ -68,6 +61,10 @@ const p = dict.privacy;
 
   .page-head .lede {
     max-width: var(--measure);
+  }
+
+  .policy__updated {
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
   }
 
   .policy {

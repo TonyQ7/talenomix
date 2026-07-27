@@ -118,6 +118,24 @@ registered source or explicitly allowlisted.
   reduced motion and never on `/demo/` — disclosed on `/privacy/` and
   allowlisted with a justification in `scripts/verify-claims.mjs`.
 
+### Known issue: the hero film is 43 MB
+
+The supplied file is 43,067,485 bytes — roughly 28x what a background loop
+should be. Two things follow, and both are workarounds rather than fixes:
+
+- It is gated to viewports at or above 64rem, so phones never fetch it. That
+  keeps mobile at 98 KB and Lighthouse at 100, but it also means the hero the
+  design is built around is desktop-only, which was not the intent.
+- `tests/film.spec.ts` runs serially, because three concurrent pulls of the same
+  43 MB stream starve each other's `play()` promise.
+
+The fix is to re-encode to roughly 1.5 MB and self-host it (see R1 in the plan):
+1080p or 720p, H.264 High, CRF ~30, no audio track, 8-12 seconds, `-movflags
++faststart`. That would remove the width gate, the serial test mode, the
+`/privacy/` third-party disclosure and the `verify-claims.mjs` allowlist entry
+in one change. No `ffmpeg` is available in this environment, so it has not been
+done here.
+
 ## Deployment
 
 `.github/workflows/ci.yml` runs typecheck, lint, build, claim verification and

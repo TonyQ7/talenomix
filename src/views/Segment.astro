@@ -3,6 +3,7 @@ import type { Locale } from '~/lib/routes';
 import { anchor, route } from '~/lib/routes';
 import { t, type Dictionary } from '~/i18n';
 import SectionHead from '~/components/SectionHead.astro';
+import FilmHero from '~/components/FilmHero.astro';
 
 interface Props {
   locale: Locale;
@@ -14,17 +15,14 @@ const dict = t(locale);
 const content = dict.segments[segment];
 ---
 
-<section class="segment-hero">
-  <div class="shell">
-    <p class="eyebrow">{content.eyebrow}</p>
-    <h1>{content.title}</h1>
-    <p class="lede">{content.lede}</p>
-    <div class="btn-row">
-      <a class="btn btn--primary" href={route('demo', locale)}>{dict.home.hero.primaryCta}</a>
-      <a class="btn btn--secondary" href={route('market', locale)}>{dict.nav.market}</a>
-    </div>
-  </div>
-</section>
+<FilmHero
+  locale={locale}
+  media="video"
+  headline={content.title}
+  body={content.lede}
+  primary={{ label: dict.home.hero.primaryCta, href: route('demo', locale) }}
+  secondary={{ label: dict.nav.market, href: route('market', locale) }}
+/>
 
 <section class="section panel--sunk">
   <div class="shell segment-grid">
@@ -74,23 +72,6 @@ const content = dict.segments[segment];
 </section>
 
 <style>
-  .segment-hero {
-    padding: clamp(5rem, 12vw, 11rem) 0 clamp(4rem, 9vw, 8rem);
-  }
-
-  .segment-hero h1 {
-    max-width: 15ch;
-    margin: 0.5rem 0 1.5rem;
-  }
-
-  .segment-hero .lede {
-    max-width: 62ch;
-  }
-
-  .segment-hero .btn-row {
-    margin-top: 2rem;
-  }
-
   .segment-grid {
     display: grid;
     gap: clamp(4rem, 8vw, 8rem);
@@ -120,10 +101,6 @@ const content = dict.segments[segment];
   }
 
   @media (max-width: 28rem) {
-    .segment-hero h1 {
-      overflow-wrap: anywhere;
-    }
-
     .segment-cta {
       overflow-wrap: anywhere;
     }

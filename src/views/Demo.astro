@@ -14,6 +14,7 @@ import { COVERAGE_STATES } from '~/types/domain';
 import MandateUniverse from '~/components/MandateUniverse.astro';
 import StateChip from '~/components/StateChip.astro';
 import CoverageLegend from '~/components/CoverageLegend.astro';
+import FilmHero from '~/components/FilmHero.astro';
 
 interface Props {
   locale: Locale;
@@ -37,15 +38,14 @@ const meterModifier: Record<string, string> = {
 };
 ---
 
+<!-- `media="still"` is load-bearing here, not cosmetic: no film slot means no
+     external request, which is what keeps this page's zero-third-party
+     guarantee true. See tests/network.spec.ts. -->
+<FilmHero locale={locale} eyebrow={d.eyebrow} headline={d.title} body={d.lede} />
+
 <section class="section section--tight">
   <div class="shell">
-    <div class="page-head">
-      <p class="eyebrow">{d.eyebrow}</p>
-      <h1>{d.title}</h1>
-      <p class="lede">{d.lede}</p>
-    </div>
-
-    <p class="dm-notice" style="margin-top: 2rem; max-width: 64rem">
+    <p class="dm-notice" style="max-width: 64rem">
       <span class="dm-notice__badge">{dict.ui.syntheticBadge}</span>
       <span>{d.syntheticNotice}</span>
     </p>

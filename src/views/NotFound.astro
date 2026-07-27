@@ -1,6 +1,7 @@
 ---
 import { route, type Locale } from '~/lib/routes';
 import { t } from '~/i18n';
+import FilmHero from '~/components/FilmHero.astro';
 
 interface Props {
   locale: Locale;
@@ -18,12 +19,11 @@ const links = [
 ];
 ---
 
+<FilmHero locale={locale} eyebrow={nf.code} headline={nf.title} body={nf.body} />
+
 <section class="section">
   <div class="shell shell--narrow">
     <div class="nf">
-      <p class="nf__code numeral">{nf.code}</p>
-      <h1>{nf.title}</h1>
-      <p class="lede">{nf.body}</p>
       <div>
         <p class="eyebrow" style="margin-bottom: 1rem">{nf.links}</p>
         <ul class="nf__links">
@@ -40,16 +40,6 @@ const links = [
     gap: 1.5rem;
     justify-items: start;
     padding-block: clamp(1rem, 5vw, 4rem);
-  }
-
-  .nf__code {
-    font-size: var(--step-5);
-    line-height: 1;
-    color: var(--cobalt);
-  }
-
-  .nf h1 {
-    max-width: 16ch;
   }
 
   .nf__links {

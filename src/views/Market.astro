@@ -6,6 +6,7 @@ import { CLAIMS } from '~/data/claims';
 import { COVERAGE_MATRIX, MARKET_FIGURES } from '~/data/market';
 import { barRow, dotPlot } from '~/lib/chart';
 import SectionHead from '~/components/SectionHead.astro';
+import FilmHero from '~/components/FilmHero.astro';
 
 interface Props {
   locale: Locale;
@@ -43,13 +44,14 @@ function valueLabel(value: number | null, unit: string): string {
 }
 ---
 
-<section class="market-hero">
-  <div class="shell">
-    <p class="eyebrow">{m.eyebrow}</p>
-    <h1>{m.title}</h1>
-    <p class="lede">{m.lede}</p>
-  </div>
-</section>
+<FilmHero
+  locale={locale}
+  media="video"
+  headline={m.title}
+  body={m.lede}
+  primary={{ label: dict.home.hero.primaryCta, href: route('demo', locale) }}
+  secondary={{ label: dict.nav.method, href: route('method', locale) }}
+/>
 
 <section class="section panel--sunk">
   <div class="shell">
@@ -144,16 +146,6 @@ function valueLabel(value: number | null, unit: string): string {
 </section>
 
 <style>
-  .market-hero {
-    padding: clamp(5rem, 11vw, 10rem) 0 clamp(3rem, 8vw, 7rem);
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .market-hero h1 {
-    max-width: 14ch;
-    margin: 0.5rem 0 1.5rem;
-  }
-
   .market-caveat {
     max-width: 65ch;
     padding: 1.25rem;

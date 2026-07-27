@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { en } from '../src/i18n/en';
 import { ALL_PATHS, CTA_DESTINATIONS, ROUTES } from './routes';
 
@@ -208,20 +208,61 @@ test.describe('demo behaviour with JavaScript', () => {
     expect(await rows.locator('visible=true').count()).toBe(total);
   });
 
-  test('the demo makes no network calls to third parties', async ({ page }) => {
-    const external: string[] = [];
+  /**
+   * Third-party requests, route by route.
+   *
+   * This used to assert only that /demo/ stayed silent, which left the other
+   * fifteen routes entirely unconstrained — so the site's first external
+   * request could have appeared anywhere without a test noticing. The film is
+   * exactly that request, so the assertion is now an explicit allowlist and the
+   * functional routes are held at zero.
+   */
+  const FILM_ORIGIN = 'https://d8j0ntlcm91z4.cloudfront.net';
+
+  function watchExternal(page: Page): string[] {
+    const seen: string[] = [];
     page.on('request', (req) => {
       const url = req.url();
-      if (!url.startsWith('http://localhost') && !url.startsWith('http://127.0.0.1') && !url.startsWith('data:')) {
-        external.push(url);
-      }
+      if (url.startsWith('http://localhost') || url.startsWith('http://127.0.0.1')) return;
+      if (url.startsWith('data:') || url.startsWith('blob:')) return;
+      seen.push(url);
     });
+    return seen;
+  }
 
+  test('the functional routes make no third-party calls at all', async ({ page }) => {
+    // These carry `media="still"`, which is what makes the guarantee structural:
+    // with no film slot in the markup there is nothing for the script to fetch.
+    const external = watchExternal(page);
+
+    for (const path of ['./demo/', './method/', './privacy/', './sv/integritet/']) {
+      await page.goto(path);
+      await page.waitForLoadState('load');
+    }
     await page.goto('./demo/');
     await page.locator('#demo-next').click();
     await page.waitForTimeout(500);
 
-    expect(external, 'the synthetic demo must not call out').toEqual([]);
+    expect(external, 'the functional routes must not call out').toEqual([]);
+  });
+
+  test('the marketing routes call out to the film host and nowhere else', async ({
+    page,
+    isMobile,
+  }) => {
+    const external = watchExternal(page);
+
+    for (const path of ['./', './market/', './for/executive-search/', './sv/']) {
+      await page.goto(path);
+      await page.waitForLoadState('load');
+      await page.waitForTimeout(300);
+    }
+
+    const origins = [...new Set(external.map((u) => new URL(u).origin))].sort();
+    expect(origins, 'unexpected third-party origin on a marketing route').toEqual(
+      // Below the 64rem gate the film is never created, so mobile is silent too.
+      isMobile ? [] : [FILM_ORIGIN],
+    );
   });
 });
 

@@ -3,6 +3,7 @@ import { route, type Locale } from '~/lib/routes';
 import { t } from '~/i18n';
 import { CLAIMS } from '~/data/claims';
 import ClaimLedger from '~/components/ClaimLedger.astro';
+import FilmHero from '~/components/FilmHero.astro';
 
 interface Props {
   locale: Locale;
@@ -13,15 +14,7 @@ const dict = t(locale);
 const m = dict.method;
 ---
 
-<section class="section section--tight">
-  <div class="shell">
-    <div class="page-head">
-      <p class="eyebrow">{m.eyebrow}</p>
-      <h1>{m.title}</h1>
-      <p class="lede">{m.lede}</p>
-    </div>
-  </div>
-</section>
+<FilmHero locale={locale} eyebrow={m.eyebrow} headline={m.title} body={m.lede} />
 
 <section class="section">
   <div class="shell">

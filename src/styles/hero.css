@@ -101,6 +101,15 @@
 .hero-film__headline {
   font-size: clamp(2.25rem, 1.1rem + 4.6vw, 4.75rem);
   max-width: 17ch;
+  /* Swedish compounds are long enough to overflow a 320px plate at this size.
+     `anywhere` is the floor; hyphenation is the humane version of it, and only
+     Swedish has the dictionary here. */
+  overflow-wrap: anywhere;
+  hyphens: none;
+}
+
+html[lang='sv'] .hero-film__headline {
+  hyphens: auto;
 }
 
 .hero-film__body {
