@@ -1,35 +1,45 @@
 /*
   Talenomix design tokens.
 
-  PLAN.md section 3 specifies a paper / ink / cobalt / mint palette with Manrope and
-  Newsreader typography, an editorial grid, hairline rules and evidence-led annotation.
-  The visual metaphor throughout is a survey chart: contours, traverses, coverage.
+  A deep-navy / white-glass palette with Instrument Serif and Inter, glass panels
+  over a film backdrop, and evidence-led annotation. The survey-chart metaphor
+  survives in the contour map and the instrument console, which stay on solid
+  surfaces — see §"Glass" below for why that is not optional.
 
-  Everything below is a named token. No raw hex values are permitted outside this file.
+  Everything below is a named token. No raw hex values are permitted outside this
+  file.
+
+  Contrast contract, verified numerically rather than by eye:
+    - every ink tone clears 4.5:1 on --paper-sunk, the darkest light surface
+    - every on-ink tone clears 4.5:1 on --ink-raised, the lightest dark surface
+    - every text token permitted on .glass clears 4.5:1 against the WORST-CASE
+      composite: glass over --hero-wash over pure black. That is 4.74:1 at the
+      current alphas, and --mint is the binding constraint.
+  tests/contrast.spec.ts recomputes all three from these values at runtime.
 */
 
 :root {
   color-scheme: light;
 
-  /* ---- Surface: warm survey-chart paper ---------------------------------- */
-  --paper: #f2efe7;
-  --paper-raised: #faf8f3;
-  --paper-sunk: #e7e3d8;
-  --paper-deep: #dcd7c9;
+  /* ---- Surface: cool paper ----------------------------------------------- */
+  --paper: #f5f3fa;
+  --paper-raised: #ffffff;
+  --paper-sunk: #e9e6f2;
+  --paper-deep: #dcd7ec;
 
   /* ---- Ink --------------------------------------------------------------- */
-  --ink: #131822;
-  --ink-raised: #1e2531;
-  --ink-strong: #0b0e15;
-  --ink-muted: #575f6d;
+  --ink: #1b133c;
+  --ink-raised: #2a2050;
+  --ink-strong: #100b26;
+  --ink-muted: #463c6e;
   /* Every ink tone below is set so the lightest one still clears 4.5:1 on the
-     darkest paper surface (--paper-sunk). See tests/a11y.spec.ts. */
-  --ink-faint: #5d6472;
+     darkest paper surface (--paper-sunk): 6.70:1. See tests/a11y.spec.ts. */
+  --ink-faint: #514878;
 
   /* Ink used as a surface (inverted sections) */
-  --on-ink: #efece4;
-  --on-ink-muted: #a6adb9;
-  --on-ink-faint: #7b8391;
+  --on-ink: #f3f1fa;
+  --on-ink-muted: #b9b2d4;
+  --on-ink-faint: #9d95bd;
 
   /* ---- Cobalt: the primary mark ------------------------------------------ */
   --cobalt: #1b44c8;
@@ -54,8 +64,14 @@
   --state-resolved-fill: color-mix(in srgb, var(--mint) 14%, transparent);
   --state-unresolved: #734d07;
   --state-unresolved-fill: color-mix(in srgb, #734d07 12%, transparent);
-  --state-excluded: #545b67;
-  --state-excluded-fill: color-mix(in srgb, #545b67 10%, transparent);
+  /* Retinted toward the navy so the neutral stops reading dirty against a cool
+     paper. Cobalt, mint and the ochre are unchanged: they encode meaning across
+     StateChip, CoverageLegend, the contour map's zone fills and the ledger copy,
+     so re-hueing them would be a content change wearing a skin change's clothes. */
+  --state-excluded: #4c4a5e;
+  --state-excluded-fill: color-mix(in srgb, #4c4a5e 10%, transparent);
+  /* The one warm tone that survives on dark surfaces (9.03:1 on --ink). */
+  --state-unresolved-on-ink: #e0b463;
   --state-review: var(--cobalt);
   --state-review-fill: color-mix(in srgb, var(--cobalt) 10%, transparent);
 
@@ -71,8 +87,11 @@
   --focus-on-ink: var(--mint-light);
 
   /* ---- Typography -------------------------------------------------------- */
-  --font-display: 'Newsreader Variable', 'Newsreader', ui-serif, Georgia, 'Times New Roman', serif;
-  --font-sans: 'Manrope Variable', 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Instrument Serif is a display face with hairline thins and exactly one
+     weight. It is restricted to h1/h2/.pullquote/.offer-price; small dense
+     numerals use the sans, whose tabular figures suit an instrument panel. */
+  --font-display: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', 'Roboto Mono', Menlo, monospace;
 
   /* Floor is 12px: the annotation labels (codes, stamps, legends) must stay
@@ -86,12 +105,16 @@
   --step-4: clamp(2rem, 1.455rem + 2.73vw, 4rem);
   --step-5: clamp(2.5rem, 1.41rem + 5.45vw, 5.5rem);
 
-  --tracking-display: -0.022em;
+  /* Instrument Serif is already a narrow face; the heavy negative tracking that
+     suited Newsreader closes the counters here. */
+  --tracking-display: -0.008em;
   --tracking-tight: -0.012em;
   --tracking-label: 0.15em;
   --tracking-code: 0.06em;
 
-  --leading-display: 0.98;
+  /* 0.98 was tuned for Newsreader. Instrument Serif has taller extenders, so at
+     that leading consecutive lines very nearly touch. */
+  --leading-display: 1.04;
   --leading-tight: 1.14;
   --leading-body: 1.62;
 
@@ -103,11 +126,41 @@
   --space-section: clamp(4.5rem, 9vw, 9rem);
   --space-section-tight: clamp(3rem, 6vw, 5.5rem);
 
+  /* ---- Radii --------------------------------------------------------------
+     --radius-xs stays at 2px on purpose: it is the :focus-visible radius in
+     base.css and the radius on 8px state glyphs. Rounding those to 12px turns a
+     focus ring on an inline link into a lozenge. Panels use --radius-lg. */
   --radius-xs: 2px;
   --radius-sm: 3px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+
+  /* ---- Glass --------------------------------------------------------------
+     The contrast guarantee is a layering invariant, not a measurement: between
+     the film and any text, every layer may only move the composite TOWARD
+     --paper. --hero-wash is what makes that floor exist; lowering it silently
+     breaks every text token on glass, which is why tests/contrast.spec.ts
+     recomputes the bound from these two values. */
+  --on-cobalt: #ffffff;
+  --mint-light-hover: #a2ddca;
+  --glass-bg: rgb(255 255 255 / 0.70);
+  --glass-blur: blur(14px) saturate(140%);
+  --glass-rule: rgb(255 255 255 / 0.55);
+  --glass-shadow: 0 18px 48px -28px rgb(27 19 60 / 0.45);
+  --hero-wash: rgb(245 243 250 / 0.40);
 
   /* ---- Motion ------------------------------------------------------------ */
   --ease-survey: cubic-bezier(0.22, 0.61, 0.24, 1);
   --dur-reveal: 620ms;
   --dur-quick: 160ms;
+}
+
+/* Without backdrop-filter, high-frequency video detail reads straight through
+   the panel. The contrast bound already holds (it comes from alpha, not blur),
+   so this is purely about legibility — and it only ever raises the floor. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --glass-bg: rgb(255 255 255 / 0.88);
+  }
 }

@@ -67,14 +67,13 @@
   font-family: var(--font-display);
   letter-spacing: var(--tracking-display);
   line-height: var(--leading-display);
-  font-variation-settings: 'opsz' 40;
 }
 
 .numeral {
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
   font-variant-numeric: tabular-nums lining-nums;
   letter-spacing: -0.03em;
-  font-weight: 400;
+  font-weight: 600;
 }
 
 /* Pull quote — used for the positioning statement. */
@@ -83,7 +82,6 @@
   font-size: var(--step-3);
   line-height: 1.18;
   letter-spacing: var(--tracking-display);
-  font-variation-settings: 'opsz' 32;
   text-wrap: balance;
 }
 
@@ -137,7 +135,7 @@
   letter-spacing: 0.01em;
   text-decoration: none;
   border: 1px solid transparent;
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-lg);
   transition:
     background-color var(--dur-quick) var(--ease-survey),
     color var(--dur-quick) var(--ease-survey),
@@ -159,7 +157,7 @@
 
 .btn--primary {
   background: var(--cobalt);
-  color: #fff;
+  color: var(--on-cobalt);
   border-color: var(--cobalt);
 }
 
@@ -186,8 +184,8 @@
 }
 
 .panel--ink .btn--primary:hover {
-  background: #a2ddca;
-  border-color: #a2ddca;
+  background: var(--mint-light-hover);
+  border-color: var(--mint-light-hover);
 }
 
 .panel--ink .btn--secondary {
@@ -239,6 +237,7 @@
   position: relative;
   background: var(--paper-raised);
   border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
   padding: clamp(1.15rem, 2.2vw, 1.75rem);
   display: flex;
   flex-direction: column;
@@ -312,7 +311,7 @@
   text-transform: uppercase;
   padding: 0.2rem 0.5rem;
   border: 1px solid currentColor;
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-pill);
   white-space: nowrap;
 }
 
@@ -374,7 +373,7 @@
 }
 
 .panel--ink .state--unresolved {
-  color: #e0b463;
+  color: var(--state-unresolved-on-ink);
 }
 
 .panel--ink .state--excluded {
@@ -529,6 +528,7 @@
 .map-frame {
   position: relative;
   border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-lg);
   background: var(--paper-raised);
   padding: clamp(0.5rem, 1.2vw, 0.9rem);
 }
@@ -833,7 +833,7 @@
 .lang-toggle {
   display: inline-flex;
   border: 1px solid var(--rule-strong);
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-pill);
   overflow: hidden;
   flex: none;
 }
@@ -1053,7 +1053,7 @@
   padding: 0.2rem 0.5rem;
   border: 1px solid var(--rule);
   color: var(--ink-muted);
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-pill);
   /* These carry sentence-length labels, so they wrap rather than overflow. */
   line-height: 1.45;
 }
@@ -1111,4 +1111,36 @@
   font-size: var(--step--2);
   color: var(--ink-faint);
   font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   Glass
+   ==========================================================================
+   Frosted panels that sit over the film. The contrast guarantee comes from
+   alpha compositing, not from the blur — see the layering invariant in
+   tokens.css — so the no-backdrop-filter fallback is safe by construction and
+   only ever raises the floor.
+
+   ONLY these text tokens are permitted on .glass, verified against the
+   worst-case composite (glass over --hero-wash over black):
+     --ink 13.2  --ink-muted 6.4  --ink-faint 5.3  --cobalt 5.0  --cobalt-deep 7.6
+
+   State chips are FORBIDDEN on glass. Their color-mix fills darken the
+   composite toward the state colour and three of the four labels fall to
+   3.9-4.4:1. They live on solid surfaces, where they measure 4.9-7.3.
+   Enforced by tests/contrast.spec.ts.
+*/
+
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-rule);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .glass {
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+  }
 }

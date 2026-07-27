@@ -19,6 +19,10 @@
 .console {
   --console-rule: var(--rule-on-ink);
   position: relative;
+  border-radius: var(--radius-lg);
+  /* The 1px-gap hairline trick inside would otherwise show square corners
+     through the rounded frame. */
+  overflow: hidden;
   background: var(--ink);
   color: var(--on-ink);
   border: 1px solid var(--ink-raised);
@@ -81,7 +85,7 @@
   gap: 0.4rem;
   padding: 0.32rem 0.7rem;
   border: 1px solid var(--rule-on-ink-strong);
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-pill);
   font-size: var(--step--2);
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -183,7 +187,11 @@
 }
 
 .kpi__value {
-  font-family: var(--font-display);
+  /* Sans, not the display serif: Instrument Serif's hairline thins alias
+     badly at this size on a dark panel, and Inter's tabular figures are the
+     better instrument face. */
+  font-family: var(--font-sans);
+  font-weight: 600;
   font-size: var(--step-3);
   line-height: 1;
   font-variant-numeric: tabular-nums lining-nums;
@@ -247,7 +255,8 @@
 }
 
 .gauge__display {
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
+  font-weight: 600;
   font-size: 26px;
   font-variant-numeric: tabular-nums;
   fill: var(--on-ink);
@@ -274,7 +283,7 @@
 }
 
 .stackbar__seg--unresolved {
-  fill: #e0b463;
+  fill: var(--state-unresolved-on-ink);
 }
 
 .stackbar__seg--excluded {
@@ -347,6 +356,7 @@
 
 .scope {
   border: 1px solid var(--console-rule);
+  border-radius: var(--radius-md);
   padding: clamp(0.9rem, 2.2vw, 1.35rem);
   display: grid;
   gap: 0.9rem;
@@ -449,7 +459,8 @@
 }
 
 .scope__n {
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
+  font-weight: 600;
   font-size: var(--step-2);
   color: var(--on-ink);
   font-variant-numeric: tabular-nums;
@@ -475,6 +486,7 @@
 
 .stream {
   border: 1px solid var(--console-rule);
+  border-radius: var(--radius-md);
   padding: clamp(0.9rem, 2.2vw, 1.35rem);
   display: grid;
   gap: 0.75rem;
@@ -491,6 +503,8 @@
   overflow: hidden;
   position: relative;
   /* Fade the stream at both edges so rows enter and leave rather than pop. */
+  /* Mask luminance, not colour — black here means "fully transparent" and is
+     not a palette value, so it is deliberately not tokenised. */
   mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
 }
 
@@ -553,11 +567,11 @@
   color: var(--mint-light);
   border: 1px solid currentColor;
   padding: 0 0.32rem;
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-pill);
 }
 
 .stream__grade.is-vendor {
-  color: #e0b463;
+  color: var(--state-unresolved-on-ink);
 }
 
 .stream__dup {
@@ -630,7 +644,7 @@
    The console is a dark panel that is not `.panel--ink`, so it does not inherit
    the override block in components.css. Anything reused from the shared
    vocabulary has to be re-pointed here or it keeps its light-surface colour and
-   fails contrast — `.code` at #5d6472 on #131822 is 2.98:1, which is invisible
+   fails contrast — muted ink on the console ground is under 3:1, which is invisible
    in a screenshot and obvious in an audit. Covered by tests/a11y.spec.ts.
 */
 .console .code {
@@ -664,7 +678,7 @@
 }
 
 .console .state--unresolved {
-  color: #e0b463;
+  color: var(--state-unresolved-on-ink);
 }
 
 .console .state--excluded {

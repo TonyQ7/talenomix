@@ -77,7 +77,6 @@ h2 {
   font-family: var(--font-display);
   letter-spacing: var(--tracking-display);
   line-height: var(--leading-display);
-  font-variation-settings: 'opsz' 36;
 }
 
 h1 {

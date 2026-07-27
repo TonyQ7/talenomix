@@ -1,6 +1,10 @@
 /* Single stylesheet entry point. Imported once from PageLayout.astro. */
-@import '@fontsource-variable/manrope/wght.css';
-@import '@fontsource-variable/newsreader/opsz.css';
+/* Self-hosted. `wght.css` for Inter deliberately, not `index.css` or `opsz.css`:
+   we only vary weight, and Inter v4's optical-size axis would ship bytes we
+   never use. Instrument Serif is a static single-weight package — see the
+   font-synthesis note in base.css. */
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource/instrument-serif/400.css';
 
 @import './tokens.css';
 @import './base.css';
