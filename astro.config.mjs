@@ -24,7 +24,10 @@ export default defineConfig({
   scopedStyleStrategy: 'class',
   integrations: [
     sitemap({
-      filter: (page) => !page.endsWith('/404/'),
+      // Account briefs are prepared for one named firm and delivered by link.
+      // They carry noindex as well; keeping them out of the sitemap means we are
+      // not the ones publishing a prospect's name to a crawler.
+      filter: (page) => !page.endsWith('/404/') && !page.includes('/brief/'),
     }),
   ],
 });

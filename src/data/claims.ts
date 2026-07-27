@@ -208,6 +208,43 @@ export const CLAIMS: readonly Claim[] = [
     vendorClaim: false,
   },
   {
+    id: 'henrison-human-not-code',
+    text: {
+      en: 'Henrison publishes a stated position on automated research: “In a digital workplace, we prioritize human-powered research — curated and powered by humans, not code.”',
+      sv: 'Henrison publicerar en uttalad hållning till automatiserad research: ”In a digital workplace, we prioritize human-powered research — curated and powered by humans, not code.”',
+    },
+    source: {
+      id: 'src-henrison-about',
+      url: 'https://www.henrison.se/about',
+      publisher: 'Henrison AB',
+      retrievedOn: '2026-07-26',
+      kind: 'direct-statement',
+      language: 'en',
+      passage:
+        'In a digital workplace, we prioritize human-powered research - curated and powered by humans, not code.',
+    },
+    confidence: 'A',
+    vendorClaim: false,
+  },
+  {
+    id: 'henrison-coverage-promise',
+    text: {
+      en: 'Henrison describes itself as one of Scandinavia’s most experienced recruitment research companies and states that it maps the entire talent landscape, working for hiring managers, talent-acquisition teams and executive-search firms.',
+      sv: 'Henrison beskriver sig som ett av Skandinaviens mest erfarna researchbolag inom rekrytering och anger att de kartlägger hela talanglandskapet, för rekryterande chefer, TA-team och sökbyråer.',
+    },
+    source: {
+      id: 'src-henrison-home',
+      url: 'https://www.henrison.se/',
+      publisher: 'Henrison AB',
+      retrievedOn: '2026-07-26',
+      kind: 'direct-statement',
+      language: 'en',
+      passage: 'map the entire talent landscape',
+    },
+    confidence: 'A',
+    vendorClaim: false,
+  },
+  {
     id: 'no-frame-78100',
     text: {
       en: 'A query to the Norwegian Enhetsregister for NACE 78.100 (recruitment and provision of labour) returned 1,369 registered entities, of which 372 publish an employee count and 110 fall in the 5–49 band. 78.100 is a superset that also contains staffing and temporary-labour businesses, so this is a frame to be narrowed, not a count of executive-search firms.',

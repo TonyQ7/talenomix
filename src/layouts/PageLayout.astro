@@ -34,7 +34,7 @@ const alternates = LOCALES.map((l) => ({
     <link rel="canonical" href={canonical.toString()} />
     {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
     <link rel="alternate" hreflang="x-default" href={new URL(route(routeKey, 'en'), Astro.site).toString()} />
-    {noIndex && <meta name="robots" content="noindex" />}
+    {noIndex && <meta name="robots" content="noindex, nofollow, noarchive" />}
 
     <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
     <meta name="theme-color" content="#f2efe7" />

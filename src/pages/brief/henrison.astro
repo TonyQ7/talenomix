@@ -1,0 +1,19 @@
+---
+import PageLayout from '~/layouts/PageLayout.astro';
+import Brief from '~/views/Brief.astro';
+import { HENRISON_BRIEF } from '~/data/brief';
+
+// Unlisted: noindex/nofollow/noarchive, excluded from the sitemap in
+// astro.config.mjs, and not linked from any navigation. Delivered as a link.
+const locale = 'en' as const;
+---
+
+<PageLayout
+  locale={locale}
+  routeKey="home"
+  title={`${HENRISON_BRIEF.firm} · account brief — Talenomix`}
+  description="An unlisted account brief prepared for one firm, sourced entirely from their own published statements."
+  noIndex
+>
+  <Brief locale={locale} brief={HENRISON_BRIEF} />
+</PageLayout>
