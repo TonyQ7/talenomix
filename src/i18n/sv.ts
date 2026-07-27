@@ -74,6 +74,10 @@ export const sv: Dictionary = {
     syntheticBadge: 'Syntetisk',
     syntheticData: 'Syntetiska scenariodata. Inte ett resultat från ett verkligt uppdrag.',
     scrollTable: 'Tabellen kan bläddras i sidled',
+    menu: 'Meny',
+    frameBadge: 'nordiska registerenheter i ramen',
+    pauseVideo: 'Pausa bakgrundsfilmen',
+    playVideo: 'Spela bakgrundsfilmen',
   },
 
   nav: {
@@ -909,7 +913,8 @@ export const sv: Dictionary = {
         id: 'website',
         title: 'Den här webbplatsen',
         body: [
-          'Webbplatsen består av statiska filer som levereras från GitHub Pages. Den sätter inga kakor, kör ingen analys, bäddar in inga tredjepartsskript och laddar inga tredjepartstypsnitt – Manrope och Newsreader ligger på den här domänen just av det skälet.',
+          'Webbplatsen består av statiska filer som levereras från GitHub Pages. Den sätter inga kakor, kör ingen analys och bäddar in inga tredjepartsskript. Inter och Instrument Serif ligger på den här domänen i stället för att hämtas från ett typsnitts-CDN.',
+          'Ett undantag, utskrivet i stället för undanstoppat: bakgrundsfilmen på våra marknadsföringssidor levereras från ett tredjeparts-CDN, så att öppna en sådan sida skickar din IP-adress och webbläsarsträng till den värden. Den hämtas först efter att sidan laddats, bara på breda skärmar, aldrig när systemet ber om reducerad rörelse och aldrig i demon – som fortfarande inte gör några externa anrop alls. Vi vill hellre lägga den på egen domän och ta bort undantaget helt.',
           'Det finns inget formulär på webbplatsen, så den samlar inte in något ni skriver. Den interaktiva demoversionen körs helt i er webbläsare och gör inga nätverksanrop alls.',
           'En sak vi inte styr över: som värd behandlar GitHub sedvanliga serveruppgifter, inklusive er IP-adress, för att kunna leverera sidan. Det gäller varje webbplats med en värd, och vi säger hellre det rakt ut än antyder att sidan är osynlig.',
         ],

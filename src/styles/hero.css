@@ -1,0 +1,189 @@
+/*
+  Film hero.
+
+  Layer order inside `.hero-film__media`, bottom to top:
+    1. `__base`  — token gradient. This is the whole backdrop with JS off or
+       reduced motion on, so it has to look deliberate, not like a fallback.
+    2. `<video>` — injected at runtime into `__slot`.
+    3. `__wash`  — the contrast floor. Every layer above the film may only move
+       the composite toward --paper; this is the one that guarantees it.
+
+  Nothing here sets `opacity: 0` outside a `.js-reveal` selector.
+*/
+
+.hero-film {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-content: center;
+  /* Pull back under the fixed pill; the plate's own padding restores clearance. */
+  margin-block-start: calc(-1 * var(--nav-clearance));
+  padding-block: calc(var(--nav-clearance) + clamp(1.5rem, 4vw, 3rem))
+    clamp(2.5rem, 6vw, 5rem);
+  overflow: hidden;
+}
+
+/* svh, not vh: on mobile `100vh` is the LARGE viewport, so a 100vh hero
+   overshoots the visible area on first paint. `100dvh` re-lays-out during
+   scroll, which is jank and CLS. */
+.hero-film--video {
+  min-block-size: 100vh;
+  min-block-size: 100svh;
+}
+
+.hero-film--still {
+  min-block-size: 58vh;
+  min-block-size: 58svh;
+}
+
+/* ---- Backdrop ------------------------------------------------------------ */
+
+.hero-film__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  /* Load-bearing: the injected video is 130% tall, which would otherwise add
+     page height and, at extreme aspect ratios, horizontal overflow. */
+  overflow: hidden;
+}
+
+.hero-film__base {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 12% 8%, var(--paper-raised) 0%, transparent 55%),
+    radial-gradient(90% 80% at 88% 0%, color-mix(in srgb, var(--cobalt) 12%, transparent) 0%, transparent 60%),
+    linear-gradient(165deg, var(--paper) 0%, var(--paper-sunk) 58%, var(--paper-deep) 100%);
+}
+
+.hero-film__slot,
+.hero-film__slot video {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  inline-size: 100%;
+  block-size: 130%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.hero-film__wash {
+  position: absolute;
+  inset: 0;
+  background: var(--hero-wash);
+}
+
+/* ---- Content ------------------------------------------------------------- */
+
+.hero-film__content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-film__content > * {
+  min-inline-size: 0;
+}
+
+.hero-film__plate {
+  display: grid;
+  justify-items: start;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+  padding: clamp(1.5rem, 4vw, 3rem);
+  max-inline-size: 62rem;
+  min-inline-size: 0;
+}
+
+.hero-film__plate > * {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.hero-film__headline {
+  font-size: clamp(2.25rem, 1.1rem + 4.6vw, 4.75rem);
+  max-width: 17ch;
+}
+
+.hero-film__body {
+  font-size: var(--step-1);
+  line-height: 1.55;
+  color: var(--ink-muted);
+  max-width: 52ch;
+  letter-spacing: var(--tracking-tight);
+}
+
+/* ---- Badge --------------------------------------------------------------- */
+
+.film-badge {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  padding: 0.4rem 0.9rem 0.4rem 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--paper-raised) 70%, transparent);
+  font-size: var(--step--1);
+  line-height: 1.4;
+}
+
+.film-badge__n {
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  /* Reserved so the count-up cannot shift the line above the fold. */
+  min-inline-size: 4ch;
+  text-align: end;
+}
+
+.film-badge__label {
+  color: var(--ink-muted);
+}
+
+/* ---- Pause control (WCAG 2.2.2) ------------------------------------------ */
+
+.hero-film__toggle {
+  position: absolute;
+  inset-block-end: clamp(1rem, 3vw, 1.75rem);
+  inset-inline-end: var(--gutter);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* 44px minimum target: this is the primary control for moving content. */
+  min-block-size: 2.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.hero-film__toggle-icon {
+  inline-size: 0.7rem;
+  block-size: 0.8rem;
+  flex: none;
+  background: var(--ink);
+  /* Two bars = pause. Swaps to a triangle when the film is already paused. */
+  clip-path: polygon(0 0, 36% 0, 36% 100%, 0 100%, 0 0, 64% 0, 100% 0, 100% 100%, 64% 100%, 64% 0);
+}
+
+.hero-film__toggle[aria-pressed='true'] .hero-film__toggle-icon {
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+@media (max-width: 40rem) {
+  .hero-film__toggle-text {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .hero-film__toggle {
+    padding: 0.5rem;
+    min-inline-size: 2.75rem;
+    justify-content: center;
+  }
+}

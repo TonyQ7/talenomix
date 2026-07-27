@@ -73,6 +73,10 @@ export const en: Dictionary = {
     syntheticBadge: 'Synthetic',
     syntheticData: 'Synthetic scenario data. Not a result from a real search.',
     scrollTable: 'Table scrolls horizontally',
+    menu: 'Menu',
+    frameBadge: 'Nordic registry entities in frame',
+    pauseVideo: 'Pause background film',
+    playVideo: 'Play background film',
   },
 
   nav: {
@@ -908,7 +912,8 @@ export const en: Dictionary = {
         id: 'website',
         title: 'This website',
         body: [
-          'This site is static files served from GitHub Pages. It sets no cookies, runs no analytics, embeds no third-party scripts, and loads no third-party fonts — Manrope and Newsreader are self-hosted from this domain for exactly that reason.',
+          'This site is static files served from GitHub Pages. It sets no cookies, runs no analytics and embeds no third-party scripts. Inter and Instrument Serif are self-hosted from this domain rather than loaded from a font CDN.',
+          'One exception, stated plainly rather than buried: the background film on our marketing pages is served from a third-party CDN, so loading one of those pages sends your IP address and browser string to that host. It is fetched only after the page has loaded, only on wide screens, never when your system asks for reduced motion, and never on the demo — which still makes no external requests at all. We would rather self-host it and remove the exception entirely.',
           'There is no form on this site, so it collects nothing you type. The interactive demo runs entirely in your browser and makes no network calls at all.',
           'One thing we do not control: as the host, GitHub processes standard server request data, including your IP address, in order to serve the page. That is inherent to any hosted website, and we would rather state it than imply the site is invisible.',
         ],

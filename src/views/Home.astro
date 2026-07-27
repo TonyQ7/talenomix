@@ -5,7 +5,7 @@ import { homeClaims } from '~/data/claims';
 import SectionHead from '~/components/SectionHead.astro';
 import ClaimLedger from '~/components/ClaimLedger.astro';
 import MarketConsole from '~/components/MarketConsole.astro';
-import RevealWords from '~/components/RevealWords.astro';
+import FilmHero from '~/components/FilmHero.astro';
 
 interface Props {
   locale: Locale;
@@ -42,39 +42,39 @@ const workflowPhases = [
 ] as const;
 ---
 
-<!-- 01 — one clear promise, outcomes, and the visual product metaphor -->
-<section class="hero">
+<!-- 01 — the film hero: one promise, one figure, one action -->
+<FilmHero
+  locale={locale}
+  media="video"
+  headline={h.hero.headline}
+  body={h.hero.body}
+  primary={{ label: h.hero.primaryCta, href: route('demo', locale) }}
+  secondary={{ label: dict.nav.market, href: route('market', locale) }}
+/>
+
+<!--
+  01b — the instrument console, immediately below the fold.
+
+  It stays on `/` because responsive.spec.ts asserts at 320px that the map's
+  in-SVG labels are hidden and the coverage legend is visible, and both exist on
+  this page only inside the console. It moves off solid paper at its peril: the
+  whole dark-panel-on-light-ground contrast depends on the surround.
+-->
+<section class="section" id="console">
   <div class="shell">
-    <div class="hero__head">
-      <p class="eyebrow" data-reveal>{h.hero.eyebrow}</p>
-      <RevealWords text={h.hero.headline} as="h1" />
+    <div class="hero__outcomes-strip" data-reveal>
+      <p class="code">{h.hero.quickTitle}</p>
+      <ul class="hero__outcomes">
+        {h.hero.outcomes.map((outcome) => (
+          <li>
+            <h2>{outcome.label}</h2>
+            <p>{outcome.body}</p>
+          </li>
+        ))}
+      </ul>
     </div>
 
-    <div class="hero__grid">
-      <div class="hero__lead" data-reveal style="--reveal-delay: 120ms">
-        <p class="lede">{h.hero.body}</p>
-        <div class="btn-row">
-          <a class="btn btn--primary" href={route('demo', locale)}>
-            {h.hero.primaryCta}<span class="btn__arrow" aria-hidden="true">→</span>
-          </a>
-          <a class="btn btn--secondary" href={route('market', locale)}>{dict.nav.market}</a>
-        </div>
-      </div>
-
-      <div class="hero__aside" data-reveal style="--reveal-delay: 180ms">
-        <p class="code">{h.hero.quickTitle}</p>
-        <ul class="hero__outcomes">
-          {h.hero.outcomes.map((outcome) => (
-            <li>
-              <h2>{outcome.label}</h2>
-              <p>{outcome.body}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-
-    <div class="hero__console" data-reveal style="--reveal-delay: 220ms">
+    <div class="hero__console" data-reveal style="--reveal-delay: 120ms">
       <MarketConsole locale={locale} />
     </div>
   </div>
@@ -251,55 +251,10 @@ const workflowPhases = [
      Three bands: the claim, the supporting read, then the instrument panel.
      The panel is the first impression; the type above it earns the right to
      show one. */
-  .hero {
-    padding-block: clamp(1.5rem, 3.5vw, 2.75rem) var(--space-section);
-    display: grid;
-    gap: clamp(1.5rem, 3vw, 2.25rem);
-  }
-
-  .hero__head {
-    display: grid;
-    gap: 1rem;
-  }
-
-  /* Deliberately a step below the global h1 size. The console is the first
-     impression; the headline introduces it rather than competing with it, and
-     the trade buys roughly a line and a half of vertical space so the panel
-     is visible without scrolling on a laptop. */
-  .hero__head :global(h1) {
-    font-size: clamp(2.25rem, 1.2rem + 4.4vw, 4.5rem);
-    max-width: 16ch;
-  }
-
-  .hero__grid {
-    display: grid;
-    gap: clamp(1.75rem, 4vw, 3.5rem);
-    align-items: start;
-  }
-
-  @media (min-width: 62rem) {
-    .hero__grid {
-      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-    }
-  }
-
-  .hero__lead {
-    display: grid;
-    gap: 1.75rem;
-    justify-items: start;
-  }
-
-  .hero__aside {
+  .hero__outcomes-strip {
     display: grid;
     gap: 0.9rem;
-    align-content: start;
-  }
-
-  @media (min-width: 62rem) {
-    .hero__aside {
-      border-inline-start: 1px solid var(--rule);
-      padding-inline-start: clamp(1.5rem, 3vw, 2.5rem);
-    }
+    margin-block-end: clamp(2rem, 5vw, 3.5rem);
   }
 
   .hero__outcomes {

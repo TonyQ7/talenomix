@@ -5,9 +5,10 @@
  *   1. Every claim in src/data/claims.ts is structurally complete — bilingual
  *      text, a resolvable source, a retrieval date that is real and not in the
  *      future, a confidence grade, and an honest vendor-claim flag.
- *   2. Every external link in the built site is a registered source or is on an
- *      explicit allowlist. This is what stops an unsourced external assertion
- *      from quietly reaching production.
+ *   2. Every external reference in the built site — href, src, poster, and the
+ *      film's data attribute — is a registered source or is on an explicit
+ *      allowlist. Scanning href alone let media through, which is precisely how
+ *      an integrity gate stops meaning what it says.
  *
  * Run with `npm run verify:claims`. Gate 2 is skipped when dist/ is absent, so
  * the script is useful both before and after a build.
@@ -45,6 +46,13 @@ const ALLOWED_EXTERNAL = new Map([
   [
     'https://eur-lex.europa.eu/legal-content/SV/TXT/?uri=celex%3A32024R1689',
     'Swedish-language rendering of the EU AI Act already in the ledger in English.',
+  ],
+  [
+    'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260714_113715_c7e0daa0-8bdd-4486-a2da-040901f8f0ea.mp4',
+    'Hero film. Owner-supplied and rights-confirmed, but third-party hosted: it ' +
+      'is the only external request the site makes, it is injected after load on ' +
+      'wide viewports only, and it is disclosed on /privacy/. Self-hosting it ' +
+      'would remove this entry entirely — see the note in that privacy section.',
   ],
 ]);
 
@@ -152,7 +160,7 @@ if (existsSync(DIST)) {
     const html = await readFile(file, 'utf8');
     const where = relative(ROOT, file);
 
-    for (const match of html.matchAll(/href="(https?:\/\/[^"]+)"/g)) {
+    for (const match of html.matchAll(/(?:href|src|poster|data-film-src)="(https?:\/\/[^"]+)"/g)) {
       const url = match[1].replace(/&amp;/g, '&');
 
       // Self-references (canonical, hreflang, og:url) are not claims.

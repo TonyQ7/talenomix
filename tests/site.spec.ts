@@ -254,3 +254,41 @@ test.describe('keyboard navigation', () => {
     await expect(page.locator('.offer-price')).toContainText(/55\s?000/);
   });
 });
+
+test.describe('nav pill', () => {
+  // Regression: `.site-nav--primary` and `.site-nav` have equal specificity, so
+  // a display-none media query placed before `.site-nav { display: flex }` loses
+  // on source order and both navigations render at once. 166 tests passed while
+  // that was broken; Lighthouse's target-size audit is what surfaced it.
+  test('exactly one navigation is visible at any width', async ({ page }) => {
+    for (const width of [320, 412, 768, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('./');
+
+      const inline = await page.locator('.site-nav--primary').isVisible();
+      const disclosure = await page.locator('.nav-disclosure').isVisible();
+
+      expect(
+        [inline, disclosure].filter(Boolean).length,
+        `at ${width}px: inline=${inline} disclosure=${disclosure}`,
+      ).toBe(1);
+    }
+  });
+
+  test('every pill target clears the 24px minimum', async ({ page }) => {
+    await page.setViewportSize({ width: 412, height: 900 });
+    await page.goto('./');
+
+    const small = await page.locator('.nav-pill a, .nav-pill summary').evaluateAll((els) =>
+      els
+        .filter((el) => (el as HTMLElement).offsetParent !== null)
+        .map((el) => {
+          const r = el.getBoundingClientRect();
+          return { tag: el.tagName, w: Math.round(r.width), h: Math.round(r.height) };
+        })
+        .filter((b) => b.w < 24 || b.h < 24),
+    );
+
+    expect(small, 'targets under 24x24 CSS px (WCAG 2.5.8)').toEqual([]);
+  });
+});

@@ -1,4 +1,20 @@
 ---
+/**
+ * Floating glass nav pill.
+ *
+ * One capsule holds the wordmark, the links and the language toggle. Three
+ * things here are load-bearing rather than stylistic:
+ *
+ *  - Below 62rem the links collapse into a native <details> disclosure. The
+ *    previous header could get away with hiding nav on mobile because it was
+ *    visually quiet and the footer carries every link; once the pill IS the
+ *    signature element, a pill containing only a wordmark reads as broken.
+ *    <details> is the only option that works with JavaScript disabled.
+ *  - The language toggle stays inside <header> and visible at every width.
+ *  - The pill is fixed, so it floats over the film hero. That takes it out of
+ *    flow — see --nav-clearance in components.css for the compensating offset
+ *    and scroll-padding-top.
+ */
 import { anchor, route, type Locale, type RouteKey } from '~/lib/routes';
 import { t } from '~/i18n';
 import LangToggle from './LangToggle.astro';
@@ -20,28 +36,50 @@ const links = [
 ---
 
 <header class="site-header">
-  <div class="shell site-header__inner">
-    <a class="wordmark" href={route('home', locale)}>
-      <span class="wordmark__dot" aria-hidden="true"></span>
-      <span>{dict.brand.name}</span>
-      <span class="wordmark__sub">{dict.brand.descriptor}</span>
-    </a>
+  <div class="site-header__inner">
+    <div class="nav-pill glass">
+      <a class="wordmark" href={route('home', locale)}>
+        <span class="wordmark__dot" aria-hidden="true"></span>
+        <span>{dict.brand.name}</span>
+        <span class="wordmark__sub">{dict.brand.descriptor}</span>
+      </a>
 
-    <nav class="site-nav site-nav--primary" aria-label={dict.nav.home}>
-      {
-        links.map((link) => (
-          <a
-            class="site-nav__link"
-            href={link.href}
-            aria-current={link.key && link.key === routeKey ? 'page' : undefined}
-          >
-            {link.label}
-          </a>
-        ))
-      }
-    </nav>
+      {/* Wide viewports: the links sit inline in the pill. */}
+      <nav class="site-nav site-nav--primary" aria-label={dict.nav.home}>
+        {
+          links.map((link) => (
+            <a
+              class="site-nav__link"
+              href={link.href}
+              aria-current={link.key && link.key === routeKey ? 'page' : undefined}
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
 
-    <div class="header-actions">
+      {/* Narrow viewports: the same links behind a no-JS disclosure. */}
+      <details class="nav-disclosure">
+        <summary class="nav-disclosure__summary">
+          <span class="visually-hidden">{dict.ui.menu}</span>
+          <span class="nav-disclosure__bars" aria-hidden="true"></span>
+        </summary>
+        <nav class="nav-disclosure__panel glass" aria-label={dict.ui.menu}>
+          {
+            links.map((link) => (
+              <a
+                class="site-nav__link"
+                href={link.href}
+                aria-current={link.key && link.key === routeKey ? 'page' : undefined}
+              >
+                {link.label}
+              </a>
+            ))
+          }
+        </nav>
+      </details>
+
       <LangToggle locale={locale} routeKey={routeKey} />
     </div>
   </div>

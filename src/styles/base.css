@@ -13,11 +13,16 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  scroll-padding-top: 6rem;
+  /* Must clear the fixed nav pill or every #fragment lands underneath it. */
+  scroll-padding-top: calc(var(--nav-clearance) + 1rem);
   overflow-x: hidden;
 }
 
 body {
+  /* Height of the floating pill plus its top offset. Pages whose first section
+     is a film hero pull back under it with a negative margin; everything else
+     starts below it. */
+  --nav-clearance: clamp(4.75rem, 7vw, 5.75rem);
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-sans);
@@ -163,6 +168,10 @@ abbr[title] {
 }
 
 /* ---- Layout primitives --------------------------------------------------- */
+
+main {
+  padding-block-start: var(--nav-clearance);
+}
 
 .shell {
   width: 100%;

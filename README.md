@@ -113,7 +113,10 @@ registered source or explicitly allowlisted.
   region.
 - Keyboard-operable throughout, including the skip link and the language toggle.
 - Reduced motion removes all reveal transitions.
-- No cookies, no analytics, no third-party requests. Fonts are self-hosted.
+- No cookies, no analytics. Fonts are self-hosted. One third-party request:
+  the hero film, injected after load on wide viewports only, never under
+  reduced motion and never on `/demo/` — disclosed on `/privacy/` and
+  allowlisted with a justification in `scripts/verify-claims.mjs`.
 
 ## Deployment
 

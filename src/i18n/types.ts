@@ -67,6 +67,13 @@ export interface Dictionary {
     readonly syntheticBadge: string;
     readonly syntheticData: string;
     readonly scrollTable: string;
+    /** Accessible name for the narrow-viewport nav disclosure. */
+    readonly menu: string;
+    /** Trails the live registry figure in the hero badge. */
+    readonly frameBadge: string;
+    /** Labels for the hero film's pause control (WCAG 2.2.2). */
+    readonly pauseVideo: string;
+    readonly playVideo: string;
   };
 
   readonly nav: {
